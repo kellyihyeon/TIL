@@ -28,7 +28,7 @@ cmd가 javac.exe와 java.exe를 찾을 때 Path가 알려주는 경로에 가서
 ```
 C:\Program Files (x86)\Java
 ``` 
-![경로](/Img/JavaBin.png)
+![경로](./Img/JavaBin.png)
 
 - 다운로드 받을 때 특정 위치를 선택하지 않았다면 위 경로를 따라가면 Java 폴더 안에 jdk1.8.0_271 폴더가 있고, jdk1.8.0_271 안에 javac.exe, java.exe 가 있는 걸 확인할 수 있다.
 
@@ -36,7 +36,7 @@ C:\Program Files (x86)\Java
 
 ### 1.2.2 환경 변수 설정
 
-![경로](/Img/JavaBin.png)
+![경로](./Img/JavaBin.png)
 - javac.exe와 java.exe가 있는 bin까지의 경로를 Path에 지정해 놓아야한다. 
 
 - 사용자 변수:  
@@ -45,7 +45,7 @@ C:\Program Files (x86)\Java
   사용자에 상관없이 전체 시스템에 대한 환경변수 설정
 
 - Path라는 변수를 추가해보자.  
-  - ![Path설정](/Img/Path.png)
+  - ![Path설정](./Img/Path.png)
   - 변수 이름: Path
   - 값: bin이 있는 위치
 
@@ -85,7 +85,7 @@ class FirstJavaProgram
 # 2. 자바 프로그램과 실행의 원리에 대한 이해
 
 ## 2.1 일반적인 프로그램과 자바 프로그램의 차이
-![Java Programming](/Img/JavaProgramming.png)
+![Java Programming](./Img/JavaProgramming.png)
 
 - 일반적인 프로그램
   - 하드웨어 위에 운영체제가 설치 된다. 여기까지 끝나야 우리가 프로그램을 사용하는 상태가 될 수 있다. (프로그램 설치 -> 실행)
@@ -166,3 +166,20 @@ Windows JVM / Linux JVM
 그리고 그렇게 만들어진 이 파일은 확장자가 '.class'인 클래스 파일이다.  
 이 클래스 파일에는 자바 바이트 코드로 채워져있다.
 ```
+<br>
+
+
+# 3. 첫 번째 자바 프로그램의 관찰과 응용
+```java
+class FirstJavaProgram {
+    public static void main(String[] args) {
+        System.out.println("Welcome to Java");
+        System.out.println("First Java program");
+    }
+}
+```
+
+- 중괄호를 이용해서 클래스와 메소드의 `영역`을 구분한다.
+- 문장의 끝에는 세미콜론을 붙여서 문장의 끝을 표시한다.
+    - 자바가상머신에 명령을 하는 문장에는 끝에 ';'을 붙인다고 생각하면 된다.
+<br>
