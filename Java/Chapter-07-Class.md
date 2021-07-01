@@ -7,7 +7,14 @@
    1.3 [인스턴스](#13-인스턴스)  
    1.4 [참조변수](#14-참조변수)
 
-2. [생성자(Constructor)와 String 클래스의 소개]()
+2. [생성자(Constructor)와 String 클래스의 소개](#2-생성자constructor와-string-클래스의-소개)  
+   2.1 [String 클래스에 대한 첫 소개](#21-string-클래스에-대한-첫-소개)  
+   2.2 [클래스 정의 모델: 인스턴스 구분에 필요한 정보를 갖게 하자.](#22-클래스-정의-모델-인스턴스-구분에-필요한-정보를-갖게-하자)   
+   2.3 [좋은 클래스 정의 후보를 위한 초기화 메소드](#23-좋은-클래스-정의-후보를-위한-초기화-메소드)  
+   2.4 [초기화 메소드를 대신하는 생성자](#24-초기화-메소드를-대신하는-생성자)  
+   2.5 [디폴트 생성자](#25-디폴트-생성자)  
+   2.6 [좋은 클래스가 되기 위한 원칙](#26-좋은-클래스가-되기-위한-원칙)  
+
 3. [자바의 이름 규칙(Naming Rule)]()
 <br>
 
@@ -365,7 +372,227 @@ if (marcelline == null)    // marcelline이 참조하는 인스턴스가 없다�
 
 
 # 2. 생성자(Constructor)와 String 클래스의 소개
+```
+"Hello"
+```
+- 자바에서는 이것을 문자열로 인식 한다.
+  그리고 자바는 문자열도 인스턴스로 표현하고 저장할 때도 인스턴스로 저장한다.
 
+- 자바가상머신을 실행하면 과장을 좀 보태서, 이 문자열을 보는 순간 이 String 클래스의 인스턴스를 생성한다.
+  - String 클래스: 자바에서 제공, 정의하는 클래스
+
+- "Hello"라는 문자열 데이터를, 생성한 인스턴스에 쏙 넣어주고 이 인스턴스가 있는 주소를 반환해준다. 
+  - 이 인스턴스에는 메소드도 몇 개가 들어가는데, 어떤 메소드가 있는지는 추후에 설명하겠다. 
+
+- System.out.println("Hello");  
+  실제로 println에 전달되는 것은 문자열이 아니고 String 인스턴스의 주소 값이 이 자리를 대체한다.  
+  사실은 println 이라는 메소드에 String 인스턴스의 참조값이 전달이 됐던 것이다.
+<br>
+<br>
+
+## 2.1 String 클래스에 대한 첫 소개
+```java
+public static void main(String[] args) {
+  String str1 = "Happy";
+  String str2 = "Birthday";
+  System.out.println(str1 + " " + str2);
+
+  printString(str1);
+  printString(str2);
+}
+
+public static void printString(string str) {
+  System.out.print(str);
+}
+```
+- String str1 = "Happy";  
+스트링 인스턴스를 생성하고 그 참조값을 str1이 가리키고 있다. (str1에 저장)
+
+- 스트링형 str1 참조변수를 가지고 문자열을 참조할 수 있다.
+
+- printString(str1);  
+문자열을 메소드의 인자로 전달할 수 있다.
+
+- public static void printString(string str)  
+매개변수로 String형 참조변수를 선언하여 문자열을 인자로 전달받을 수 있다.
+
+
+## 2.2 클래스 정의 모델: 인스턴스 구분에 필요한 정보를 갖게 하자.
+
+```java
+class BankAccount {
+  int balance = 0; // 예금 잔액
+
+  public int deposit(int amount) {...}
+  public int withdraw(int amount) {...}
+  public int checkMyBalance() {...}
+}
+```
+문제있는 클래스 정의
+<br>
+
+```java
+class BankAccount {
+  String accNumber;  // 계좌번호
+  String ssNumber;   // 주민번호
+  int balance = 0;   // 예금 잔액
+
+  public int deposit(int amount) {...}
+  public int withdraw(int amount) {...}
+  public int checkMyBalance() {...}
+}
+```
+좋은 클래스 정의 후보
+
+- 인스턴스를 구분할 수 있는 정보를 클래스에 정의할 필요가 있다. 각각의 인스턴스를 구분할 수 있는 정보를 갖게끔 해라.
+
+- marcelline 인스턴스  
+  bubblegum 인스턴스  
+  jake 인스턴스  
+  계좌번호, 주민번호를 위한 참조변수는 각각의 인스턴스를 구분하게 하는 고유정보이다.
+
+- 만약 고유정보가 클래스 안에 없고 어쩌다보니 marcelline -> bubblegum -> jake 를 참조하고 있을 때, 실수가 일어났는지 확인하려면 클래스 안의 고유정보를 볼 수 있어야 한다.
+<br>
+
+## 2.3 좋은 클래스 정의 후보를 위한 초기화 메소드
+
+### 2.3.1 초기화를 위한 메소드
+```java
+class BankAccount {
+  String accNumber;  // 계좌번호
+  String ssNumber;   // 주민번호
+  int balance = 0;   // 예금 잔액
+
+  public void initAccount(String acc, String ss, int bal) {
+    accNumber = acc;
+    ssNumber = ss;
+    balance = bal;  // 계좌 개설 시 예금액으로 초기화
+  }
+  ...
+}
+```
+- BankAccount 계좌를 생성하고 계좌번호, 주민번호, 예금잔액을 저장할 있는 변수만 딱 넣어둔다고 끝이 아니다. 그 정보를 marcelline 것으로 만들어서 저장을 해줘야 한다.
+
+- 인스턴스 생성 후에 초기화를 해줘서 적당한 값으로 저장을 해줘야한다.  
+(초기화 과정을 거쳐야 한다.)
+
+- public void initAccount(String acc, String ss, int bal)  
+초기화를 위한 메소드, 딱 한번만 호출하는 메소드.   
+여러 번 호출하는 과정에서 계좌번호, 주민번호가 변경될 수 있으므로 두 번 호출하면 큰일 나는 메소드이다.
+
+- 자바에서는 `초기화를 위한 메소드`를 직접 만들어서 호출하는 것을 명세화 시켰다.  
+반드시 진행해야 하며, 인스턴스 변수*, 즉  멤버변수들을 초기화 하는 방법을 생성자라는 걸 통해서 하도록 자바의 문법으로 정해놨다.
+  - '클래스를 이루는 멤버다'라고해서 멤버변수라고도 부른다.
+  
+- 생성자는 우리가 명시적으로 호출하지 않는다.
+우리가 호출하지 않아도 자동으로 호출이 되면서 초기화가 이루어진다.   
+= 프로그래머의 편의를 위한 것이다.
+<br>
+
+### 2.3.2 초기화
+```java
+public static void main(String[] args) {
+  BankAccount marcelline = new BankAccount(); // 계좌 생성
+  marcelline.initAccount("12-34-89", "990824-9090909", 10000);  // 초기화
+  ...
+}
+```
+- 우리가 초기화를 위한 메소드를 정의할 경우
+인스턴스 생성문장, 초기화 문장을 각각 구분해야 하는데, 생성자를 사용하면 구분하지 않아도 된다.
+
+- 하나의 문장으로 인스턴스 생성을 명령하면,  자동으로 생성자라는 것이 호출되면서 우리가 원하는 값으로 초기화가 이뤄진다.
+
+## 2.4 초기화 메소드를 대신하는 생성자
+```java
+class BankAccount {
+  String accNumber;  // 계좌번호
+  String ssNumber;   // 주민번호
+  int balance = 0;   // 예금 잔액
+
+  // 생성자
+  public BankAccount(String acc, String ss, int bal) {
+    accNumber = acc;
+    ssNumber = ss;
+    balance = bal;  
+  }
+  ...
+}
+```
+- 메소드와 생긴 형태는 같은데, 생성자가 자동으로 호출되기 위한 조건이 있다.  
+① 생성자의 이름은 클래스의 이름과 동일해야 한다.  
+② 생성자는 값을 반환하지 않고 반환형도 표시하지 않는다.
+
+- 이 두 가지 조건만 만족하면 생성자이다. 인스턴스 생성할 때 자동으로 호출된다.
+<br>
+
+```java
+public static void main(String[] args) {
+  BankAccount marcelline = new BankAccount("12-34-89", "990824-9090909", 10000); 
+  ...
+}
+```
+- 하지만 혼자 생성되고 혼자 호출 되면 의미가 없으니 내가 원하는 계좌번호, 주민번호, 예금 잔액으로 초기화 시켜줘야 한다.(세 개의 매개변수 선언)
+
+- ①계좌번호 초기화, ②주민번호 초기화, ③예금잔액 초기화의 의도로 코드를 작성했다.
+
+- 이 값을 전달하는 방법은 인스턴스를 생성하면서 전달해주는 것이다.
+<br>
+<br>
+
+## 2.5 디폴트 생성자
+```java
+class BankAccount {
+  String accNumber;  // 계좌번호
+  String ssNumber;   // 주민번호
+  int balance = 0;   // 예금 잔액
+
+  public BankAccount() {  // 컴파일러에 의해 자동 삽입되는 '디폴트 생성자'
+    // empty
+  }
+
+  public int deposit(int amount) {...}
+  public int withdraw(int amount) {...}
+  public int checkMyBalance() {...}
+}
+```
+- 생성자를 만들지 않으면 자바 컴파일러가 생성자를 넣어준다.
+
+- new bankAccount();  
+우리는 이렇게 인스턴스를 생성했는데, 이것은 **`인자를 전달받지 않는 생성자를 호출하라`** 라는 의미이다.
+
+- class 안에 public BankAccount(){} 이 코드가 없다면 생성자가 없는 것이다.  
+그렇다면 new BankAccount(); 이 호출은 불가능하다.
+
+- 하지만 자바에서 아예 문법적으로 규칙을 정해놓았다.  
+인스턴스 생성 과정에서는 무조건 생성자가 호출이 되어야 한다.
+
+- 우리가 생성자를 넣지 않으면 `디폴트 생성자`가 컴파일 과정에서 삽입이 된다.  
+
+- 디폴트 생성자가 하는 일은 없다.  
+비어있으며 인자값도 없다. 무늬만 생성자이다.  
+이런 생성자이지만 이렇게 정의해서 넣어줌으로인해 인스턴스의 생성문법의 기본 규칙을 유지하게끔 만들어준 것이다.
+  - new BankAccount **`();`**
+<br>
+<br>
+
+
+## 2.6 좋은 클래스가 되기 위한 원칙
+- 가급적 모든 클래스는 기본적으로 생성자를 직접 정의하는 것이 의미있다.
+
+- 데이터가 없이 메소드만 있는 클래스가 있을까?  
+데이터만 있고 메소드가 없는 클래스가 있을까?
+
+- 반드시 클래스 안에는 하나라도 데이터가 있고, 하나 이상의 메소드가 있다.  
+데이터가 있다는 건 그 값을 적절히 초기화 시켜줄 의무가 있는 것이다.
+
+- 원하는 값, 적절한 값, 필요한 값으로 초기화 시켜줄 필요가 있다.  
+그래서 생성자를 직접 넣어주는 게 의미가 있다.
+
+- 생성자를 초기화 시켜줄 필요가 없는 경우라도 명시적으로 생성자를 만들어서 `0`으로 초기화 하겠다는 문장을 넣어주는 것이 좋다.
+  - 안적어도 0으로 초기화가 되지만 명시적으로 balance = 0; 작성.
+<br>
+<br>
 
 
 # 3. 자바의 이름 규칙(Naming Rule)
+
