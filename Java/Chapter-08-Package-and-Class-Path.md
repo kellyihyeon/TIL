@@ -2,8 +2,23 @@
 
 ## 목차
 1. [클래스 패스(Class Path)](#1-클래스-패스class-path)  
+   1.1 [전반적 과정](#11-전반적-과정)  
+   1.2 [컴파일 실행 과정](#12-컴파일-실행-과정)  
+   1.3 [클래스 패스](#13-클래스-패스)  
+   1.4 [현재 디렉토리에 대한 이해](#14-현재-디렉토리에-대한-이해)  
+   1.5 [디렉토리 구조 변경 및 컴파일](#15-디렉토리-구조-변경-및-컴파일)  
+   1.6 [클래스 패스 설정하기](#16-클래스-패스-설정하기)  
+   1.6 [절대 경로 vs 상대 경로](#17-절대-경로-vs-상대-경로)  
+   1.7 [클래스 패스를 고정시키는 방법](#18-클래스-패스를-고정시키는-방법)    
    
-2. [패키지(Package)의 이해]()
+2. [패키지(Package)의 이해](#2-패키지package의-이해)  
+   2.1 [패키지 선언이 필요한 상황의 연출](#21-패키지-선언이-필요한-상황의-연출)  
+   2.2 [이로 인한 문제점들](#22-이로-인한-문제점들)    
+   2.3 [공간적, 접근적 충돌 해결을 위한 패키지 선언](#23-공간적-접근적-충돌-해결을-위한-패키지-선언)   
+   2.4 [패키지 선언에 따른 문제 해결](#24-패키지-선언에-따른-문제-해결)  
+   2.5 [패키지 선언이 된 소스파일 컴파일 방법](#25-패키지-선언이-된-소스파일-컴파일-방법)  
+   2.6 [클래스 하나에 대한 import 선언](#26-클래스-하나에-대한-import-선언)  
+   2.7 [패키지 전체에 대한 import 선언](#27-패키지-전체에-대한-import-선언)   
 <br>
 
 # 1. 클래스 패스(Class Path)
@@ -57,6 +72,7 @@ C:\PS>javac S.java
 C:\PS>java A
 ```
 - java.exe도 현재 디렉토리(PS)에서 A.class 파일을 찾아서 메인 메소드를 실행한다.
+<br>
 
 ## 1.3 클래스 패스
 - javac, java를 실행시켰을 때, A.class 파일을 현재 디렉토리(PS)에서만 찾는데, 클래스를 찾는 경로를 내가 별도로 지정을 해줄 수가 있다.  
@@ -137,7 +153,7 @@ C:\PackageStudy>java WhatYourName
 읽어들여서 그 정보를 기준으로 인스턴스를 생성하면 되고, 마찬가지로 ZZZ 인스턴스 생성도 동일한 과정을 거친다.
 <br>
 <br>
-___
+
 
 ## 1.5 디렉토리 구조 변경 및 컴파일
 ### 1.5.1 디렉토리 구조 변경
@@ -230,8 +246,12 @@ C:\PackageStudy>set classpath=.;C:\PackageStudy\MyClass
 
 #### 1.6.1.3 결과
 ![ClassPathSetting-Success](./Img/ClassPathSetting-Success.png)
+
 MyClass를 클래스 패스로 추가를 하나 더 해줬더니 제대로 실행되는 걸 확인할 수 있다.  
 ;뒤에 입력하여 클래스 패스를 얼마든지 추가하고 싶은 만큼 추가해줄 수 있다.
+<br>
+<br>
+
 
 ## 1.7 절대 경로 vs 상대 경로
 ### 1.7.1 절대 경로
@@ -284,3 +304,215 @@ C:\AB>set classpath=.;.\MyClass
 
 
 # 2. 패키지(Package)의 이해
+## 2.1 패키지 선언이 필요한 상황의 연출
+- 자바 프로그램을 개발하다보면 모든 클래스를 내가 다 정의하는 것이 아니다.
+
+- 직접 클래스를 정의하는 것보다 이미 정의된 클래스를 가져다쓰는 경우가 많다.
+
+- 가져다 쓸 때 자바에서 제공해주는 클래스뿐만 아니라 기업에서 제공해주는 클래스도 많다.
+A사, B사가 제공해주는 클래스를 묶음 단위로 구매해서 실무에서 개발하는 경우가 많다.
+<br>
+<br>
+
+## 2.2 이로 인한 문제점들
+A사, B사, C사가 있는데, 서로가 서로를 알아서 모든 클래스를 정의할 때 이름 검색 후 이름이 충돌이 나지 않게끔 클래스를 디자인 하는 것이 아니기때문에 이름 충돌이 발생할 가능성이 있다.
+
+- www.abcd.com의 Circle.java
+```java
+public class Circle {
+    double rad;
+    final double PI;
+
+    public Circle(double r) {
+        rad = r;
+        PI = 3.14;
+    }
+
+    public double getArea() {
+        return (rad * rad) * PI;
+    }
+}
+```
+
+- www.efgh.com의 Circle.java
+```java
+public class Circle {
+    double rad;
+    final double PI;
+
+    public Circle(double r) {
+        rad = r;
+        PI = 3.14;
+    }
+
+    public double getPerimeter() {
+        return (rad * 2) * PI;
+    }
+}
+```
+
+두 클래스가 모두 필요한 상황이라고 가정해보자.
+
+- 공간에서의 충돌  
+동일 이름의 클래스 파일을 같은 위치에 둘 수 없다.
+
+- 접근 방법에서의 충돌  
+인스턴스 생성 방법에서 두 클래스에 차이가 없다.
+<br>
+<br>
+
+## 2.3 공간적, 접근적 충돌 해결을 위한 패키지 선언
+
+- 공간적 충돌  
+디렉토리를 달리해서 저장한다.  
+
+- 접근 방법에서의 충돌   
+이름을 조금이라도 다르게 해서 구성할 수밖에 없다. (경로가 달라졌다는 가정하에서) 어떤 경로에 있는 Circle인지 명시한다.
+
+- 패키지 선언을 하면 이 Circle이라는 클래스가 세상에 유일한 클래스가 되도록 할 수 있다.   
+이름 충돌이 발생하지 않는 클래스를 만들 수 있다.
+
+- 클래스 접근 방법의 구분  
+서로 다른 패키지의 두 클래스는 인스턴스 생성 시 사용하는 이름이 다르다.
+
+- 클래스의 공간적인 구분
+서로 다른 패키지의 두 클래스 파일은 저장되는 위치가 다르다.
+
+- 컴파일 과정에서, 클래스 파일이 저장되어야 하는 위치가 상대적으로 결정이 된다.   
+그리고 이렇게 결정된 위치는 컴파일 이후에 바꿀 수 없다.
+<br>
+<br>
+
+
+## 2.4 패키지 선언에 따른 문제 해결
+```java
+package com.abcd.smart;
+
+public class Circle {
+    double rad;
+    final double PI;
+
+    public Circle(double r) {
+        rad = r;
+        PI = 3.14;
+    }
+
+    public double getArea() {
+        return (rad * rad) * PI;
+    }
+}
+```
+
+```java
+package com.efgh.simple;
+
+public class Circle {
+    double rad;
+    final double PI;
+
+    public Circle(double r) {
+        rad = r;
+        PI = 3.14;
+    }
+
+    public double getPerimeter() {
+        return (rad * 2) * PI;
+    }
+}
+```
+
+```java
+package com.abcd.smart;
+package com.efgh.simple;
+```
+
+- 패키지 이름을 짓는 관례가 있다.
+  - 패키지 이름은 인터넷 도메인 이름의 역순으로 이름을 구성한다.  
+www.abcd.com -> com.abcd
+
+  - 이름 끝에 클래스를 정의한 주체 또는 팀의 이름이 추가 된다.  
+smart, simple = 팀 이름
+
+- 패키지 선언 이후에 등장하는 클래스들은 제약조건이 생긴다.  
+클래스 파일들은 com이라는 디렉토리의 서브 디렉토리 abcd에 있는 smart라는 디렉토리 안에 있어야 한다.
+
+```bash
+├── 📁PackageStudy
+│   ├── 📦com.abcd.smart
+│   │   └── Circle.class
+│   └── 📦com.efch.simple
+│       └── Circle.class
+```
+
+- 이처럼 패키지 선언은 클래스 파일이 있어야 하는 위치를 강제하는 것이다.
+
+- 인스턴스 생성 시
+    ```java
+    com.abcd.smart.Circle c1 = new com.abcd.smart.Critcle(3.5);
+    ```
+  - 자바 가상머신이 이 문장을 보는 순간 Circle을 찾는다. 찾을 때 com을 찾는데, 클래스 패스를 기준 com을 찾는다. 클래스 패스에 com이라는 디렉토리가 있는지를 찾는 것이다.
+
+  - 클래스 패스에 com이 있고, 이 com안에 abcd가 있나? -> abcd안에 smart가 있나? 이런식으로 찾는다.
+<br>
+<br>
+
+## 2.5 패키지 선언이 된 소스파일 컴파일 방법
+```
+C:\PackageStudy>javac -d <directory> <filename>
+```
+- `-d` 옵션  
+PackageStudy -> com -> abcd -> smart안에 클래스 파일까지 전부 만들어주는 역할을 한다.
+
+- `<directory>`  
+패키지를 생성할 위치 정보
+
+- `<filename>`  
+컴파일할 파일의 이름
+<br>
+
+```
+C:\PackageStudy>javac -d . src\circle1\Circle.java
+```
+- `-d`  
+패키지에서 명시하는대로 컴파일을 하고, 경로를 만들고 거기다가 클래스 파일을 가져다놔라.
+
+- `. `   
+현재 디렉토리를 기준으로 패키지 정보대로 디렉토리를 만들어라.
+<br>
+<br>
+
+
+## 2.6 클래스 하나에 대한 import 선언
+```java
+import com.abcd.smart.Circle;
+
+class ImportCircle {
+    public static void main(String args[]) {
+        Circle c1 = new Circle(3.5);
+        ...
+    }
+}
+```
+- Circle = com.abcd.smart.Circle
+
+- 클래스 내에서 Circle을 쓴다면 그것은 
+`com.abcd.smart.Circle`이라고 명시해준 것이다.
+
+- 주의
+  ```java
+  import com.abcd.smart.Circle;
+  import com.efgh.simple.Circle;
+  ```
+  동일 이름의 두 클래스에 대한 import 선언은 컴파일 오류
+<br>
+<br>
+
+## 2.7 패키지 전체에 대한 import 선언
+```java
+import com.abcd.smart.*;
+```
+
+- com.abcd.smart 패키지로 묶인 전체 클래스에 대한 패키지 선언.
+
+- 지양 하자.   
+패키지 안에 여러 개의 클래스 파일들이 있는데 이 파일들이 수십개, 백개가 되는 경우 막연히 import 시켜버리면 이름 충돌이 발생할 수도 있다.
