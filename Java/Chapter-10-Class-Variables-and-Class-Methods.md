@@ -2,14 +2,23 @@
 
 ## 목차
 1. [static 선언을 붙여서 선언하는 클래스 변수](#1-static-선언을-붙여서-선언하는-클래스-변수)  
-  1.1 [선언된 클래스의 모든 인스턴스가 공유하는 클래스 변수](#11-선언된-클래스의-모든-인스턴스가-공유하는-클래스-변수)  
-  1.2 [클래스 변수의 접근 방법](#클래스-변수의-접근-방법)  
-  1.3 [클래스 변수 접근의 예](#클래스-변수-접근의-예)  
-  1.4 [클래스 변수의 초기화 시점과 초기화 방법](#클래스-변수의-초기화-시점과-초기화-방법)  
-  1.5 [클래스 변수 활용의 예](#클래스-변수-활용의-예)  
+  1.1 [클래스 변수는 언제 필요한가](#11-클래스-변수는-언제-필요한가)  
+  1.2 [클래스 변수는 어디에 두어야 하는가](#12-클래스-변수는-어디에-두어야-하는가)  
+  1.3 [어떻게 하면 클래스 변수가 되는가](#13-어떻게-하면-클래스-변수가-되는가)  
+  1.4 [클래스 변수는 무엇인가](#14-클래스-변수는-무엇인가)  
+  1.5 [선언된 클래스의 모든 인스턴스가 공유하는 클래스 변수](#15-선언된-클래스의-모든-인스턴스가-공유하는-클래스-변수)    
+  1.6 [클래스 변수의 접근 방법](#16-클래스-변수의-접근-방법)    
+  1.7 [클래스 변수 접근의 예](#17-클래스-변수-접근의-예)    
+  1.8 [클래스 변수의 초기화 시점과 초기화 방법](#18-클래스-변수의-초기화-시점과-초기화-방법)   
+  1.9 [클래스 변수 활용의 예](#19-클래스-변수-활용의-예)    
 
 2. [static 선언을 붙여서 선언하는 클래스 메소드](#2-static-선언을-붙여서-선언하는-클래스-메소드)  
+   2.1 [클래스 메소드의 정의와 호출](#21-클래스-메소드의-정의와-호출)  
+   2.2 [클래스 메소드로 정의하는 것이 옳은 경우](#22-클래스-메소드로-정의하는-것이-옳은-경우)  
+   2.3 [클래스 메소드에서 인스턴스 변수에 접근이 가능할까](#23-클래스-메소드에서-인스턴스-변수에-접근이-가능할까)
+     
 3. [System.out.println() 그리고 public static void main()](#3-systemoutprintln-그리고-public-static-void-main)
+   
 4. [또 다른 용도의 static 선언](#4-또-다른-용도의-static-선언)
 <br>
 
@@ -248,5 +257,108 @@ class Circle {
 
 
 # 2. static 선언을 붙여서 선언하는 클래스 메소드
+## 2.1 클래스 메소드의 정의와 호출
+```java
+class NumberPrinter {
+    
+    private int myNum = 0;
+
+    static void showInt(int n) {
+        System.out.println(n);
+    }
+    
+    static void showDouble(double n) {
+        System.out.println(n);
+    }
+
+    void setMyNumber(int n) {
+        myNum = n;
+    }
+
+    void showMyNumber() {
+        showInt(myNum);     // 내부 접근
+    }
+}
+
+class ClassMethod {
+    public static void main(String[] args) {
+        NumberPrinter.showInt(20);  // 외부 접근
+        NumberPrinter np = new NumberPrinter();
+        np.showDouble(3.15);    // 외부 접근
+        np.setMyNumber(75);
+        np.showMyNumber();
+    }
+}
+```
+- 클래스 메소드의 성격 및 접근 방법이 클래스 변수와 동일하다.
+
+- NumberPrinter 인스턴스가 3개 있을 때, 각각의 인스턴스 안에 showInt, showDouble 메소드가 있는 게 아니라 static 메소드(클래스 메소드)는 다른 메모리 공간에 존재하고 있다.
+
+- 외부에서는 클래스의 이름 또는 인스턴스의 참조 변수 이름을 통해서 접근한다.  
+(클래스 이름을 통해서 접근하는 편이 좋다!)
+<br>
+<br>
+
+
+## 2.2 클래스 메소드로 정의하는 것이 옳은 경우
+```java
+class SimpleCalculator {
+    static final double PI = 3.1415;
+
+    static double add(double n1, double n2) {
+        return n1 + n2;
+    }
+
+    static double min(double n1, double n2) {
+        return n1 - n2;
+    }
+
+    static double calCircleArea(double r) {
+        return PI * r * r;
+    }
+
+    static double calCirclePeri(double r) {
+        return PI * (r * 2);
+    }
+}
+```
+- 단순 기능 제공이 목적인 메소드들, 인스턴스 변수와 관련 지을 이유가 없는 메소드들은 static으로 선언하는 것이 옳다.
+
+- 인스턴스 메소드는 인스턴스 변수와 연관되어져야한다. 
+
+- static 메소드는 인스턴스가 가질 필요도 없고, 여러 개가 있을 필요도 없고 하나만 존재하면 원할 때마다 가져다 쓸 수 있는 메소드이다.
+<br>
+<br>
+
+
+## 2.3 클래스 메소드에서 인스턴스 변수에 접근이 가능할까?
+```java
+class AAA {
+    int num = 0;
+    static void addNum(int n){
+        num += n;
+    }
+}
+```
+- num은 인스턴스화 되었을 때 존재하는 인스턴스 변수이고, addNum은 인스턴스 생성과 관련없이 존재하는 클래스 메소드이다. 
+<br>
+
+```
+                  addNum
+                ┌────────┐  
+                │ Method │ 
+                └────────┘ 
+
+    AAA             AAA             AAA
+┌──────────┐    ┌──────────┐    ┌──────────┐
+│ Instance │    │ Instance │    │ Instance │ 
+└──────────┘    └──────────┘    └──────────┘ 
+
+```
+<br>
+<br>
+
+
 # 3. System.out.println() 그리고 public static void main()
+
 # 4. 또 다른 용도의 static 선언
