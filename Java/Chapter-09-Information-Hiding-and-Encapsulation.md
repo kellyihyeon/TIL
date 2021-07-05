@@ -18,7 +18,14 @@
    2.8 [인스턴스 멤버의 prtected 선언이 갖는 의미](#28-인슨턴스-멤버의-protected-선언이-갖는-의미)  
    2.9 [인스턴스 멤버 대상 접근 수준 지시자 정리](#29-인스턴스-멤버-대상-접근-수준-지시자-정리)
 
-3. [캡슐화(Encapsulation)](#3-캡슐화encapsulation)
+3. [캡슐화(Encapsulation)](#3-캡슐화encapsulation)  
+   3.1 [캡슐화의 정의](#31-캡슐화의-정의)  
+   3.2 [캡슐화를 시켜주는 이유](#32-캡슐화를-시켜주는-이유)  
+   3.3 [캡슐화 무너진 예](#33-캡슐화-무너진-예)  
+   3.4 [무너진 캡슐화의 결과](#34-무너진-캡슐화의-결과)  
+   3.5 [적절한 캡슐화의 예](#35-적절한-캡슐화의-예)  
+   3.6 [적절한 캡슐화로 인한 코드 수준의 향상](#36-적절한-캡슐화로-인한-코드-수준의-향상)  
+   3.7 [포함 관계로 캡슐화 완성하기](#37-포함-관계로-캡슐화-완성하기)  
 <br>
 
 # 1. 정보 은닉(Informaiotn Hiding)
@@ -480,3 +487,228 @@ protected: +1 (상속 관계)
 
 
 # 3. 캡슐화(Encapsulation)
+*자바 문법이라기보다는 소프트웨어 공학적 측면이 강한 개념*
+
+## 3.1 캡슐화의 정의
+- 클래스를 정의하는 데 있어서 하나의 클래스에 필요한 것들을 잘 담는 것이다.
+
+- Car라는 클래스를 정의한다면 Car와 관련이 있는 것들을 잘 담는 것이다.  
+무조건 관련있는 것을 담는 것이 아니라 `적절히` 담는 것이 중요하다.  
+  - A라는 시스템에서 Car가 갖는 역할과 기능, B라는 시스템에서 Car가 갖는 역할과 기능은 완전히 다르다.
+
+- 클래스들은 각각의 역할이 있다. 역할을 가지고 관계를 맺고선 서로간의 관계 형성을 통해서 프로그램이 흘러간다.
+
+- 문제는 C가 가지고 있는 역할 일부를 잘못 판단해서 D에 넘기고, B가 가지고 있는 역할 일부를 잘못 판단해서 I에 넘겼을 때 나타난다.
+
+- 자기고 가지고 있어야 될 기능을 적절히 가지고 있지 않고, 다른 위치로 옮겼을 때 코드의 복잡도가 엄청나게 올라간다. (캡슐화가 무너졌을 때)  
+즉, C, B와 관련있는 모든 클래스들이 무너진다.
+<br>
+<br>
+
+## 3.2 캡슐화를 시켜주는 이유
+- 클래스가 자기가 담당해야 될 역할을 안정적으로 해서 나와 관련있는 클래스들이
+편하게 존재할 수 있도록 돕기 위해서이다.
+
+- 사람의 네트워킹과 비슷한 맥락이다.  
+각자 역할을 충실히 담당하면 문제 생길일이 없지만, 내 역할을 충실히 담당하지 못하도록 디자인이 되면 주변 사람들이 고생을 하고 고생을 하다보면 전체 시스템의 성공 확률이 낮아진다. 
+
+- 캡슐화의 수준, 완성도를 높여 나가는 것이지, 캡슐화의 정답은 없다.  
+하나의 예제를 보며 감을 익히고, 계속 만들어 나가면서 연습을 하고 경험을 쌓자.
+<br>
+<br>
+
+
+## 3.3 캡슐화 무너진 예
+*(가정: 코감기는 콧물, 재채기, 코막힘을 `늘` 동반한다.)*
+
+```java
+class SinivelCap {  // 콧물 처치용 캡슐
+    void take() {
+        System.out.println("콧물이 싹~ 낫습니다.");
+    }
+}
+
+class SneezeCap {   // 재채기 처치용 캡슐
+    void take() {
+        System.out.println("재채기가 멎습니다.");
+    }
+}
+
+class SnuffleCap {   // 코막힘 처치용 캡슐
+    void take() {
+        System.out.println("코가 뻥 뚫립니다.");
+    }
+}
+```
+- 약의 복용 순서가 중요하다면?
+- 클래스 SinivelCap, SneezeCap, SnuffleCap의 적용 및 사용 방법이 별도로 존재한다면? 그 순서는 위배되면 안된다.
+<br>
+
+```java
+class ColdPatient {   
+    void takeSnivelCap(SinivelCap cap) {
+        cap.take();
+    }
+
+    void takeSneezeCap(SneezeCap cap) {
+        cap.take();
+    }
+
+    void takeSnuffleCap(SnuffleCap cap) {
+        cap.take();
+    }
+}
+```
+- 코감기 환자 클래스: 
+코감기 환자의 역할에 충실해야 한다. 여행을 간다든지, 밥을 먹는다든지 해서는 안된다.
+<br>
+<br>
+
+## 3.4 무너진 캡슐화의 결과
+```java
+class BadEncapsulation {
+
+    public static void main(String[] args) {
+        // 코감기 환자 등장
+        ColdPatient suf = new ColdPatient();
+
+        // 콧물 캡슐 구매 후 복용
+        suf.takeSinivelCap(new SinivelCap());
+
+        // 재채기 캡슐 구매 후 복용
+        suf.takeSinivelCap(new SinivelCap());
+
+        // 코막힘 캡슐 구매 후 복용
+        suf.takeSinivelCap(new SinivelCap());
+    }
+}
+```
+- 코감기 치료를 진행하는 메인 메소드는
+세 클래스가 존재함을 알고, 세 클래스의 인스턴스를 생성을 해서 복용 순서가 어떻게 되는지에 대한 순서 정보도 알아야 한다.
+
+- 캡슐화가 무너지면 이렇듯 클래스 사용 방법과 관련하여 알아야 할 사항들이 많이 등장한다.
+  - 복용해야 할 약의 종류
+  - 복용해야 할 약의 순서
+  
+- 결론적으로 코드가 복잡해진다.
+<br>
+<br>
+
+
+## 3.5 적절한 캡슐화의 예
+*(가정: 코감기는 콧물, 재채기, 코막힘을 늘 동반한다.)*
+
+```java
+class SinivelCap {  // 콧물 처치용 캡슐
+    void take() {
+        System.out.println("콧물이 싹~ 낫습니다.");
+    }
+}
+
+class SneezeCap {   // 재채기 처치용 캡슐
+    void take() {
+        System.out.println("재채기가 멎습니다.");
+    }
+}
+
+class SnuffleCap {   // 코막힘 처치용 캡슐
+    void take() {
+        System.out.println("코가 뻥 뚫립니다.");
+    }
+}
+```
+<br>
+
+```java
+class SinusCap {   
+    void sniTake(SinivelCap cap) {
+        System.out.println("콧물이 싹~ 낫습니다.");
+    }
+
+    void takeSneezeCap(SneezeCap cap) {
+        System.out.println("재채기가 멎습니다.");
+    }
+
+    void takeSnuffleCap(SnuffleCap cap) {
+        System.out.println("코가 뻥 뚫립니다.");
+    }
+
+    void take() {   // 약의 복용 방법 및 순서가 담긴 메소드
+        sniTake();
+        sneTake();
+        snuTake();
+    }
+}
+```
+- 하나의 클래스가 기능을 다 가지고 있다.
+
+- 세 가지를 적절히 담았더니 가이드 메소드를 적용할 수 있게 된다. (take 메소드)
+
+- take() 메소드가 호출이 되면, 알아서 복용순서에 맞게 복용을 하게끔 메소드를 디자인 해놨다.
+<br>
+<br>
+
+
+## 3.6 적절한 캡슐화로 인한 코드 수준의 향상
+```java
+class ColdPatient {
+    void takeSinus(SinusCap cap) {
+        cap.take();
+    }
+}
+
+class OneClassEncapsulation {
+
+    public static void main(String[] args) {
+        ColdPatient suf = new ColdPatient();
+        suf.takeSinus(new SinusCap());
+    }
+}
+```
+- ColdPatient 클래스는 SinivelCap, SneezeCap, SnuffleCap 클래스들은 몰라도 된다. SinusCap 클래스 하나만 알면 된다.
+
+- 복용 순서를 몰라도 된다. take 메소드를 통해 복용 과정이 모두 자동화 된다.
+
+- 클래스 내에 필요한 기능을 적절히 잘 담을 경우에, 클래스의 인스턴스를 생성해서 활용하는 방법이 단순해진다.   
+주변 클래스, 메소드들이 그 클래스를 활용함에 있어서 알아야할 정보들이 훨씬 줄어든다.
+<br>
+<br>
+
+
+## 3.7 포함 관계로 캡슐화 완성하기
+```java
+class SinivelCap {  // 콧물 처치용 캡슐
+    void take() {
+        System.out.println("콧물이 싹~ 낫습니다.");
+    }
+}
+
+class SneezeCap {   // 재채기 처치용 캡슐
+    void take() {
+        System.out.println("재채기가 멎습니다.");
+    }
+}
+
+class SnuffleCap {   // 코막힘 처치용 캡슐
+    void take() {
+        System.out.println("코가 뻥 뚫립니다.");
+    }
+}
+```
+<br>
+
+```java
+class SinusCap {
+    SinivelCap siCap = new SinivelCap();
+    SneezeCap szCap = new SneezeCap();
+    SnuffleCap sfCap = new SnuffleCap();
+
+    void take() {
+        siCap.take();
+        szCap.take();
+        sfCap.take();
+    }
+}
+```
+- 의미는 같다.  
+앞 예제에서는 메소드를 새로운 클래스에 넣는 형태로 기존에 있던 클래스를 완전히 무너뜨리고  새로운 클래스를 정의 했다면, 이 클래스는 클래스의 정의를 무너뜨리지 않고 새로운 클래스를 등장시켜서 캡슐화를 완성(포함 관계)했다.
