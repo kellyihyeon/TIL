@@ -440,3 +440,52 @@ class Boat {
 
 
 # 4. 또 다른 용도의 static 선언
+
+## 4.1 static 초기화 블록
+```java
+class DateOfExecution {
+    static String date;
+    
+    static {
+        LocalDate nDate = LocalDate.now();
+        date = nDate.toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(date);
+    }
+}
+```
+- **`static {...}`** 문장을 실행 해주면, date 변수를 현재의 날짜를 저장한 static 변수로 만들어줄 수 있다.
+
+- 현재의 날짜라는 것은 내가 코드에 직접 써줄 수가 없다. 오늘 실행할 때와 내일 실행할 때의 값이 달라지므로 날마다 바꿔줘야 한다. 
+이처럼 내가 초기화 할 값을 메소드 호출을 통해서 얻어와야 하는 때가 있다. 
+
+- date는 언제 초기화가 되느냐?   
+DateOfExecution 클래스가 자바가상머신에 의해서 읽혀지는 순간에 특정 메모리 공간에 할당이 되고 초기화가 이루어진다.
+
+- static 변수가 특정 메모리 공간에 할당이 되고, 할당 된 다음에 그냥 끝나는 것이 아니라 **`static 초기화 블록`** 이 그 시점에 실행이 된다.   
+즉 메인 메소드에서 특별한 액션을 취하지 않아도 date가 메모리 공간에 올라가는 그 시점 직후에 자동으로 실행이 된다.
+  - static {...}  
+    인스턴스 생성과 관계 없이 static 변수가 메모리 공간에 할당될 때 실행이 된다.
+
+- static 초기화 블록이 왜 필요한가?   
+내가 static 변수에 값을 직접 찍어 넣는 것이 아니라 값을 얻어와서 static 변수를 초기화 해야 될 때 필요하다.
+<br>
+<br>
+
+
+## 4.2 static import 선언
+```java
+import static java.lang.Math.PI;
+
+System.out.println(Math.PI);
+
+System.out.println(PI);
+```
+- import static java.lang.Math.PI;  
+java.lang 패키지의 Math 클래스에 있는 static으로 선언된 PI 값을 import 하겠다.
+  - import 이후 System.out.println(PI) 이렇게 PI를 바로 사용할 수 있다.
+
+- vs 값의 출처는 코드 레벨에서 바로 보이는 게 좋다.
+  - Math.PI vs PI
