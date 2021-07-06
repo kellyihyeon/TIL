@@ -17,7 +17,10 @@
    2.2 [클래스 메소드로 정의하는 것이 옳은 경우](#22-클래스-메소드로-정의하는-것이-옳은-경우)  
    2.3 [클래스 메소드에서 인스턴스 변수에 접근이 가능할까](#23-클래스-메소드에서-인스턴스-변수에-접근이-가능할까)
      
-3. [System.out.println() 그리고 public static void main()](#3-systemoutprintln-그리고-public-static-void-main)
+3. [System.out.println() 그리고 public static void main()](#3-systemoutprintln-그리고-public-static-void-main)  
+   3.1 [System.out.println()에서 out과 println의 정체는?](#31-systemoutprintln에서-out과-println의-정체는)    
+   3.2 [main 메소드가 public이고 static인 이유는?](#32-main-메소드가-public이고-static인-이유는)  
+   3.3 [main 메소드를 어디에 위치시킬 것인가?](#33-main-메소드를-어디에-위치시킬-것인가)
    
 4. [또 다른 용도의 static 선언](#4-또-다른-용도의-static-선언)
 <br>
@@ -322,7 +325,7 @@ class SimpleCalculator {
     }
 }
 ```
-- 단순 기능 제공이 목적인 메소드들, 인스턴스 변수와 관련 지을 이유가 없는 메소드들은 static으로 선언하는 것이 옳다.
+- **`단순 기능 제공이 목적인 메소드들, 인스턴스 변수와 관련 지을 이유가 없는 메소드들은 static으로 선언하는 것이 옳다.`**
 
 - 인스턴스 메소드는 인스턴스 변수와 연관되어져야한다. 
 
@@ -360,5 +363,80 @@ class AAA {
 
 
 # 3. System.out.println() 그리고 public static void main()
+
+## 3.1 System.out.println()에서 out과 println의 정체는?
+```java
+java.lang.System.out.println(...);
+```
+
+### 3.1.1 System
+- System은 java.lang 패키지에 묶여 있는 **`클래스의 이름`** 이다.
+그러나 컴파일러가 `import java.lang.*;` 문장을 삽입해주므로 java.lang을 생략할 수 있다.
+
+- import java.lang.*;  
+패키지 전체를 import 하는 방식은 좋지 않다고 했는데 자바에서 이렇게 하고 있는 이유는 무엇인가?  
+java.lang 패키지에는 시스템과 관련된 클래스들이 묶여 있다. 개발자가 이 클래스들의 이름과 중복된 이름을 실수로 만들 수도 있는데 이렇게 이름 충돌이 나버리면 문제가 생기므로 자바 컴파일러가 전부 import해버린다.  
+우리가 중복된 이름을 만들려고 하면 컴파일 오류가 생기게 되는데, 이는 "제발 너희는 java.lang 패키지에 있는 클래스 이름 쓰지마" 라는 의미가 있다.
+<br>
+
+### 3.1.2 out
+- out은 클래스 System의 이름을 통해 접근하므로, 이는 System 클래스의 **`클래스 변수 이름`** 임을 유추할 수 있다.
+<br>
+
+### 3.1.3 println
+- println은 out이 참조하는 인스턴스의 메소드이다.
+  - 이 부분은 이해가 안되므로 기본서를 찾아보자.
+<br>
+<br>
+
+
+## 3.2 main 메소드가 public이고 static인 이유는?
+**`public`** **`static`** void main(String[] args) {...} 
+
+- static인 이유   
+인스턴스 생성과 관계없이 제일 먼저 호출되는 메소드이다.
+
+- public인 이유   
+main 메소드의 호출 명령은 외부로부터 시작되는 명령이다.   
+(단순히 일종의 약속으로 이해해도 괜찮다.) 
+
+  - 자바와 우리의 합리적이고 타당성이 있는 약속이다.  
+    궁극적으로 메인 메소드를 실행하는 명령을 내리는 위치는 외부이다.  
+    명령 프롬프트에서 혹은 이클립스 같은 개발 툴을 사용한다면 이클립스라는 외부 툴에서 메인 메소드의 호출을 명령하는 것이다.  
+    자바 런처에 의해서 모든 세팅이 되고 메인 메소드의 실행이 이루어진다. 즉 요청 자체가 클래스 외부에서 이루어진다.   
+    이러한 상징적 의미로 public으로 둔다.
+<br>
+<br>
+
+
+## 3.3 main 메소드를 어디에 위치시킬 것인가?
+```java
+class Car {
+    void myCar() {
+        System.out.println("This is my car.");
+    }
+
+    public static void main(String[] args) {
+        Car c = new Car();
+        c.myCar();
+
+        Boat t = new Boat();
+        t.myBoat();
+    }
+}
+
+class Boat {
+    void myBoat() {
+        System.out.println("This is my boat.");
+    }
+}
+```
+- 어디에 두어도 상관없다. 넣어두면 실행하는 방법이 달라질 뿐이다.    
+  -  java Car / java Boat
+
+- main 메소드를 담기 위한 별도의 클래스를 만드는 것이 보편적인 방법이다.
+<br>
+<br>
+
 
 # 4. 또 다른 용도의 static 선언
