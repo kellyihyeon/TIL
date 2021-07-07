@@ -231,4 +231,162 @@ this.data는 어느 위치에서 건 인스턴스 변수 data를 의미한다.
 
 # 2. String 클래스
 
+## 2.1 String 인스턴스 생성의 두가지 방법
+```java
+String str1 = new String("Simple String");
+
+String str2 = "The Best String";
+```
+- 둘 다 String `인스턴스의 생성`으로 이어지고 그 결과 인스턴스의 참조 값이 반환된다.
+<br>
+<br>
+
+
+## 2.2 String 인스턴스와 println 메소드
+```java
+public static void main(String[] args) {
+    String str1 = new String("Simple String");
+    String str2 = "The Best String";
+
+    System.out.println(str1);
+    System.out.println(str1.length());
+    System.out.println();   // '개행'
+
+    System.out.println(str2);
+    System.out.println(str2.length());
+    System.out.println();
+
+    showString("Funny String");
+}
+
+public static void showString(String str) {
+    System.out.println(str);
+    System.out.println(str.length());
+}
+```
+- System.out.println("hello, it's me");  
+문자열을 전달하고 있다.   
+구체적으로 이는 String 인스턴스의 생성으로 이어지고 그 인스턴스 참조값이 println 메소드로 전달이 되는 것이다.
+<br>
+
+```java
+void println() {...}
+void println(int x) {...}
+void println(String x) {...}
+```
+- println 메소드가 다양한 인자를 전달받을 수 있는 이유는 메소드 오버로딩 
+<br>
+<br>
+
+
+## 2.3 문자열 생성 방법 두 가지의 차이점
+```java
+class ImmutableString {
+    public static void main(String[] args) {
+        String str1 = "Simple String";
+        String str2 = "Simple String";
+
+        String str3 = new String("Simple String");
+        String str4 = new String("Simple String");
+
+        if (str1 == str2) {
+            System.out.println("str1과 str2는 동일 인스턴스 참조");
+        } else {
+            System.out.println("str1과 str2는 다른 인스턴스 참조");
+        }
+
+        if (str3 == str4) {
+            System.out.println("str3과 str4는 동일 인스턴스 참조");
+        } else {
+            System.out.println("str3과 str4는 다른 인스턴스 참조");
+        }
+    }
+}
+```
+- String 인스턴스 4개가 만들어지고, 각 참조변수가 str1 -> new String(), str2 -> new String() ... 가리키고 있겠구나 라고 예측할 수 있다. 결과를 보자.
+<br>
+
+```text
+str1과 str2는 동일 인스턴스 참조
+str3과 str4는 다른 인스턴스 참조
+```
+- 당황스럽게도 str1과 str2는 동일 인스턴스를 참조하고 있다.  
+하나의 인스턴스를 가리키고 있다는 사실을 여기서 알 수 있다. 
+
+- String str1 = "Simple String";  
+  String str2 = "Simple String";  
+첫 번째 코드에서는 인스턴스가 생기고, 다음 문장을 실행할 때 새 인스턴스를 생성한 것이 아니라 str1이 가지고 있는 참조값이 단순히 str2에 저장이 되었다는 사실을 알 수 있다. 
+
+    ```java
+    String str1 = "Simple String";
+    String str2 = str1;
+    ```
+<br>
+<br>
+
+
+## 2.4 String 인스턴스는 Immutable 인스턴스
+*String 인스턴스는 Immutable 인스턴스!
+따라서 생성되는 인스턴스의 수를 최소화 한다.*
+
+```java
+public static void main(String[] args) {
+    String str1 = "Simple String";
+    String str2 = str1;
+    ...
+}
+```
+- 각 인스턴스가 생성이 되지 않고, 왜 이렇게 처리하는 걸까?  
+
+- String 인스턴스는 Immutable 인스턴스이기 때문이다.  
+String 인스턴스 안에 저장된 문자열은 바꿀 수 없다. 클래스가 한 번 생성되면 바꾸지 못하도록 이렇게 디자인 되어있다. 
+
+- 그래서 그게 str1의 참조 값을 str2에 저장하는 것과 무슨 상관일까?    
+str1과 완전히 같은 문자열("Simple String")을 만들고 str2가 이를 가리키게 했을 때, 자바 가상머신은 새 인스턴스를 생성해주는 게 아니라 그 문자열을 기반으로 생성된 인스턴스의 참조값을 던져준다.
+그래서 str2가 "Simple String"을 참조하게 되는데, 이렇게 해도 문제 되는 일이 없을까?
+
+- 문제 되는 일이 없다.   
+String 인스턴스는 Immutabale 인스턴스이다.   
+이를 다시 생각해보면 저장된 문자열은 바꿀 수가 없다는 뜻인데, 그렇다면 Str1이 할 수 있는 일은 고작 그 값을 참조해서 출력하거나 확인하는 것, 그게 다이다.  
+str1도 문자열을 바꿀 수가 없다. str2도 독립된 인스턴스를 가지고 있었다 한들 참조하는 일이 다이다.
+<br>
+
+```java
+public static void main(String[] args) {
+    String str1 = "Simple String";
+    String str2 = new String("Simple String");
+}
+```
+- 정말 새로운 인스턴스가 꼭 필요한 경우가 있다고 한다면?   
+자바는 이를 가능하게 해준다.     
+new 하는 순간 새로운 인스턴스가 생성된다. 자바 가상머신이 무조건 만들어준다.
+<br>
+<br>
+
+
+## 2.5 String 인스턴스 기반 switch문 구성
+```java
+public static void main(String[] args) {
+        String str = "two";
+
+        switch (str) {
+            case "one":
+                System.out.println("one");
+                break;
+            case "two":
+                System.out.println("two");
+                break;
+            default:
+                System.out.println("default");
+        }
+
+    }
+```
+- 1.7 버전부터 추가된 문법
+- switch문을 구성할 때 문자열 정보를 switch문의 인자에 넣을 수 있게 되었다.
+<br>
+<br>
+
+
+
 # 3. String 클래스의 메소드
