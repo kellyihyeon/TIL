@@ -8,8 +8,26 @@
    1.4 [생성자의 오버로딩](#14-생성자의-오버로딩)  
    1.5 [키워드 this를 이용한 다른 생성자의 호출](#15-키워드-this를-이용한-다른-생성자의-호출)  
    1.6 [키워드 this를 이용한 인스턴스 변수의 접근](#16-키워드-this를-이용한-인스턴스-변수의-접근)  
-2. [String 클래스](#2-string-클래스)
-3. [String 클래스의 메소드](#3-string-클래스의-메소드)
+
+2. [String 클래스](#2-string-클래스)  
+   2.1 [String 인스턴스 생성의 두가지 방법](#21-string-인스턴스-생성의-두가지-방법)  
+   2.2 [String 인스턴스와 println 메소드](#22-string-인스턴스와-println-메소드)  
+   2.3 [문자열 생성 방법 두 가지의 차이점](#23-문자열-생성-방법-두-가지의-차이점)  
+   2.4 [2.4 String 인스턴스는 Immutable 인스턴스](#24-string-인스턴스는-immutable-인스턴스)  
+   2.5 [String 인스턴스 기반 switch문 구성](#25-string-인스턴스-기반-switch문-구성)  
+
+3. [String 클래스의 메소드](#3-string-클래스의-메소드)  
+   3.1 [문자열 연결시키기](#31-문자열-연결시키기)  
+   3.2 [문자열의 일부 추출](#32-문자열의-일부-추출)  
+   3.3 [문자열의 내용 비교](#33-문자열의-내용-비교)  
+   3.4 [기본 자료형의 값을 문자열로 바꾸기](#34-기본-자료형의-값을-문자열로-바꾸기)  
+   3.5 [문자열 대상 + 연산과 += 연산](#35-문자열-대상--연산과--연산)  
+   3.6 [문자열과 기본 자료형의 + 연산](#36-문자열과-기본-자료형의--연산)  
+   3.7 [concat 메소드는 이어서 호출 가능](#37-concat-메소드는-이어서-호출-가능)  
+   3.8 [문자열 결합의 최적화를 하지 않을 경우](#38-문자열-결합의-최적화를-하지-않을-경우)  
+   3.9 [문자열 결합의 최적화를 진행 할 경우](#39-문자열-결합의-최적화를-진행-할-경우)  
+   3.10 [StringBuilder](#310-stringbuilder)  
+   3.11 [StringBuffer](#311-stringbuffer)
 <br>
 
 
@@ -388,5 +406,275 @@ public static void main(String[] args) {
 <br>
 
 
-
 # 3. String 클래스의 메소드
+
+## 3.1 문자열 연결시키기
+*String 인스턴스는 Immutable 인스턴스라는 것을 기억하자*
+
+```java
+class StringConcat {
+    public static void main(String[] args) {
+        String st1 = "Coffee";
+        String st2 = "Bread";
+
+        String st3 = st1.concat(st2);
+        System.out.println(st3);
+
+        String st4 = "Fresh".concat(st3);
+        System.out.println(st4);
+    }
+}
+```
+- 문자열을 연결한다 함은 문자열을 변경하는 것이 아니다.  
+새 문자열을 생성한다는 의미이다. (Immutable!)  
+덧붙여서 새로운 문자열을 생성하고 참조값을 반환한다.
+
+```bash
+CoffeeBread
+FreshCoffeeBread
+```
+<br>
+<br>
+
+
+## 3.2 문자열의 일부 추출
+```java
+String str = "abcdefg";
+
+str.substring(2);
+str.substring(2, 4);
+```
+
+- substring(int beginIndex);  
+  substring(int beginIndex, int endIndex);
+
+- beginIndex부터 끝 문자열까지 반환.
+    - cdefg
+
+- beginIndex부터 **`endIndex-1`** 까지 반환.
+  - cd 
+<br>
+<br>
+
+
+## 3.3 문자열의 내용 비교
+
+- ==
+참조값을 비교한다.   
+같은 인스턴스를 가리키고 있느냐 아니냐를 따지는 연산.
+
+```java
+ public static void main(String[] args) {
+        String st1 = "Lexicographically";
+        String st2 = "lexicographically";
+        int cmp;
+
+        if (st1.equals(st2)) {
+            System.out.println("두 문자열은 같습니다.");
+        } else {
+            System.out.println("두 문자열은 다릅니다.");
+        }
+
+        cmp = st1.compareTo(st2);
+        if (cmp == 0) {
+            System.out.println("두 문자열은 일치합니다.");
+        } else if (cmp < 0) {
+            System.out.println("사전의 앞에 위치하는 문자열: " + st1);
+        } else {
+            System.out.println("사전의 앞에 위치하는 문자열: " + st2);
+        }
+
+        if (st1.compareToIgnoreCase(st2) == 0) {
+            System.out.println("두 문자열은 같습니다.");
+        } else {
+            System.out.println("두 문자열은 다릅니다.");
+        }
+        
+    }
+```
+- equals
+내용을 비교해서 내용이 같으면 true, 다르면 false를 반환한다.
+
+- compareTo
+좀 더 상세하다.   
+st1을 st2와 비교했을 때, 내용이 같으면 0을 반환한다.  
+사전 편찬 순서 상 str1이 앞서면 0보다 작은 값을 반환한다.  
+str1이 뒤에 있으면 0보다 큰 값을 반환한다.
+
+- compareToIgnoreCase  
+두 문자열을 비교를 하긴 하는데, 대소문자 비교를 하지 않겠다.
+
+```bash
+두 문자열은 다릅니다.
+사전의 앞에 위치하는 문자: Lexicographically
+두 문자열은 같습니다.
+```
+<br>
+<br>
+
+
+## 3.4 기본 자료형의 값을 문자열로 바꾸기
+```java
+double e = 2.718281;
+String se = String.valueOf(e);
+```
+- valueOf  
+기본 자료형 값을 문자열 인스턴스로 치환 해주는 메소드
+valueOf는 static으로 선언되어 있다.
+<br>
+<br>
+
+
+## 3.5 문자열 대상 + 연산과 += 연산
+```java
+System.out.println("funny" + "camp");
+// 컴파일러에 의한 자동 변환
+System.out.println("funny".concat("camp"));
+
+String str = "funny";
+str += "camp";  //str = str + "camp"
+// 컴파일러가 하는 일
+str = str.concat("camp");
+```
+- 덧붙여진다고 생각하지 말자.  
+String 인스턴스는 못바꾼다. 결과적으로 str이 가지고 있는 문자열과 camp 라는 문자열을 더해서 새로운 문자열을 만드는 것이다!  
+
+- str은 funny라는 문자열을 참조하고 있었는데,  str += "camp"; 이 연산에 의해서 참조하고 있는 대상이 바뀌어버렸다.  
+ 전혀 다른 새로운 인스턴스를 참조한다.
+<br>
+<br>
+
+
+## 3.6 문자열과 기본 자료형의 + 연산
+```java
+String str = "age: " + 17;
+// No
+String str = "age: ".concat(17);
+
+String str = "age: " + 17;
+// Yes
+String str = "age: ".concat(String.valueOf(17));
+```
+- concat은 String을 매개변수로 받는다.
+- int를 String으로 변환하고 concat의 매개변수로 넘겨준다.
+<br>
+<br>
+
+
+## 3.7 concat 메소드는 이어서 호출 가능
+```java
+String str = "AB".concat("CD").concat("EF");
+```
+- 이게 어떻게 가능한가?  
+문자열이 만들어지는 과정을 살펴보자.
+
+- String str = ("AB".concat("CD")).concat("EF");
+
+- String str = "ABCD".concat("EF");
+
+- String str = "ABCDEF";
+<br>
+<br>
+
+
+## 3.8 문자열 결합의 최적화를 하지 않을 경우
+```java
+String birth = "<양>" + 7 + '.' + 16;
+// ↓ 컴파일러가 하는 일 추측
+String birth =
+    "<양>".concat(String.valueOf(7)).concat(String.valueOf('.')).concat(String.valueOf(16));
+```
+- 너무 과도한 String 인스턴스 생성으로 이어진다. 따라서 컴파일러는 이렇게 변환하지 않는다.
+- 이 문장에서 중간에 새로 생성되는 String의 인스턴스의 수는 너무 많다.  
+인스턴스 생성을 해도 해도 너무 하고 있다. 
+<br>
+<br>
+
+
+## 3.9 문자열 결합의 최적화를 진행 할 경우
+```java
+String birth = "<양>" + 7 + '.' + 16;
+// ↓
+String birth = (new StringBuilder("<양>").append(7).append('.').append(16)).toString();
+```
+- 최종 결과물에 대한 인스턴스 생성 이외에 중간에 인스턴스를 생성하지 않는다.  
+따라서 컴파일러는 이 방식으로 변환을 진행한다.
+
+- StringBuilder  
+  이 안에 buffer가 있다. buffer는 저장 공간이라고 생각하자.  
+  buffer 안에 인자로 전달하는 값을 단순히 저장해둔다고 생각하자.  
+  
+  인스턴스는 생성되면 그 인스턴스의 참조값이 반환이 되는데, 그 반환된 인스턴스를 대상으로 append 메소드를 호출하면서 7을 전달한다.   
+  
+  . 찍고 append를 계속 호출하고 있는데, 앞에서 살펴봤던 concat 메소드를 계속해서 호출하고 있는 맥락과 같다.  
+  하지만 append 메소드는 같은 인스턴스를 반환 받는다.
+  
+  new StringBuilder의 참조값이 10번지라고 한다면 .append(7).append('.').append(16)은 같은 인스턴스를 반환 받고 있다.  
+  (자기가 속한 인스턴스의 참조값을 반환. 10번지)
+
+  buffer에 [양, 7, ., 16]을 저장만 해두고, toString 메소드를 호출했을 때 저장된 내용을 가지고 새로운 String 인스턴스를 만들어낸다. 그리고 인스턴스의 참조값을 반환한다.
+<br>
+<br>
+
+
+## 3.10 StringBuilder
+### 3.10.1 StringBuilder 예
+```java
+public static void main(String[] args) {
+        // 문자열 "123"이 저장된 인스턴스의 생성
+        StringBuilder stbuf = new StringBuilder("123");
+
+        stbuf.append(45678);    // 문자열 덧붙이기
+        System.out.println(stbuf.toString());
+
+        stbuf.delete(0, 2);     // 문자열 일부 삭제
+        System.out.println(stbuf.toString());
+
+        stbuf.replace(0, 3, "AB");  // 문자열 일부 교체
+        System.out.println(stbuf.toString());
+
+        stbuf.reverse();    // 문자열 내용 뒤집기
+        System.out.println(stbuf.toString());
+
+        String sub = stbuf.substring(2, 4); // 일부만 문자열로 반환
+        System.out.println(sub);
+    }
+```
+<br>
+
+### 3.10.2 결과
+
+```bash
+12345678
+345678
+AB678
+876BA
+6B
+```
+- 출력된 결과물을 예측해냈으면 다음으로 넘어가자.
+<br>
+<br>
+
+
+## 3.11 StringBuffer
+StringBuffer와 StringBuilder는 기능적으로는 완전히 동일하다.
+- 생성자를 포함한 메소드의 수
+- 메소드의 기능
+- 메소드의 이름과 매개변수의 선언
+
+하지만 차이점은 다음과 같다.
+- StringBuffer는 쓰레드에 안전하다.
+- 따라서 쓰레드 안정성이 불필요한 상황에서 StringBuffer를 사용하면 성능의 저하만 유발하게 된다.
+- 그래서 StringBuilder가 등장하게 되었다.
+<br>
+
+StringBuilder 로 했던 것들을 StringBuffer로 바꾸고 실행해도 제대로 실행된다. 그렇다면 이 둘은 왜 존재하는가?  
+
+원래 StringBuffer가 먼저 등장했고, StringBuffer는 쓰레드에 안전하도록 디자인되었다.  
+물론 안전하다는 것은 좋은 게 맞지만, 좋게 만들다보니 성능적으로 문제가 있었다. 쓰레드 안전이 불필요한 상황에서는 속도만 늦어지는 상황이 발생하였고, 그래서 StringBuilder가 만들어지게 된 것이다.
+
+
+```text
+StringBuffer와 StringBuilder는 기능적으로 완전히 똑같다.
+StringBuffer가 먼저 만들어졌고 쓰레드에 안전하다. 그러다보니 속도가 느렸고, 쓰레드에 안전성을 필요로 하지 않을 때 쓸 수 있도록 새로 만들어진 게 StringBuilder 이다.
+``` 
