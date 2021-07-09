@@ -269,7 +269,7 @@ dest = 0 0 2 3 4 0 0
 ```
 - src에 있는 것을 dest에 복사해라.
 srcPos = 1, destPos = 2 -> src의 인덱스 1번 째부터 복사해서 값들을 dest의 2번째 인덱스에서부터 가져다 놓기 시작해라.
-length = 3 -> 3개만 복사하여라.
+length = 3 -> 몇개? 3개만 복사하여라.
 
 - java.lang.System 클래스에 정의되어 있는 메소드, 한 배열에 저장된 값을 다른 배열에 복사할 때 사용하는 메소드
 <br>
@@ -305,13 +305,75 @@ class ArrayUtils {
 7 7 7 7 7 7 7 7 7 7
 0 0 0 7 7 7 7 0 0 0 
 ```
+<br>
+<br>
 
 
-## main 메소드의 매개변수 선언
+## 4.5 main 메소드의 매개변수 선언
+```java
+public static void main(String[] args) {....}
+```
+- 이제 main 메소드의 매개변수 안에 기입된 것들이 무엇인지 의미를 알 수 있다.
+
+- main 을 호출해야 한다면?  
+  ```java
+    String[] arr = new String[] {"Coffee", "Milk", "Orange"};
+    main(arr);
+  ```
+
+- 하지만 우리는 위와 같은 작업을 해준 적이 없다.  
+누가 해준 것인가? 실행이 되면서 자동으로 자바 가상머신에 의해서 자동으로 만들어져서 전달이 된다.
+
+- ```bash
+  C:\JavaStudy>java Simple
+  ```
+  Simple에 있는 메인메소드를 실행하라는 명령어를 입력하면,
+  자바 가상머신은 빈 배열(길이가 0인)을 만들고 이를 전달한다.
+  ```java
+  String[] arr = new String[] {};
+  main(arr);
+  ```
+
+- ```bash
+  C:\JavaStudy>java Simple Coffee Milk Orange
+  ```
+  명령어에 이렇게 입력하면 어떻게 될까?  
+  자바 가상머신은 전달된 Coffee를 String 인스턴스로 만든다. Milk도, Orange도.  
+  공백을 기준으로 전달되는 문자열 정보를 가지고 String 인스턴스를 만든다.   
+  이렇게 프로그램을 실행하면 세 개의 String 인스턴스가 생성이 되고, 이를 하나의 배열로 묶어버리고 참조값을 인자로 전달한다.
+  ```java
+  String[] arr = new String[] {};
+  main(arr);
+  ```
+
+  ```text
+    arr <──────{ [  ][  ][  ] }
+                  │   │    │
+                 "C" "M"  "O"
+  ```
+<br>  
+<br>  
 
 
-## main의 매개변수로 인자를 전달하는 예
+## 4.6 main의 매개변수로 인자를 전달하는 예
+```java
+class Simple {
+    public static void main(String[] args) {
+        for (int i = 0; i < args.length; i++) {
+            System.out.println(args[i]);
+        }
+    }
+}
+```
+
+```bash
+C:\JavaStudy>java Simple Coffee Milk Orange
+Coffee
+Milk
+Orange
+```
+<br>
+<br>
 
 
-
-
+# 5. enhanced for문
