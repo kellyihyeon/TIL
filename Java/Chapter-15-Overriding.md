@@ -6,6 +6,11 @@
    1.2 [상속과 IS-A 관계](#12-상속과-is-a-관계)  
    1.3 [IS-A 관계의 예](#13-is-a-관계의-예)  
 
+2. [메소드 오버라이딩](#2-메소드-오버라이딩)  
+   2.1 [상위 클래스의 참조변수가 참조할 수 있는 대상의 범위](#21-상위-클래스의-참조변수가-참조할-수-있는-대상의-범위)  
+   2.2 [참조변수의 참조 가능성 관련 예제](#22-참조변수의-참조-가능성-관련-예제)  
+   2.3 []()
+
 
 <br>
 
@@ -102,4 +107,270 @@ App is running in Nougat
 
 
 # 2. 메소드 오버라이딩
+*시나리오1: 스마트폰의 기능을 사용하지 않는 내가 핸드폰(전화만 됨)을 사러 간 상황*  
+
+*시나리오2: 직원인 내가 스마트폰을 구매하러 온 고객에게 핸드폰 보여주고 있는 상황*
+<br>
+
+## 2.1 상위 클래스의 참조변수가 참조할 수 있는 대상의 범위
+```java
+class SmartPhone extends MobilePhone {...}
+
+SmartPhone phone = new SmartPhone("010-555-777", "Nougat");
+
+MobilePhone phone = new SmartPhone("010-555-777", "Nougat");
+```
+- SmartPhone 참조변수로 SmartPhone은 당연히 참조가 가능하다.
+
+- MobilePhone 참조변수로 SmartPhone을 참조하는 것도 가능하다.
+
+- SmartPhone 참조변수로 MobilePhone을 참조하는 것은 성립하지 않는다.
+<br>
+<br>
+
+
+## 2.2 참조변수의 참조 가능성 관련 예제
+```java
+class MobilePhone {
+    protected String number;    // 전화번호
+
+    public MobilePhone(String num) {
+        number = num;
+    }
+
+    public void answer() {
+        System.out.println("Hi~ from " + number);
+    }
+}
+```
+<br>
+
+```java
+class SmartPhone extends MobilePhone {
+    private String androidVer;  // 안드로이드 운영체제 네임(버전)
+
+    public SmartPhone(String num, String ver) {
+        super(num);
+        androidVer = ver;
+    }
+
+    public void playApp() {
+        System.out.println("App is running in " + androidVer);
+    }
+}
+```
+<br>
+
+```java
+public static void main(String[] args) {
+    SmartPhone phone1 = new SmartPhone("010-555-777", "Nougat");
+    MobilePhone phone2 = new SmartPhone("010-999-3333", "Nougat");
+
+    phone1.answer();
+    phone1.playApp();
+    System.out.println();
+
+    phone2.answer();
+    // phone2.playApp();
+}
+```
+- phone2는 스마트폰 인스턴스를 참조 하고 있다.  
+하지만 스마트폰 인스턴스를 참조하고 있음에도 불구하고 호출할 수 있는 메소드의 범위는 모바일폰에 정의된 메소드로 제한된다.  
+주석을 없애면 컴파일 오류가 발생한다.
+<br>
+<br>
+
+
+## 2.3 참조변수의 참조 가능성에 대한 정리
+```java
+class Cake {
+    public void sweet() {...}
+}
+
+class CheeseCake extends Cake {
+    public void milky() {...}
+}
+
+class StrawberryCheeseCake extends CheeseCake {
+    public void sour() {...}
+}
+```
+<br>
+
+```java
+Cake cake1 = new StrawberryCheeseCake();
+
+CheeseCake = cake2 = new StrawberryCheeseCake();
+```
+<br>
+
+StrawberryCheeseCake 인스턴스
+![StrawberryCheeseCake](./Img/StrawberryCheeseCake.png)
+
+<br>
+<br>
+
+
+## 2.4 참조변수 간 대입과 형 변환
+```java
+class Cake {
+    public void sweet() {...}
+}
+
+class CheeseCake extends Cake {
+    public void milky() {...}
+}
+```
+<br>
+
+```java
+CheeseCake ca1 = new CheeseCake();
+Cake ca2 = ca1;     // 가능
+
+Cake ca3 = new CheeseCake();
+CheeseCake ca4 = ca3;   // 불가능
+```
+
+<br>
+<br>
+
+
+## 2.5 참조변수의 참조 가능성: 배열 기반
+```java
+class Cake {
+    public void sweet() {...}
+}
+
+class CheeseCake extends Cake {
+    public void milky() {...}
+}
+```
+<br>
+
+```java
+Cake cake = new CheeseCake();   // 가능
+
+CheeseCake[] cakes = new CheeseCake[10]; // 가능
+
+Cake[] cakes = new CheeseCake[10];  // 가능
+```
+- 상속의 관계가 배열 인스턴스의 참조 관계까지 이어진다.
+
+<br>
+<br>
+
+## 2.6 메소드 오버라이딩 1
+```java
+class Cake {
+    public void yummy() {
+        System.out.println("Yummy cake");
+    }
+}
+
+class CheeseCake extends Cake {
+    public void yummy() {
+        System.out.println("Yummy Cheese cake");
+    }
+}
+```
+- 오버라이딩 관계
+  CheeseCake의 yummy 메소드가 Cake의 yummy 메소드를 오버라이딩
+<br>
+
+```java
+public static void main(String[] args) {
+    Cake c1 = new CheeseCake();
+    CheeseCake c2 = new CheeseCake();
+
+    c1.yummy();
+    c2.yummy();
+}
+```
+
+<br>
+<br>
+
+## 2.7 메소드 오버라이딩 2
+```java
+class Cake {
+    public void yummy() {...}
+}
+
+class CheeseCake extends Cake {
+    public void yummy() {...}   // Cake의 yummy를 오버라이딩
+}
+
+class StrawberryCheeseCake extends CheeseCake {
+    public void yummy() {...}   //  그리고 CheeseCake의 yummy를 오버라이딩
+}
+```
+<br>
+
+```java
+public static void main(String[] args) {
+    Cake c1 = new StrawberryCheeseCake();
+    CheeseCake c2 = new StrawberryCheeseCake();
+    StrawberryCheeseCake c3 = new StrawberryCheeseCake();
+
+    c1.yummy();
+    c2.yummy();
+}
+```
+<br>
+<br>
+
+## 2.8 오버라이딩 된 메소드 호출하는 방법
+```java
+class Cake {
+    public void yummy() {
+        System.out.println("Yummy Cake");
+    }
+}
+
+class CheeseCake extends Cake {
+    public void yummy() {
+        super.yummy();
+        System.out.println("Yummy Cheese Cake");
+    }
+
+    public void yummy() {
+        super.yummy();
+        System.out.println("Yummy Tasty Cake");
+    }
+}
+```
+- 오버라이딩 된 메소드를 인스턴스 외부에서 호출하는 방법은 없다.
+그러나 인스턴스 내부에서는 키워드 super를 이용해 호출 가능하다.
+
+<br>
+<br>
+
+
+## 2.9 인스턴스 변수와 클래스 변수도 오버라이딩이 되는가?
+```java
+class Cake {
+    public int size;
+    ...
+}
+
+class CheeseCake extends Cake {
+    public int size;
+    ...
+}
+```
+<br>
+
+```java
+CheeseCake c1 = new CheeseCake();
+c1.size = ...   // CheeseCake의 size에 접근
+
+Cake c2 = new CheeseCake();
+c2.size = ...   // Cake의 size에 접근
+```
+- 인스턴스 변수는 오버라이딩 되지 않는다. 따라서 참조변수의 형에 따라 접근하는 멤버가 결정된다.
+
+<br>
+<br>
+
+
 # 3. instanceof 연산자
