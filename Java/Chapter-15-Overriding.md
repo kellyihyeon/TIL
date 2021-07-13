@@ -17,7 +17,9 @@
    2.8 [오버라이딩 된 메소드 호출하는 방법](#28-오버라이딩-된-메소드-호출하는-방법)  
    2.9 [인스턴스 변수와 클래스 변수도 오버라이딩이 되는가?](#29-인스턴스-변수와-클래스-변수도-오버라이딩이-되는가)  
 
-
+3. [instanceof 연산자](#3-instanceof-연산자)  
+   3.1 [instance of 연산자의 기본](#31-instance-of-연산자의-기본)  
+   3.2 [instanceof 연산자의 활용](#32-instanceof-연산자의-활용)  
 <br>
 
 # 1. 상속을 위한 두 클래스의 관계
@@ -210,7 +212,7 @@ CheeseCake = cake2 = new StrawberryCheeseCake();
 ```
 <br>
 
-- StrawberryCheeseCake 인스턴스
+- StrawberryCheeseCake 인스턴스  
 ![StrawberryCheeseCake](./Img/StrawberryCheeseCake.png)
 
 <br>
@@ -433,3 +435,124 @@ Cake의 size에 접근이 가능하느냐, CheeseCake의 size에 접근이 가�
 
 
 # 3. instanceof 연산자
+## 3.1 instance of 연산자의 기본
+```java
+class Cake {}
+
+class CheeseCake extends Cake {}
+
+class StrawberryCheeseCake extends CheeseCake {}
+```
+<br>
+
+```java
+public static void main(String[] args) {
+    Cake cake = new StrawberryCheeseCake();
+
+    if(cake instanceof Cake) {...}
+
+    if(cake instanceof CheeseCake) {...}
+
+    if(cake instanceof StrawberryCheeseCake) {...}   
+}
+```
+- if (ref **`instanceof`** ClassName)
+  ref(참조변수)가 ClassName 클래스의 인스턴스를 참조하면 true 반환
+  ref가 ClassName을 상속하는 클래스의 인스턴스이면 true 반환
+
+- 참조변수가 참조하는 대상이 중요하다.
+<br>
+<br>
+
+
+## 3.2 instanceof 연산자의 활용
+```java
+class Box {
+    public void simpleWrap() {
+        System.out.println("Simple Wrapping");
+    }
+}
+
+class PaperBox extends Box {
+    public void paperWrap() {
+        System.out.println("Paper Wrapping");
+    }
+}
+
+class GoldPaperBox extends PaperBox {
+    public void goldWrap() {
+        System.out.println("Gold Wrapping");
+    }
+}
+```
+<br>
+
+```java
+public static void main(String[] args) {
+    Box box1 = new Box();
+    PaperBox box2 = new PaperBox();
+    GoldPaperBox box3 = new GoldPaperBox();
+
+    wrapBox(box1);
+    wrapBox(box2);
+    wrapBox(box3);
+}
+
+public static void wrapBox(Box box) {
+    if (box instanceof GoldPaperBox) {
+        ((GoldPaperBox) box).goldWrap();
+    } else if (box instanceof PaperBox) {
+        ((PaperBox)box).paperWrap();
+    } else {
+        box.simpleWrap();
+    }
+}
+```
+- wrapBox(box1);  ->  simpleWrap();
+- wrapBox(box2);  ->  paperWrap();
+- wrapBox(box3);  ->  goldWrap();
+<br>
+<br>
+
+
+### 3.2.1 다른 방법으로 같은 결과 내기 
+```java
+class Box {
+    public void wrap() {
+        System.out.println("Simple Wrapping");
+    }
+}
+
+class PaperBox extends Box {
+    public void wrap() {
+        System.out.println("Paper Wrapping");
+    }
+}
+
+class GoldPaperBox extends PaperBox {
+    public void wrap() {
+        System.out.println("Gold Wrapping");
+    }
+}
+```
+<br>
+
+```java
+public static void main(String[] args) {
+    Box box1 = new Box();
+    PaperBox box2 = new PaperBox();
+    GoldPaperBox box3 = new GoldPaperBox();
+
+    wrapBox(box1);
+    wrapBox(box2);
+    wrapBox(box3);
+}
+
+public static void wrapBox(Box box) {
+    box.wrap();
+}
+```
+- "상속은 연관된 일련의 클래스들에 대해 공통적인 규약을 정의할 수 있다."
+
+- 오버라이딩으로 같은 결과를 만들 수 있다.  
+공통적인 규약 wrap() 메소드만을 남겨놓고, 상속을 통해서 같은 결과를 냈다.
