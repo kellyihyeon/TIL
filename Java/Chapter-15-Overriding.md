@@ -12,6 +12,10 @@
    2.3 [참조변수의 참조 가능성에 대한 정리](#23-참조변수의-참조-가능성에-대한-정리)  
    2.4 [참조변수 간 대입과 형 변환](#24-참조변수-간-대입과-형-변환)  
    2.5 [참조변수의 참조 가능성: 배열 기반](#25-참조변수의-참조-가능성-배열-기반)  
+   2.6 [메소드 오버라이딩 1](#26-메소드-오버라이딩-1)  
+   2.7 [메소드 오버라이딩 2](#27-메소드-오버라이딩-2)  
+   2.8 [오버라이딩 된 메소드 호출하는 방법](#28-오버라이딩-된-메소드-호출하는-방법)  
+   2.9 [인스턴스 변수와 클래스 변수도 오버라이딩이 되는가?](#29-인스턴스-변수와-클래스-변수도-오버라이딩이-되는가)  
 
 
 <br>
@@ -298,8 +302,16 @@ class CheeseCake extends Cake {
     }
 }
 ```
-- 오버라이딩 관계
-  CheeseCake의 yummy 메소드가 Cake의 yummy 메소드를 오버라이딩
+- Cake의 yummy 메소드와 CheeseCake의 yummy 메소드는 반환형, 메소드 이름, 매개변수까지 같다.
+  
+- 오버라이딩 관계  
+  CheeseCake의 yummy 메소드가 Cake의 yummy 메소드를 오버라이딩 한 것이다.
+
+- CheeseCake가 Cake를 상속하면서 yummy 메소드를 오버라이딩 했다. 가려버렸다. 가리면 보이지 않는다.  
+yummy를 호출하면 자식 클래스의 메소드가 대신 호출된다.  
+가렸기때문에 참조변수의 형이 무엇이든지 상관없이 Cake의 yummy는 호출이 안된다.
+외부에서는 (.찍고 들어오는 것을 말함) 절대 호출이 안된다.   
+대신 CheeseCake의 yummy가 호출되는 것이다. 이것이 메소드 오버라이딩이다.
 <br>
 
 ```java
@@ -311,7 +323,16 @@ public static void main(String[] args) {
     c2.yummy();
 }
 ```
+- c2가 yummy를 호출하는 것은 당연히 CheeseCake의 yummy 메소드를 호출하는 것이다.
 
+- 가려졌다는 의미는, c1이 접근할 수 있는 메소드인 Cake의 yummy 메소드를 호출하라고 명령을 해도 Cake의 yummy가 아닌 CheeseCake의 yummy가 대신 호출되는 상황을 가리킨다.
+(= 메소드 오버라이딩)
+
+- c1, c2 모두 CheeseCake 인스턴스를 생성하고 있는데, 참조변수의 형이 무엇인지는 신경 쓰지 않아도 된다.  
+외부에서는 .찍고 들어와서 오버라이딩 된 메소드는 호출 불가능하다. 대신 오버라이딩 한 메소드가 호출된다.  
+
+- Cake c1 = new Cake();  
+착각하지 말아야 할 것이 이 경우에는 당연히 Cake의 yummy 메소드를 호출할 수 있다.
 <br>
 <br>
 
@@ -329,6 +350,8 @@ class StrawberryCheeseCake extends CheeseCake {
     public void yummy() {...}   //  그리고 CheeseCake의 yummy를 오버라이딩
 }
 ```
+- 외부에서는 Cake형 참조변수로 접근하든 CheeseCake형 참조변수로 접근하든 StrawberryCheeseCake형 참조변수로 접근하든 .찍고 접근하면 결론적으로는 마지막에 최종적으로 오버라이딩 한 메소드만 호출이 된다.  
+(=StrawberryCheeseCake의 yummy 메소드)
 <br>
 
 ```java
@@ -345,6 +368,8 @@ public static void main(String[] args) {
 <br>
 
 ## 2.8 오버라이딩 된 메소드 호출하는 방법
+
+오버라이딩 된 메소드는 절대 호출이 불가능한가?
 ```java
 class Cake {
     public void yummy() {
@@ -358,14 +383,18 @@ class CheeseCake extends Cake {
         System.out.println("Yummy Cheese Cake");
     }
 
-    public void yummy() {
+    public void tasty() {
         super.yummy();
         System.out.println("Yummy Tasty Cake");
     }
 }
 ```
-- 오버라이딩 된 메소드를 인스턴스 외부에서 호출하는 방법은 없다.
-그러나 인스턴스 내부에서는 키워드 super를 이용해 호출 가능하다.
+- 오버라이딩 된 메소드를 `인스턴스 외부`에서 호출하는 방법은 없다.
+그러나 `인스턴스 내부`에서는 **`키워드 super를 이용`** 해 호출 가능하다.
+
+- tasty 메소드 내부에서 단순히 yummy 메소드를 호출했다면 CheeseCake의 yummy 메소드가 호출될 것이다.
+하지만 `super.yummy` 메소드를 호출한다면 Cake의 yummy 메소드가 호출된다.
+  - super: 이 인스턴스가 아니라 이 클래스가 상속하는 부모클래스의 멤버를 의미
 
 <br>
 <br>
@@ -392,8 +421,13 @@ c1.size = ...   // CheeseCake의 size에 접근
 Cake c2 = new CheeseCake();
 c2.size = ...   // Cake의 size에 접근
 ```
+- c2가 Cake의 size에 접근을 하려고 해도, 가려져있으니 CheeseCake의 size가 호출 되는 게 아니냐?  
+아니다. 인스턴스 메소드를 제외한 나머지는 오버라이딩 대상이 아니다.   
+Cake의 size에 접근이 가능하느냐, CheeseCake의 size에 접근이 가능하느냐는 참조변수 형에 따라서 결정된다.
+
 - 인스턴스 변수는 오버라이딩 되지 않는다. 따라서 참조변수의 형에 따라 접근하는 멤버가 결정된다.
 
+- 참고: 이렇게 코드를 작성하는 경우는 없다.
 <br>
 <br>
 
