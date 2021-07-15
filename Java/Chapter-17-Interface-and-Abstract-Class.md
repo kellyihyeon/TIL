@@ -12,6 +12,14 @@
    2.1 [인터페이스에 선언되는 메소드와 변수](#21-인터페이스에-선언되는-메소드와-변수)  
    2.2 [인터페이스 간 상속: 문제 상황의 제시](#22-인터페이스-간-상속-문제-상황의-제시)  
    2.3 [제시한 문제의 해결책: 인터페이스의 상속](#23-제시한-문제의-해결책-인터페이스의-상속)  
+   2.4 [인터페이스의 디폴트 메소드: 문제 상황의 제시](#24-인터페이스의-디폴트-메소드-문제-상황의-제시)  
+   2.5 [문제 상황의 해결책: 인터페이스의 디폴트 메소드](#25-문제-상황의-해결책-인터페이스의-디폴트-메소드)  
+   2.6 [디폴트 메소드의 효과](#26-디폴트-메소드의-효과)  
+   2.7 [인터페이스의 static 메소드](#27-인터페이스의-static-메소드)  
+   2.8 [인터페이스 대상의 instanceof 연산](#28-인터페이스-대상의-instanceof-연산)  
+   2.9 [인터페이스 대상 instanceof 연산의 예](#29-인터페이스-대상-instanceof-연산의-예)  
+   2.10 [인터페이스의 또 다른 용도: Marker 인터페이스](#210-인터페이스의-또-다른-용도-marker-인터페이스)  
+   2.11 [추상 클래스](#211-추상-클래스)  
 
 <br>
 
@@ -379,20 +387,29 @@ interface Printable {
 - 인터페이스에도 static 메소드를 정의할 수 있다.
 
 - 그리고 인터페이스의 static 메소드 호출 방법은 클래스의 static 메소드 호출 방법과 같다.
+  - Printable.printLine();
+<br>
+<br>
+
 
 ## 2.8 인터페이스 대상의 instanceof 연산
 ```java
 if (ca instanceof Cake) ...
 ```
-- ca가 참조하는 인스턴스를 Cake 형 참조변수로 참조할 수 있으면 true 반환
+- ca가 참조하는 인스턴스를 Cake 형 참조변수로 참조할 수 있으면 true를 반환한다.
 
-- ca가 참조하는 인스턴스가 Cake를 직접 혹은 간접적으로 구현한 클래스의 인스턴스인 경우 true 반환
+- ca가 참조하는 인스턴스가 Cake를 직접 혹은 간접적으로 구현한 클래스의 인스턴스인 경우 true를 반환한다.
+<br>
+<br>
+
 
 ## 2.9 인터페이스 대상 instanceof 연산의 예
 ```java
 interface Printable {
     void printLine(String str);
+}
 ```
+<br>
 
 ```java
 class SimplePrinter implements Printable {
@@ -401,6 +418,7 @@ class SimplePrinter implements Printable {
     }
 }
 ```
+<br>
 
 ```java
 class MultiPrinter extends SimplePrinter {
@@ -411,6 +429,7 @@ class MultiPrinter extends SimplePrinter {
     }
 }
 ```
+<br>
 
 ```java
 public static void main(String[] args) {
@@ -427,6 +446,7 @@ public static void main(String[] args) {
     }
 }
 ```
+<br>
 
 ```bash
 This is a simple printer.
@@ -435,18 +455,24 @@ start of multi...
 This is a multiple printer.
 end of multi
 ```
+<br>
+<br>
+
 
 ## 2.10 인터페이스의 또 다른 용도: Marker 인터페이스
 ```java
 interface Upper { }     // 마커 인터페이스
 interface Lower { }     // 마커 인터페이스
 ```
+- 내용이 비어있다.
+<br>
 
 ```java
 interface Printable {
     String getContents();
 }
 ```
+<br>
 
 ```java
 class Report implements Printable, Upper {
@@ -461,6 +487,8 @@ class Report implements Printable, Upper {
     }
 }
 ```
+- Upper 인터페이스를 구현하고 있지만, 구현 할 내용이 없다.
+<br>
 
 ```java
 public void printContents(Printable doc) {
@@ -475,10 +503,13 @@ public void printContents(Printable doc) {
 ```
 - 클래스에 특정 표시를 해 두기 위한 목적으로 정의된 인터페이스를 마커 인터페이스라 한다.
 마커 인터페이스에는 구현해야 할 메소드가 없는 경우가 흔하다.
+<br>
+<br>
+
 
 ## 2.11 추상 클래스
 ```java
-public abstract class Houser {  // 추상 클래스
+public abstract class House {  // 추상 클래스
     public void methodOne() {
         System.out.println("method one");
     }
@@ -489,3 +520,5 @@ public abstract class Houser {  // 추상 클래스
 - 하나 이상의 추상 메소드를 지니는 클래스를 가리켜 추상 클래스라 한다.
   
 - 그리고 추상 클래스를 대상으로는 인스턴스 생성이 불가능하다. 물론 참조변수 선언은 가능하다.
+
+- 누군가가 House 클래스를 상속할 때 methodTwo 라는 메소드를 구현하기를 바라고있다.
