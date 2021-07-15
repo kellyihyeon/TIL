@@ -2,7 +2,14 @@
 
 ## 목차
 1. [인터페이스의 기본과 그 의미](#1-인터페이스의-기본과-그-의미)  
-2. []()
+   1.1 [인터페이스](#11-인터페이스)  
+   1.2 [추상 메소드만 담고 있는 인터페이스](#12-추상-메소드만-담고-있는-인터페이스)  
+   1.3 [인터페이스를 구현하는 클래스](#13-인터페이스를-구현하는-클래스)  
+   1.4 [상속과 구현](#14-상속과-구현)  
+   1.5 [Printer Driver 관련 예제](#15-printer-driver-관련-예제)  
+
+2. [인터페이스의 문법 구성과 추상 클래스](#2-인터페이스의-문법-구성과-추상-클래스)  
+   2.1 []()
 
 <br>
 
@@ -108,14 +115,13 @@ class Robot extends Machine implements Movable, Runnable {...}
 <br>
 
 
-## 1.5 인터페이스의 본질적 의미
-
-## 1.6 Printer Driver 관련 예제
+## 1.5 Printer Driver 관련 예제
 ```java
 interface Printable {   // MS 가 정의하고 제공한 인터페이스
     public void print(String doc);
 }
 ```
+<br>
 
 ```java
 class SPrinterDriver implements Printable {
@@ -127,6 +133,7 @@ class SPrinterDriver implements Printable {
     }
 }
 ```
+<br>
 
 ```java
 class LPrinterDriver implements Printable {
@@ -138,6 +145,7 @@ class LPrinterDriver implements Printable {
     }
 }
 ```
+<br>
 
 ```java
 public static void main(String[] args) {
@@ -153,6 +161,16 @@ public static void main(String[] args) {
     prn.print(myDoc);
 }
 ```
+- 세상에는 너무도 많은 프린터기와 그 프린터기를 제공하는 제조사가 있다.
+
+- 프린터 드라이버의 사용방법을 제조사가 각자 만든다면 마이크로소프트 입장에서는 혼란스럽다.   
+프린트 별로 사용 방법이 다 다르면 운영체제를 개발하는 입장에서는 어려울 수밖에 없다.
+
+- 하지만 MS가 인터페이스를 정의하고 제공한다면, 제조사가 이를 기반으로 만들었을 때 제조사가 어디든 사용 방법이 같아진다.
+
+- 삼성 프린터를 대상으로 출력을 하건 LG 프린터를 대상으로 출력을 하건 출력하는 방법에는 차이가 없다.   사용 방법이 같다는 것은 사용 방법을 명시한 인터페이스를 MS에서 제공 했다는 의미가 된다.  
+<br>
+<br>
 
 
 
