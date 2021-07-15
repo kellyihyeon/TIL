@@ -294,21 +294,34 @@ class Prn909Drv implements ColorPrintable {
 - ColorPrintable를 구현한 클래스를 만든다.
 <br>
 <br>
-___
+
 
 ## 2.4 인터페이스의 디폴트 메소드: 문제 상황의 제시
-- 총 256개의 인터페이스가 존재하는 상황에서 모든 인터페이스에 다음 추상 메소드를 추가해야 한다고 가정해보자.
+*디폴트 메소드의 등장 배경을 잘 이해하자.*
+
+- 출력의 대상이 프린터기만 있는 것이 아니다. 모니터로도 출력할 수 있고, 팩스로도 출력할 수 있다.   이처럼 디바이스별로 출력을 위한 인터페이스가 256가지가 있다고 가정하자. (흑백 출력)
+
+- 총 256개의 인터페이스가 존재하는 상황에서 모든 인터페이스에 다음 추상 메소드를 추가해야 한다. (컬러 출력의 시대가 왔다.)
 
 ```java
 void printCMYK(String doc);
 ```
 - 물론 인터페이스 간 상속으로 문제 해결이 가능하다.
 다만, 인터페이스의 수가 256개 늘어날 뿐이다.
+<br>
+<br>
+
 
 ## 2.5 문제 상황의 해결책: 인터페이스의 디폴트 메소드
 ```java
 default void printCMYK(String doc) { }  // 디폴트 메소드
 ```
+- 디폴트 메소드로 이 문제를 해결하면 인터페이스의 수가 늘어나지 않는다.
+
+- 디폴트 메소드는 몸체를 가지고 있기 때문에, 구현을 하고 싶으면 하고 안하고 싶으면 안해도 된다.
+<br>
+<br>
+
 
 ## 2.6 디폴트 메소드의 효과
 ```java
@@ -316,6 +329,7 @@ interface Printable {
     void print(String doc); 
 }
 ```
+<br>
 
 ```java
 interface Printable {
@@ -323,7 +337,7 @@ interface Printable {
     default void printCMYK(String doc) { } 
 }
 ```
-- 인터페이스의 교체
+<br>
 
 ```java
 class SPrinterDriver implements Printable {
@@ -334,6 +348,7 @@ class SPrinterDriver implements Printable {
 ```
 - 기존에 정의된 클래스
 인터페이스 교체로 인해 코드 수정이 필요 없다.
+<br>
 
 ```java
 class Prn909Drv implements Printable {
@@ -345,6 +360,8 @@ class Prn909Drv implements Printable {
 }
 ```
 - 새로 정의된 클래스
+<br>
+<br>
 
 
 ## 2.7 인터페이스의 static 메소드
