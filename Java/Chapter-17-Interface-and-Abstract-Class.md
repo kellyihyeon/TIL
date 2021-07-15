@@ -1,0 +1,159 @@
+# 인터페이스와 추상클래스
+
+## 목차
+1. [인터페이스의 기본과 그 의미](#1-인터페이스의-기본과-그-의미)  
+2. []()
+
+<br>
+
+# 1. 인터페이스의 기본과 그 의미
+## 1.1 인터페이스
+- 통신 도구 또는 수단이다.  
+- 제공되는 기능이 있으면 그 기능을 활용하는 방법이다.
+
+- 커피 자판기를 생각해보자.  
+커피 자판기에서 커피를 뽑아 먹기 위해서 커피 자판기 내부의 메커니즘을 알 필요가 없다.  
+밀크 커피가 300원이라면 단순하게 밀크 커피를 뽑아 먹을 수 있는 동전을 넣고 버튼을 누른다.  
+종이컵이 내려오고 밀크 커피가 컵에 다 차면 그 컵을 빼서 마시면 된다.  
+커피 자판기를 사용하는 방법, 이것이 인터페이스이다. 
+커피 자판기를 사용하기 위해서 굳이 커피 자판기 머신이 구동되는 원리에 관한 모든 것을 알 필요가 없다.
+
+- 또 다른 예로 게임 머신을 생각해보자.   
+조이 스틱을 상하좌우로 움직여서 사용하는 것, 버튼을 누르면 미사일이 나가는 것처럼 게임 머신의 인터페이스는 조이 스틱과 버튼이다.   
+게임기를 사용하는 방법이 인터페이스다.
+
+- 이제 인스턴스를 생각해보자.  
+인스턴스는 애초에 클래스가 있었으니 인스턴스가 만들어진다.   
+클래스를 짱짱하게 만들어서 어마어마한 기능을 넣어놓았다. 적당한 클래스 안에 상당히 많은 기능이 들어있는 상태이다.  
+클래스를 정의한 주체(나)와 사용하는 주체(너)가 다른 경우가 많은데, 이 클래스는 어떻게 생겼고 이런 기능들이 있으니 사용자에게 알아서 쓰라고 하면 사용자는 복잡하고 어려운 사용법에 화를 낸다.
+
+- 클래스를 만든 사람은 사용자가 사용하기 좋도록 사용자에게 알려줘야한다. 그래서 이 클래스의 인터페이스를 만든다.  
+이처럼 복잡한 클래스의 사용법을 담고 있는 것을 인터페이스라 한다.  
+<br>
+<br>
+
+
+## 1.2 추상 메소드만 담고 있는 인터페이스
+```java
+Interface Printable {
+    public void print(String doc);  // 추상 메소드
+}
+```
+- 클래스 정의와 비슷하다.
+Interface라는 키워드를 써주는 것이 다른 점이다.   
+인터페이스에 담기는 내용들은 클래스와 마찬가지로 { }중괄호 사이에 등장하게 된다.  
+
+- 인터페이스에는 특징이 있다.   
+클래스 안에 존재하던 메소드와 달리 몸체가 없다  . 메소드의 선언부만 나열한 걸 가리켜 추상 메소드라 한다.  
+완벽한 메소드의 정의는 아니다. 이러한 메소드가 있고 어떻게 생겼는지를 보여주는 것이다.  
+
+- 추상 메소드 ──> 조이스틱, 버튼과 같은 역할을 하는 사용 방법에 해당된다.
+
+- 인터페이스는 클래스가 아니므로 인터페이스를 대상으로 인스턴스 생성은 불가능하다.  
+인터페이스는 클래스의 정의에 의해서 구현이 될 뿐이다.
+
+- 인터페이스를 **`구현`** 한다는 것은 추상 메소드를 완성하겠다는 의미이다. 
+  - 상속 X, 구현 O
+
+
+- 인터페이스의 정의  
+메소드의 몸체를 갖지 않는다.  
+따라서 인스턴스 생성이 불가능 하지만 참조변수 선언은 가능하다.  
+<br>
+<br>
+
+
+## 1.3 인터페이스를 구현하는 클래스
+```java
+class Printer implements Printable {
+    public void print(String doc) {
+        System.out.println(doc);
+    }
+}
+```
+- 구현하는 메소드와 추상 메소드 사이에도 메소드 오버라이딩 관계가 성립한다.   
+따라서 @Override 어노테이션을 붙일 수 있다.  
+(상속에서 Override 호출되는 것처럼 이해하면 쉽다.)
+<br>
+
+```java
+Printable prn = new Printer();
+prn.print("Hello");
+```
+- 인터페이스형 참조변수 선언은 가능하다.   
+prn 이라는 Printable형 참조변수는 Printable을 구현한 클래스의 인스턴스를 참조할 수 있다.
+
+- Printer 인스턴스를 prn으로 참조한다.   
+이 인스턴스에 아무리 많은 메소드가 public으로 선언이 되어있다 할지라도 prn을 통해서 접근할 수 있는 메소드는 인터페이스 내에 정의된 추상메소드만 호출할 수 있다.  
+즉 print 메소드 하나만 호출할 수 있다.  
+<br>
+<br>
+
+
+## 1.4 상속과 구현
+```java
+class Robot extends Machine implements Movable, Runnable {...}
+```
+- Robot 클래스는 Machine 클래스를 상속한다.    
+이렇듯 상속과 구현이 동시에 가능하다.
+
+- Robot 클래스는 Movable과 Runnable 인터페이스를 구현한다.
+이렇듯 둘 이상의 인터페이스 구현이 가능하다.
+
+- 상속과 구현은 별개이다.
+상속과 별개로, 더불어 하나 이상의 인터페이스를 구현 할 수도 있다.  
+
+- Robot 인스턴스를 생성했을 때, 이 Robot 인스턴스를 참조할 수 있는 참조형은 Robot형, Machine형, Movable형, Runnable형 즉 4개이다.
+<br>
+<br>
+
+
+## 1.5 인터페이스의 본질적 의미
+
+## 1.6 Printer Driver 관련 예제
+```java
+interface Printable {   // MS 가 정의하고 제공한 인터페이스
+    public void print(String doc);
+}
+```
+
+```java
+class SPrinterDriver implements Printable {
+
+    @Override
+    public void print(String doc) {
+        System.out.println("From Samsung printer");
+        System.out.println(doc);
+    }
+}
+```
+
+```java
+class LPrinterDriver implements Printable {
+
+    @Override
+    public void print(String doc) {
+        System.out.println("From LG Printer");
+        System.out.println(doc);
+    }
+}
+```
+
+```java
+public static void main(String[] args) {
+    String myDoc = "This is a report about ...";
+
+    // 삼성 프린터로 출력
+    Printable prn = new SPrinterDriver();
+    prn.print(myDoc);
+    System.out.println();
+
+    // LG 프린터로 출력
+    prn = new LPrinterDriver();
+    prn.print(myDoc);
+}
+```
+
+
+
+# 2. 인터페이스의 문법 구성과 추상 클래스
