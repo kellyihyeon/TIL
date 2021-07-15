@@ -9,7 +9,9 @@
    1.5 [Printer Driver 관련 예제](#15-printer-driver-관련-예제)  
 
 2. [인터페이스의 문법 구성과 추상 클래스](#2-인터페이스의-문법-구성과-추상-클래스)  
-   2.1 []()
+   2.1 [인터페이스에 선언되는 메소드와 변수](#21-인터페이스에-선언되는-메소드와-변수)  
+   2.2 [인터페이스 간 상속: 문제 상황의 제시](#22-인터페이스-간-상속-문제-상황의-제시)  
+   2.3 [제시한 문제의 해결책: 인터페이스의 상속](#23-제시한-문제의-해결책-인터페이스의-상속)  
 
 <br>
 
@@ -175,3 +177,298 @@ public static void main(String[] args) {
 
 
 # 2. 인터페이스의 문법 구성과 추상 클래스
+## 2.1 인터페이스에 선언되는 메소드와 변수
+```java
+interface Printable {
+    public void print(String doc);  //  추상 메소드
+}
+```
+- 인터페이스는 외부에서 사용할 수 있는 사용 방법을 명시하는 것이기 때문에 기본적으로 인터페이스 안에 선언되는 추상 메소드는 public 선언을 하지 않더라도 public 선언이 된 것으로 간주된다.
+
+- 디폴트 선언이 아니다!
+<br>
+
+```java
+interface Printable {
+    public static final int PAPER_WIDTH = 70;
+    public static final int PAPER_HEIGHT = 120;
+    public void print(String doc);
+}
+```
+- static으로 선언된 상수는 Printable.PAPER_WIDTH 로 접근한다.
+
+- static final 을 생략했다고 가정하자.  
+public은 있으나 없으나 자동으로 public 선언이 된 것이고, static final이 없다면 int PAPER_WIDTH = 70;이 선언된 것인데, 클래스 관점에서보면 이것은 인스턴스 변수이다.   
+하지만 인터페이스는 인스턴스 변수가 올 수가 없다.  
+그래서 static final을 생략하더라도 자동으로 static final이 선언된 것으로 간주된다.
+<br>
+<br>
+
+
+## 2.2 인터페이스 간 상속: 문제 상황의 제시
+삼성과 LG에서 컬러 출력이 가능한 새로운 프린터기를 출시했다.   
+기존 흑백 프린터기는 기존의 드라이버를 사용하면 되지만, 컬러 프린터기는 컬러까지 출력되는 드라이버를 사용해야 한다.
+
+```java
+interface Printable {
+    void print(String doc); 
+    void printCMYK(String doc);
+}
+```
+- 컬러 출력을 위한 메소드가 추가된다면 시스템 전체에 문제가 발생한다. 
+<br>
+
+```java
+class SPrinterDriver implements Printable {
+
+    @Override
+    public void print(String doc) {...}
+}
+```
+- 이 클래스에서 printCMYK 메소드를 구현해야 한다.
+
+- 메소드가 추가 됐으므로 새로운 메소드를 구현해야 하는데, 이 클래스는 printCMYK가 필요가 없다는 것이 문제이다.
+<br>
+
+```java
+class LPrinterDriver implements Printable {
+
+    @Override
+    public void print(String doc) {...}
+}
+```
+- 이 클래스에서도 printCMYK 메소드를 구현해야 한다.
+
+- 인터페이스를 구현하는 클래스는 해당 인터페이스의 모든 추상 메소드를 구현해야 한다. 그래야 인스턴스 생성이 가능하다.
+<br>
+<br>
+
+
+## 2.3 제시한 문제의 해결책: 인터페이스의 상속
+```java
+interface Printable {
+    void print(String doc); 
+}
+```
+- 이 인터페이스에 새로운 메소드를 만드는 것이 아니라 기존 것 그대로 둔다.
+<br>
+
+```java
+interface ColorPrintable extends Printable {
+    void printCMYK(String doc);
+}
+```
+- 새로운 인터페이스를 만든다.  
+그리고 Printable 인터페이스를 상속하게 만든다.
+
+- 인터페이스 간 상속도 **`extends`** 로 표현한다.
+
+- ColorPrintable 인터페이스에는 print 메소드와 printCMYK 메소드가 있게 된다.
+<br>
+
+```java
+class SPrinterDriver implements Printable {
+
+    @Override
+    public void print(String doc) {...}
+}
+```
+- 인터페이스가 바뀌지 않았으므로 기존 클래스를 수정할 필요가 없어진다.
+<br>
+
+```java
+class Prn909Drv implements ColorPrintable {
+    @Override
+    public void print(String doc) {  // 흑백 출력 
+        System.out.println("black & white ver");
+        System.out.println(doc);
+    }
+
+    @Override
+    public void printCMYK(String doc) {  // 컬러 출력 
+        System.out.println("CMYK ver");
+        System.out.println(doc);
+    }
+}
+```
+- ColorPrintable를 구현한 클래스를 만든다.
+<br>
+<br>
+___
+
+## 2.4 인터페이스의 디폴트 메소드: 문제 상황의 제시
+- 총 256개의 인터페이스가 존재하는 상황에서 모든 인터페이스에 다음 추상 메소드를 추가해야 한다고 가정해보자.
+
+```java
+void printCMYK(String doc);
+```
+- 물론 인터페이스 간 상속으로 문제 해결이 가능하다.
+다만, 인터페이스의 수가 256개 늘어날 뿐이다.
+
+## 2.5 문제 상황의 해결책: 인터페이스의 디폴트 메소드
+```java
+default void printCMYK(String doc) { }  // 디폴트 메소드
+```
+
+## 2.6 디폴트 메소드의 효과
+```java
+interface Printable {
+    void print(String doc); 
+}
+```
+
+```java
+interface Printable {
+    void print(String doc); 
+    default void printCMYK(String doc) { } 
+}
+```
+- 인터페이스의 교체
+
+```java
+class SPrinterDriver implements Printable {
+
+    @Override
+    public void print(String doc) {...}
+}
+```
+- 기존에 정의된 클래스
+인터페이스 교체로 인해 코드 수정이 필요 없다.
+
+```java
+class Prn909Drv implements Printable {
+    @Override
+    public void print(String doc) {...}
+
+    @Override
+    public void printCMYK(String doc) {...}
+}
+```
+- 새로 정의된 클래스
+
+
+## 2.7 인터페이스의 static 메소드
+```java
+interface Printable {
+    static void printLine(String str) {
+        System.out.println(str);
+    } 
+
+    default void print(String doc) { 
+        printLine(doc);     // 인터페이스의 static 메소드 호출
+    } 
+}
+```
+- 인터페이스에도 static 메소드를 정의할 수 있다.
+
+- 그리고 인터페이스의 static 메소드 호출 방법은 클래스의 static 메소드 호출 방법과 같다.
+
+## 2.8 인터페이스 대상의 instanceof 연산
+```java
+if (ca instanceof Cake) ...
+```
+- ca가 참조하는 인스턴스를 Cake 형 참조변수로 참조할 수 있으면 true 반환
+
+- ca가 참조하는 인스턴스가 Cake를 직접 혹은 간접적으로 구현한 클래스의 인스턴스인 경우 true 반환
+
+## 2.9 인터페이스 대상 instanceof 연산의 예
+```java
+interface Printable {
+    void printLine(String str);
+```
+
+```java
+class SimplePrinter implements Printable {
+    public void printLine(String str) {
+        System.out.println(str);
+    }
+}
+```
+
+```java
+class MultiPrinter extends SimplePrinter {
+    public void printLine(String str) {
+        super.printLine("start of multi...");
+        super.printLine(str);
+        super.printLine("end of multi");
+    }
+}
+```
+
+```java
+public static void main(String[] args) {
+    Printable prn1 = new SimplePrinter();
+    Printable prn2 = new MultiPrinter();
+
+    if (prn1 instanceof Printable) {
+        prn1.printLine("This is a simple printer.");
+    }
+    System.out.println();
+
+    if (prn2 instanceof Printable) {
+        prn2.printLine("This is a multiple printer.");
+    }
+}
+```
+
+```bash
+This is a simple printer.
+
+start of multi...
+This is a multiple printer.
+end of multi
+```
+
+## 2.10 인터페이스의 또 다른 용도: Marker 인터페이스
+```java
+interface Upper { }     // 마커 인터페이스
+interface Lower { }     // 마커 인터페이스
+```
+
+```java
+interface Printable {
+    String getContents();
+}
+```
+
+```java
+class Report implements Printable, Upper {
+    String cons;
+
+    Report(String cons) {
+        this.cons = cons;
+    }
+
+    public String getContents() {
+        return cons;
+    }
+}
+```
+
+```java
+public void printContents(Printable doc) {
+    if (doc instanceof Upper) {
+        System.out.println((doc.getContents()).toUpperCase());
+    } else if (doc instanceof Lower) {
+        System.out.println((doc.getContents()).toLowerCase());
+    } else {
+        System.out.println(doc.getContents());
+    }
+}
+```
+- 클래스에 특정 표시를 해 두기 위한 목적으로 정의된 인터페이스를 마커 인터페이스라 한다.
+마커 인터페이스에는 구현해야 할 메소드가 없는 경우가 흔하다.
+
+## 2.11 추상 클래스
+```java
+public abstract class Houser {  // 추상 클래스
+    public void methodOne() {
+        System.out.println("method one");
+    }
+
+    public abstract void methodTwo();   // 추상 메소드
+}
+```
+- 하나 이상의 추상 메소드를 지니는 클래스를 가리켜 추상 클래스라 한다.
+  
+- 그리고 추상 클래스를 대상으로는 인스턴스 생성이 불가능하다. 물론 참조변수 선언은 가능하다.
