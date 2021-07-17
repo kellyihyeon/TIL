@@ -17,6 +17,10 @@
    1.13 [ArrayIndexOutOfBoundsException](#113-arrayindexoutofboundsexception)   
 
 2. [예외처리에 대한 나머지 설명들](#2-예외처리에-대한-나머지-설명들)  
+   2.1 [예외 클래스의 구분](#21-예외-클래스의-구분)  
+   2.2 [Error 클래스를 상속하는 예외 클래스들의 특성](#22-error-클래스를-상속하는-예외-클래스들의-특성)  
+   2.3 [RuntimeException 클래스를 상속하는 예외 클래스들의 특성](#23-runtimeexception-클래스를-상속하는-예외-클래스들의-특성)  
+   2.4 [Exception 클래스를 상속하는 예외 클래스들의 특성](#24-exception-클래스를-상속하는-예외-클래스들의-특성)  
 
 <br>
 
@@ -354,3 +358,91 @@ class ArrayIndexOutOfBounds {
 
 
 # 2. 예외처리에 대한 나머지 설명들
+## 2.1 예외 클래스의 구분
+- **`Error 클래스`** 를 상속하는 예외 클래스
+
+- **`Exception 클래스`** 를 상속하는 예외 클래스
+
+- **`RuntimeException 클래스`** 를 상속하는 예외 클래스  
+RuntimeException 클래스는 Exception 클래스를 상속한다.
+
+- 상속하는 클래스가 무엇인가에 따라 예외 클래스의 성격이 달라진다.
+<br>
+<br>
+
+
+## 2.2 Error 클래스를 상속하는 예외 클래스들의 특성
+- Error는 엄밀히 따지면 예외가 아니다.  
+Exception이 예외이다. 
+
+- Error 클래스를 상속하는 예외 클래스의 예외 상황은 시스템 오류 수준의 예외 상황으로 프로그램 내에서 처리할 수 있는 수준의 예외가 아니다.
+
+- 예시
+    ```text  
+    VirtualMachineError
+    IOError
+    ```
+<br>
+<br>
+
+
+## 2.3 RuntimeException 클래스를 상속하는 예외 클래스들의 특성
+- Exception을 상속하는 예외 클래스의 성격도 가지고 있지만 Errir를 상속하는 예외 클래스의 성격도 없지않아 있다.
+  - Error와 Exception의 중간쯤에 있다고 생각하자.
+
+- 코드 오류로 발생하는 경우가 대부분이다. 따라서 이 유형의 예외 발생 시 코드의 수정을 고려해야 한다.
+  - 코드 뜯어 고쳐야 하는 에러에 가깝다.
+
+- 예시
+    ```text
+    ArithmeticException
+    ClassCastException
+    IndexOutOfBoundsException
+    NegativeArraySizeException
+    NullPointerException
+    ArraysStoreException
+    ```
+<br>
+<br>
+
+
+## 2.4 Exception 클래스를 상속하는 예외 클래스들의 특성
+- 진정한 예외라고 할 수 있다. 자바 가상머신도 프로그래머가 예외처리 해줘야한다고 종용하고 있다.
+
+- 코드의 문법적 오류가 아닌, 프로그램 실행 과정에서 발생하는 예외적 상황을 표현하기 위한 클래스들이다.  
+따라서 예외의 처리를 어떻게 할 것인지 반드시 명시해 주어야 한다.
+
+- 예시
+  ```text
+  java.io.IOException
+  입출력 관련 예외 상황을 표현하는 예외 클래스
+  ```
+<br>
+<br>
+
+
+## 2.5 Exception을 상속하는 예외의 예
+```java
+public static void main(String[] args) {
+    Path file = Paths.get("C:\\javastudy\\Simple.txt");
+    BufferedWriter writer = null;
+
+    try {
+        writer = Files.newBufferedWriter(file);     // IOException 발생 가능
+        writer.write('A');  // IOException 발생 가능
+        writer.write('Z');  // IOException 발생 가능
+
+        if(writer != null) {
+            writer.close();     // IOException 발생 가능
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+    }  
+}
+```
+- Exception을 상속하는 예외는 반드시 처리를 해야 한다. 그렇지 않으면 컴파일 오류로 이어진다.
+
+
+
+## 2.6 처리하거나 아니면 넘기거나
