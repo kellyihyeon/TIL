@@ -10,9 +10,15 @@
    1.6 [try ~ catch의 예](#16-try--catch의-예)  
    1.7 [예외 발생 이후의 실행 흐름](#17-예외-발생-이후의-실행-흐름)  
    1.8 [try로 감싸야 할 영역의 결정](#18-try로-감싸야-할-영역의-결정)  
-   1.9 [둘 이상의 예외 처리를 위한 구성](#19-둘-이상의-예외-처리를-위한-구성)    
+   1.9 [둘 이상의 예외 처리를 위한 구성](#19-둘-이상의-예외-처리를-위한-구성)   
+   1.10 [Throwable 클래스](#110-throwable-클래스)  
+   1.11 [예외의 전달](#111-예외의-전달)  
+   1.12 [printStackTrace 메소드 관련 예제](#112-printstacktrace-메소드-관련-예제)  
+   1.13 [ArrayIndexOutOfBoundsException](#113-arrayindexoutofboundsexception)   
 
-2. []()
+2. [예외처리에 대한 나머지 설명들](#2-예외처리에-대한-나머지-설명들)  
+
+<br>
 
 # 1. 자바 예외처리의 기본
 - 여기서 예외는 일반적으로 프로그램 사용자의 실수를 의미한다.
@@ -233,15 +239,118 @@ catch(ArithmeticException | InputMismatchException e) {
 
 ## 1.10 Throwable 클래스
 
+- java.lang.Throwable 클래스  
+모든 예외 클래스의 최상위 클래스이다. 물론 Throwable도 Object를 상속한다.
+
+- Throwable 클래스의 메소드  
+  - public String getMessage()  
+  예외의 원인을 담고 있는 문자열을 반환
+  - public void printStackTrace()  
+  예외가 발생한 위치와 호출된 메소드의 정보를 출력
+<br>
+<br>
 
 
+## 1.11 예외의 전달
+```java
+class ExceptionMessage {
+    public static void md1(int n) {
+        md2(n, 0);    // 아래의 메소드 호출
+    }
+
+    public static void md2(int n1, int n2) {
+        int r = n1 / n2;  // 예외 발생 지점
+    }
+
+    public static void main(String[] args) {
+        md1(3);
+        System.out.println("Good bye~~!");
+    }
+}
+```
+- 예외 발생 지점에서 예외를 처리하지 않으면 해당 메소드를 호출한 영역으로 예외가 전달된다.
+<br>
+
+### 1.11.1 예외 전달 과정
+- int r = n1 / n2;   
+여기에서 예외가 발생했고, 자바 가상머신은 try를 찾는다. try가 없으니 md2 메소드를 호출한 영역으로 예외를 넘긴다.
+
+- md2(n, 0);   
+여기로 가서 다시 try를 찾는다.  
+역시 여기서도 try가 없으니 자바 가상머신은 이 책임을 md2(n, 0);를 감싸고 있는 md1 메소드를 호출한 영역으로 다시 예외를 넘긴다.  
+
+- md1(3);   
+역시 try가 없으니 main 메소드를 호출한 쪽으로 예외를 넘긴다.  
+main 메소드 호출은 자바 가상머신이 한다.  
+
+- 예외가 자바 가상머신으로까지 넘어왔다.   
+자바 가상머신은 예외처리 메커니즘을 동작시킨다.   
+예외의 printStackTrace 메소드를 호출시키고, 호출 후 자바 가상머신은 프로그램을 종료시킨다.
+
+- 메소드 호출 내용은 아래와 같다.
+    ```bash
+    Exception in thread "main" java.lang.ArithmeticException: / by zero
+        at ExceptionMessage.md2(ExceptionMessage.java:6)
+        at ExceptionMessage.md1(ExceptionMessage.java:3)
+        at ExceptionMessage.main(ExceptionMessage.java:9)
+    ```
+<br>
+<br>
 
 
+## 1.12 printStackTrace 메소드 관련 예제
+```java
+class ExceptionMessage2 {
+    public static void md1(int n) {
+        md2(n, 0);    // 이 지점으로 md2로부터 예외가 넘어온다.
+    }
 
+    public static void md2(int n1, int n2) {
+        int r = n1 / n2;  // 예외 발생 지점
+    }
 
+    public static void main(String[] args) {
+        try {
+            md1(3);     // 이 지점에서 md1으로부터 예외가 넘어온다.
+        } 
+        catch(Throwable e) {
+            e.printStackTrace();
+        }
+        
+        System.out.println("Good bye~~!");
+    }
+}
+```
+- try ~ catch 문을 처리하고 실행의 흐름은 다시 System.out.println("Good bye~~!"); 부터 시작된다.
 
+- 메소드 호출 내용은 아래와 같다.
+    ```bash
+    java.lang.ArithmeticException: / by zero
+        at ExceptionMessage2.md2(ExceptionMessage2.java:6)
+        at ExceptionMessage2.md1(ExceptionMessage2.java:3)
+        at ExceptionMessage2.main(ExceptionMessage2.java:10)
+    Good bye~~!
+    ```
+<br>
+<br>
 
+## 1.13 ArrayIndexOutOfBoundsException
+```java
+class ArrayIndexOutOfBounds {
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 3};
 
+        for(int i = 0; i < 4; i++) {
+            System.out.println(arr[i]);
+        }
+    }
+}
+```
+- System.out.println(arr[i]);  
+인덱스 값 3은 예외를 발생시킨다.   
+0, 1, 2까지가 전부인데 범위를 넘어섰기 때문에 예외를 발생시킨다.
+<br>
+<br>
 
 
 # 2. 예외처리에 대한 나머지 설명들
