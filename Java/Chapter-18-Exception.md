@@ -592,3 +592,95 @@ catch (ThirdException e) {...}
 
 
 ## 2.11 finally
+```java
+try {
+    ...
+}
+finally {   // 코드의 실행이 try 안으로 진입하면, 무조건 실행된다.
+    ... 
+}
+```
+- finally 구문은 실행이 되어야 할 코드를 담는 구문이다.
+
+- try 다음에 finally를 바로 적어도 되고, try ~ catch ~ finally 로 적어도 된다.
+<br>
+
+```java
+try {
+    ...
+}
+catch(Exception name) {
+    ...
+}
+finally {   // 코드의 실행이 try 안으로 진입하면, 무조건 실행된다.
+    ... 
+}
+```
+- 예외가 발생하건 안하건 상관없이 일단 try 안으로 들어오면 finally 안에 있는 코드는 무조건 실행된다.
+<br>
+<br>
+
+
+## 2.12 finally 구문 사용의 예
+```java
+public static void main(String[] args) {
+    Path file = Paths.get("C:\\javastudy\\Simple.txt");
+    BufferedWriter writer = null;
+
+    try {
+        writer = Files.newBufferedWriter(file);    // IOException 발생 가능
+        writer.write('A');  // IOException 발생 가능
+    }
+    catch(IOException e) {
+        e.printStackTrace();
+    }    
+    finally {
+        try {
+            if(writer != null) {
+            writer.close();     // IOException 발생 가능
+            }
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
+        
+    }
+}
+```
+- 실행의 흐름이 try 구문 안에 들어왔을 때 반드시 실행해야 하는 문장을 finally 구문에 둘 수 있다.
+
+- file을 한 번 열었으면 그 파일을 쓰든 쓰지않든 닫아줘야하므로 file을 닫는 코드를 finally에 넣어주었다.
+
+- writer.close();   
+finally 안에 또 try ~ catch문이 있다.  
+코드가 원래 try문 안에 있었을 때는 try구문이 있어서 다시 감싸줄 필요가 없었지만, finally 구문 안에 들어오면 try가 없으므로 try ~ catch로 감싸줘야 한다.
+<br>
+<br>
+
+
+## 2.13 try-with-resources
+```java
+try(BufferedWriter writer = Files.newBufferedWriter(file)) {
+    writer.write('A');
+    writer.write('Z');
+}
+
+catch(IOException e) {
+    e.printStackTrace();
+}
+```
+- file은 자원인데, 자원을 사용하는 과정에는 열고 닫는 개념이 있다.   
+try-with-resources라는 것은 resource를 컨트롤하기 위한 코드와 try를 합쳐놨다는 의미이다.  
+
+- try (BufferedWriter writer = Files.newBufferedWriter(file))  
+괄호 안에 있는 것은 메소드에 인자를 전달한다는 의미가 아니다.  
+파일과 같은 리소스를 괄호 안에서 생성한다는 의미이다.
+
+- try 구문을 빠져나갈 때 writer.close(); 문장을 자동으로 실행시켜준다.  
+try-with-resources의 resource 영역에 자원을 오픈만 해주면 알아서 닫아준다는 문법적 개선이 있었다.
+
+- resource에는 어떤 것들이 올 수 있을까?  
+writer가 참조하는 인스턴스가 java.lang.AutoCloseable 인터페이스를 구현하고 있으면 try-resource에 넣을 수가 있다.
+
+- try-with-resources 기반의 오픈 및 종료 대상이 되기 위한 조건은 다음과 같다.
+  - java.lang.AutoCloseable 인터페이스의 구현
