@@ -21,6 +21,9 @@
    2.2 [Error 클래스를 상속하는 예외 클래스들의 특성](#22-error-클래스를-상속하는-예외-클래스들의-특성)  
    2.3 [RuntimeException 클래스를 상속하는 예외 클래스들의 특성](#23-runtimeexception-클래스를-상속하는-예외-클래스들의-특성)  
    2.4 [Exception 클래스를 상속하는 예외 클래스들의 특성](#24-exception-클래스를-상속하는-예외-클래스들의-특성)  
+   2.5 [Exception을 상속하는 예외의 예](#25-exception을-상속하는-예외의-예)  
+   2.6 [처리하거나 아니면 넘기거나](#26-처리하거나-아니면-넘기거나)  
+   2.7 [둘 이상의 예외 넘김에 대한 선언](#27-둘-이상의-예외-넘김에-대한-선언)  
 
 <br>
 
@@ -428,7 +431,7 @@ public static void main(String[] args) {
     BufferedWriter writer = null;
 
     try {
-        writer = Files.newBufferedWriter(file);     // IOException 발생 가능
+        writer = Files.newBufferedWriter(file);    // IOException 발생 가능
         writer.write('A');  // IOException 발생 가능
         writer.write('Z');  // IOException 발생 가능
 
@@ -442,7 +445,70 @@ public static void main(String[] args) {
 }
 ```
 - Exception을 상속하는 예외는 반드시 처리를 해야 한다. 그렇지 않으면 컴파일 오류로 이어진다.
-
+<br>
+<br>
 
 
 ## 2.6 처리하거나 아니면 넘기거나
+```java
+public static void main(String[] args) {
+    try {
+        md1();
+    }  
+    catch (IOException e) {
+        e.printStackTrace();
+    }
+}
+
+public static void md1() throws IOException {   // IOException 예외 넘긴다고 명시
+    md2();
+}
+
+public static void md2() throws IOException {   // IOException 예외 넘긴다고 명시
+    Path file = Paths.get("C:\\javastudy\\Simple.txt");
+    BufferedWriter writer = null;
+
+    writer = Files.newBufferedWriter(file);     // IOException 발생 가능
+        writer.write('A');  // IOException 발생 가능
+        writer.write('Z');  // IOException 발생 가능
+
+        if(writer != null) {
+            writer.close();     // IOException 발생 가능
+        }
+}
+```
+- 메소드의 throws절 선언을 통해 예외의 처리를 넘길 수 있다.
+
+- public static void md2() throws IOException {...}  
+md2 메소드를 호출한 영역으로 예외를 넘겨버리겠다.
+
+- RuntimeException을 상속하는 예외 클래스의 경우에는 예외가 발생하면 자동으로 호출한 영역으로 넘어가는데, Exception을 상속하는 예외 클래스는 넘기든 직접 처리하든 이를 명시해야한다. 
+
+- 명시해주지 않으면 컴파일 에러로 이어진다.
+<br>
+<br>
+
+
+## 2.7 둘 이상의 예외 넘김에 대한 선언
+```java
+public void simpelWrite() throws IOException, IndexOutofBoundsException {
+    ...
+}
+```
+- throws절에 둘 이상의 예외를 넘길 수 있다.
+<br>
+<br>
+
+
+## 2.8 프로그래머가 정의하는 예외 클래스
+```java
+class ReadAgeException extends Exception {  // Exception을 상속한다.
+    public ReadAgeException() {
+        super("유효하지 않은 나이가 입력되었습니다.");
+    }
+}
+```
+- Throwable 클래스의 getMessage 메소드가 반환할 문자열 지정
+
+
+## 2.9 프로그래머 정의 예외 클래스의 예
