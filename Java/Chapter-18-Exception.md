@@ -24,6 +24,9 @@
    2.5 [Exception을 상속하는 예외의 예](#25-exception을-상속하는-예외의-예)  
    2.6 [처리하거나 아니면 넘기거나](#26-처리하거나-아니면-넘기거나)  
    2.7 [둘 이상의 예외 넘김에 대한 선언](#27-둘-이상의-예외-넘김에-대한-선언)  
+   2.8 [프로그래머가 정의하는 예외 클래스](#28-프로그래머가-정의하는-예외-클래스)  
+   2.9 [프로그래머 정의 예외 클래스의 예](#29-프로그래머-정의-예외-클래스의-예)  
+   2.10 [잘못된 catch 구문의 구성](#210-잘못된-catch-구문의-구성)  
 
 <br>
 
@@ -508,7 +511,84 @@ class ReadAgeException extends Exception {  // Exception을 상속한다.
     }
 }
 ```
+- 상황에 따라 논리적으로 예외가 발생하는 경우가 생긴다.
+  - int age = 0;   
+  한국에서 0살은 예외상황이지만, 미국에서는 예외상황이 아니다.
+
 - Throwable 클래스의 getMessage 메소드가 반환할 문자열 지정
+<br>
+<br>
 
 
 ## 2.9 프로그래머 정의 예외 클래스의 예
+```java
+class MyExceptionClass {
+    public static void main(String[] args) {
+        System.out.print("나이 입력: ");
+
+        try {
+            int age = readAge();
+            System.out.printf("입력된 나이: %d \n", age);
+        }
+        catch(ReadAgeException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static int readAge() throws ReadAgeException {
+        Scanner kb = new Scanner(System.in);
+        int age = kb.nextInt();
+
+        if(age < 0) {
+            throw new ReadAgeException();   // 예외의 발생
+        }
+        return age;
+    }
+}
+```
+<br>
+
+```bash
+나이 입력: 12
+입력된 나이: 12
+
+나이 입력 -7
+유효하지 않은 나이가 입력되었습니다.
+```
+<br>
+<br>
+
+
+## 2.10 잘못된 catch 구문의 구성
+```java
+class FirstException extends Exception {...}
+class SecondException extends FirstException {...}
+class ThirdException extends SecondException {...}
+```
+- Exception 클래스를 직접 상속해야만 예외 클래스가 되는 것은 아니다. 간접 상속해도 된다.
+<br>
+
+```java
+try {
+    ...
+}
+catch (FirstException e) {...}
+catch (SecondException e) {...}
+catch (ThirdException e) {...}
+```
+- try 안에서 예외가 발생하면 catch 구문으로 가는데 위 코드는 상속관계에 의해서 FirstException이 예외를 다 받아줄 수 있기 때문에 SecondException과 ThirdException은 기회를 얻지 못한다.
+
+- 다행히 컴파일러는 이 부분에 대해 컴파일 오류를 전달해 준다. 
+  - 이렇게 하면 SecondException과 ThirdException은 실행되지 않는다고 알려준다.
+
+- catch 문을 알맞게 수정하면 아래와 같다.
+    ```java
+    catch (ThirdException e) {...}
+    catch (SecondException e) {...}
+    catch (FirstException e) {...}
+    ```
+<br>
+<br>
+
+
+## 2.11 finally
