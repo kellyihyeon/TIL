@@ -13,7 +13,9 @@
    2.1 [Object 클래스의 finalize 메소드](#21-object-클래스의-finalize-메소드)  
    2.2 [finalize 메소드의 오버라이딩 예](#22-finalize-메소드의-오버라이딩-예)  
    2.3 [인스턴스의 비교: equals 메소드](#23-인스턴스의-비교-equals-메소드)  
-   2.4 [String 클래스의 equals 메소드](#24-string-클래스의-equals-메소드)     
+   2.4 [String 클래스의 equals 메소드](#24-string-클래스의-equals-메소드)   
+   2.5 [인스턴스 복사: clone 메소드](#25-인스턴스-복사-clone-메소드)  
+   2.6 [clone 메소드 호출의 예](#26-clone-메소드-호출의-예)  
    
 <br>   
 
@@ -376,3 +378,92 @@ public static void main(String[] args) {
 str1, st2는 참조 대상이 다르다.
 str1, st2는 내용이 동일하다.
 ```
+<br>
+<br>
+
+
+## 2.5 인스턴스 복사: clone 메소드
+```java
+protected Object clone() throws CloneNotSupportedException
+```
+- Object 클래스에 정의되어 있는 clone 메소드가 호출되면 인스턴스의 복사가 이뤄진다.
+
+- 클래스 정의 시, clone 메소드의 호출을 허용하려면 **`Cloneable`** 인터페이스를 구현해야 한다.
+
+- Cloneable 인터페이스는 구현해야 할 추상 메소드가 없는 마커 인터페이스이다.
+<br>
+<br>
+
+## 2.6 clone 메소드 호출의 예
+```java
+class Point implements Cloneable {
+    private int xPos;
+    private int yPos;
+
+    public Point(int x , int y) {
+        xPos = x;
+        yPos = y;
+    }
+
+    public void showPosition() {
+        System.out.prinf("[%d, %d]", xPos, yPos);
+        System.out.println();
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();   // Object 클래스의 clone 메소드 호출
+    }
+}
+```
+- 접근 수준 지시자를 protected에서 public으로 바꾸기 위한 메소드 오버라이딩
+
+- Point 클래스에 오버라이딩 된 clone 메소드를 보면 기능이 없다.
+Object 의 clone 메소드를 호출하고 결과를 반환받는 것 뿐, 다른 일을 하고 있지 않다. 
+하는 일도 딱히 없는데 왜 오버라이딩을 했을까?
+<br>
+
+```java
+class InstanceCloning {
+    public static void main(String[] args) {
+        Point org = new Point(3, 5);
+        Point cpy;
+
+        try {
+            cpy = (Point)org.clone();
+            org.showPosition();
+            cpy.showPosition();
+        }
+        catch(CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+
+    }
+}
+```
+- clone 메소드가 protected로 선언되어 있어서 외부에서 호출이 불가능하기 때문에 public으로 바꾸어서 외부에서 호출가능하게끔 오버라이딩 한 것이다.
+
+- **`아니 모든 클래스는 Object를 상속하는데 메소드가 protected 여도 외부에서 접근 가능하지 않나??? `**
+
+- Object 클래스를 생각해보자.  
+Object 클래스와 Point는 상속관계로 묶여 있지만 당연히 다른 클래스이다.   
+
+- 이번엔 패키지를 생각해보자.  
+Point와, InstanceCloning 클래스는 디폴트 패키지이다.  
+Object는?  
+!!! java.lang 패키지이다.  
+다른 패키지에 있는 clone 메소드를 호출하고 있는 것이다. (외부에서 접근 불가능)
+그렇기 때문에 public이 아니면 호출이 불가능해지는 것이다.  
+<br>
+<br>
+
+## 2.7 Shallow Copy
+
+
+## 2.8 Deep Copy
+
+
+## 2.9 String 인스턴스 대상 깊은 복사
+
+
+
