@@ -16,6 +16,11 @@
    2.4 [String 클래스의 equals 메소드](#24-string-클래스의-equals-메소드)   
    2.5 [인스턴스 복사: clone 메소드](#25-인스턴스-복사-clone-메소드)  
    2.6 [clone 메소드 호출의 예](#26-clone-메소드-호출의-예)  
+   2.7 [Shallow Copy](#27-shallow-copy)  
+   2.8 [Deep Copy](#28-deep-copy)  
+   2.9 [String 인스턴스 대상 깊은 복사](#29-string-인스턴스-대상-깊은-복사)  
+   2.10 [clone 메소드의 호출과 형 변환](#210-clone-메소드의-호출과-형-변환)  
+   2.11 [clone 메소드의 반환형 수정](#211-clone-메소드의-반환형-수정)  
    
 <br>   
 
@@ -458,12 +463,69 @@ Object는?
 <br>
 
 ## 2.7 Shallow Copy
-
+- 기본서 참고
 
 ## 2.8 Deep Copy
+- 기본서 참고
+<br>
+<br>
 
 
 ## 2.9 String 인스턴스 대상 깊은 복사
+```java
+class Person implements Cloneable {
+    private String name;    // String 클래스는 Cloneable 구현 안함
+    private int age;
+    ...
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Person cpy = (Person)super.clone();    // clone 메소드 호출을 통한 복사본 생성
+        cpy.name = new String(name);        // 깊은 복사의 형태로 복사본을 완성
+        return cpy;     // 완성된 복사본의 참조 값 반환
+    }
+}
+```
+<br>
+<br>
 
 
+## 2.10 clone 메소드의 호출과 형 변환
+```java
+class Point implements Cloneable {
+    ...
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+}
+```
+<br>
+
+```java
+Point org = new Point(1, 2);
+Point cpy = (Point)org.clone();     // 형 변환
+```
+- 일반적인 모습
+<br>
+<br>
+
+
+## 2.11 clone 메소드의 반환형 수정
+```java
+class Point implements Cloneable {
+    ...
+    @Override
+    public Point clone() throws CloneNotSupportedException {
+        return (Point)(super.clone());
+    }
+}
+```
+- 오버라이딩 한 메소드의 반환형을 Point 클래스 내에서는 Point로 바꿀 수 있다. 
+<br>
+
+```java
+Point org = new Point(1, 2);
+Porint cpy = org.clone();   // 형 변환이 필요 없다.
+```
 
