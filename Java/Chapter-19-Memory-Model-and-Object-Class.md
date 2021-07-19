@@ -12,6 +12,10 @@
 2. [Object 클래스](#2-object-클래스)  
    2.1 [Object 클래스의 finalize 메소드](#21-object-클래스의-finalize-메소드)  
    2.2 [finalize 메소드의 오버라이딩 예](#22-finalize-메소드의-오버라이딩-예)  
+   2.3 [인스턴스의 비교: equals 메소드](#23-인스턴스의-비교-equals-메소드)  
+   2.4 [String 클래스의 equals 메소드](#24-string-클래스의-equals-메소드)     
+   
+<br>   
 
 # 1. 자바 가상머신의 메모리 모델
 ## 1.1 운영체제 입장에서 자바 가상머신
@@ -314,7 +318,61 @@ end of program
 
 ## 2.3 인스턴스의 비교: equals 메소드
 - 인스턴스의 내용 비교를 위한 기능을 equals 메소드에 담아 정의한다.  
+
 - equals는 Object 클래스의 메소드이다.
 
+- == 연산자를 통해서 비교하는 방법  
+참조 값을 비교한다.   
+동일한 인스턴스를 참조하는 경우 true를 반환한다.
+
+- Onject의 equals 메소드도 동일하다.  
+참조 값을 비교한다.
+
+- ```java
+    INum num1 = new INum(10);
+    INum num2 = new INum(12);
+    INum num3 = new INum(10);
+
+    if(num1.equals(num3)) {
+        System.out.println("num1, num3 내용이 동일하다.");
+    } else {
+        System.out.println("num1, num3 내용이 다르다.");
+    }
+   ```  
+   false를 반환한다.
+
+- == 연산자와 Object의 equals 메소드는 동일한데 equals 메소드는 하위 클래스에서 오버라이딩해서 사용할 수 있다.
+
+- 같다, 다르다의 기준을 프로그래머가 클래스 내에서 equals 메소드를 정의한다.
+<br>
+<br>
+
+
 ## 2.4 String 클래스의 equals 메소드
+```java
+public static void main(String[] args) {
+    String str1 = new String("So Simple");
+    String str2 = new String("So Simple");
+
+    // 참조 대상을 비교하는 if ~ else문
+    if (str1 == str2) {
+        System.out.println("str1, st2는 참조 대상이 동일하다.");
+    } else {
+        System.out.println("str1, st2는 참조 대상이 다르다.");
+    }
+
+    // 두 인스턴스의 내용을 비교하는 if ~ else문
+    if (str1.equals(str2)) {
+        System.out.println("str1, st2는 내용이 동일하다.");
+    } else {
+        System.out.println("str1, st2는 내용이 다르다.");
+    }
+}
+```
 - String 클래스는 내용 비교를 하는 형태로 equals 메소드를 오버라이딩 하고 있다.
+<br>
+
+```bash
+str1, st2는 참조 대상이 다르다.
+str1, st2는 내용이 동일하다.
+```
