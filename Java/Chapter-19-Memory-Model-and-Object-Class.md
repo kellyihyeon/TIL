@@ -9,7 +9,9 @@
    1.5 [힙 영역](#15-힙-영역)  
    1.6 [자바 가상머신의 인스턴스 소멸시키기](#16-자바-가상머신의-인스턴스-소멸시키기)  
 
-2. []()
+2. [Object 클래스](#2-object-클래스)  
+   2.1 [Object 클래스의 finalize 메소드](#21-object-클래스의-finalize-메소드)  
+   2.2 [finalize 메소드의 오버라이딩 예](#22-finalize-메소드의-오버라이딩-예)  
 
 # 1. 자바 가상머신의 메모리 모델
 ## 1.1 운영체제 입장에서 자바 가상머신
@@ -225,3 +227,94 @@ Variables
 ```
 - 참조 관계가 끊어진 인스턴스는 접근이 불가능하다.  
 따라서 가비지 컬렉션의 대상이 된다.
+<br>
+<br>
+
+
+# 2. Object 클래스
+## 2.1 Object 클래스의 finalize 메소드
+```java
+protected void finalize() throws Throwable
+```
+- Object 클래스에 정의되어 있는 이 메소드는 인스턴스 소멸 시 자동으로 호출이 된다.  
+자식 클래스에서 오버라이딩 할 수 있다.
+
+- 자바 가상머신에 의해서 가비지 컬렉션 될 때 자동으로 호출된다.  
+인스턴스가 사라질 때 호출되는 메소드이다.
+
+- 가비지 컬렉션을 할 때는 2단계로 나뉘어진다.  
+일단 훑는다. 가비지 컬렉션을 할 대상이 있나 찾아본다.  
+가비지 컬렉션을 해야되는 상황이면 일단 체크를 해놓는다. 체크만 하고 멈추고 자바 프로그램이 실행되도록 한다.  
+다음으로 체크해 놓은 것을 지우는 과정이 일어난다.  
+이처럼 체크하는 과정과 삭제하는 과정이 구분될 수 있다.
+
+- finalize 메소드는 가비지 컬렉션을 체크할 때 호출되는 것이 아니라 인스턴스를 삭제할 때 호출된다.
+<br>
+<br>
+
+
+## 2.2 finalize 메소드의 오버라이딩 예
+```java
+class Person {
+    String name;
+
+    public Person(String name) {
+        this.name = name;
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();   // 상위 클래스의 finalize 메소드 호출
+        System.out.println("destroyed: " + name); 
+    }
+}
+```
+- Object 클래스의 finalize 메소드를 호출하면서 기존의 메소드를 건드리지 않고, 끼워 넣기 형태로 오버라이딩 하고 있다.
+<br>
+
+```java
+public static void main(String[] args) {
+    Person p1 = new Person("Yoon");
+    Person p2 = new Person("Park");
+    p1 = null;  // 참조대상을 가비지 컬렉션의 대상으로 만듦
+    p2 = null;  // 참조대상을 가비지 컬렉션의 대상으로 만듦
+
+    // System.gc();
+    // System.runFinalization();
+
+    System.out.println("end of program");
+}
+```
+```bash
+end of program
+```
+- 실행 결과를 보면 가비지 컬렉션의 대상인 Person 인스턴스의 finalize 메소드가 실행이 되지 않았다.  
+실행이 됐다면 "destroyed: name" 문자열이 출력이 됐을 것이다.  
+왜 실행이 되지 않은 것일까?
+
+- 프로그램이 종료될 때는 메소드 영역, 스택 영역, 힙 영역이 전부 사라진다.   
+프로그램이 종료 될 텐데 굳이 가비지 컬렉션을 호출할 필요가 없으니 실행이 되지 않은 것이다.
+
+- 호출이 될 수도 있고, 안 될 수도 있는 메소드는 활용을 잘 하지 않는다. (신뢰가 떨어진다.)
+
+- ```java
+  System.gc();
+  System.runFinalization();
+  ```
+    이름에서 벌써 유추가능하다.  
+    gc 메소드를 호출하는 명령이 아니라 재촉하는 것이다.   
+    "가비지 컬렉션 좀 해달라." (역시 호출이 될 수도 안될 수도 있다.)
+
+    runFinalization 메소드는 "체크만 하지말고 제발 지워버려라"라고 요청하는 것이다.
+
+    주석을 해제하면 finalize 메소드를 호출한 결과를 실제로 확인할 수 있다.
+<br>
+<br>
+
+
+## 2.3 인스턴스의 비교: equals 메소드
+- 인스턴스의 내용 비교를 위한 기능을 equals 메소드에 담아 정의한다.  
+- equals는 Object 클래스의 메소드이다.
+
+## 2.4 String 클래스의 equals 메소드
+- String 클래스는 내용 비교를 하는 형태로 equals 메소드를 오버라이딩 하고 있다.
