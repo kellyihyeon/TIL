@@ -12,7 +12,10 @@
    1.8 [Number 클래스의 추상 메소드 호출의 예](#18-number-클래스의-추상-메소드-호출의-예)  
    1.9 [래퍼 클래스의 다양한 static 메소드들](#19-래퍼-클래스의-다양한-static-메소드들)  
 
-2. []()
+2. [BigInteger 클래스와 BigDecimal 클래스](#2-biginteger-클래스와-bigdecimal-클래스)  
+   2.1 [매우 큰 정수를 표현하기 위한 java.math.BigInteger 클래스](#21-매우-큰-정수를-표현하기-위한-javamathbiginteger-클래스)  
+   2.2 [오차 없는 실수를 표현 하기 위한 BigDecimal 클래스](#22-오차-없는-실수를-표현-하기-위한-bigdecimal-클래스)  
+
 3. []()
 4. []()
 
@@ -234,4 +237,92 @@ static 메소드 호출을 통해서 인스턴스 생성이 가능하다.
 12의 2진 표현: 1100
 12의 8진 표현: 14
 12의 16진 표현: c
+```
+<br>
+<br>
+
+
+# 2. BigInteger 클래스와 BigDecimal 클래스
+- BigInteger  
+long보다 더 큰 정수를 표현해야 될 때 사용하는 클래스 
+
+- BigDecimal  
+아주 사소한 오차도 발생시키지 않는 실수 연산을 지원하기 위해 디자인 된 클래스
+<br>
+
+## 2.1 매우 큰 정수를 표현하기 위한 java.math.BigInteger 클래스
+```java
+public static void main(String[] args) {
+    // long 형으로 표현 가능한 값의 크기 출력
+    System.out.println("최대 정수: " + Long.MAX_VALUE);
+    System.out.println("최소 정수: " + Long.MIN_VALUE);
+    System.out.println();
+
+    // 매우 큰 수를 BigInteger 인스턴스로 표현
+    BigInteger big1 = new BigInteger("10000000000000000000");
+    BigInteger big2 = new BigInteger("-9999999999999999999");
+
+    // BigInteger 기반 덧셈 연산
+    BigInteger r1 = big1.add(big2);
+    System.out.println("덧셈 결과: " + r1);
+
+    //  BigInteger 기반 곱셈 연산
+    BigInteger r2 = big1.multiply(big2);
+    System.out.println("곱셈 결과: " + r2);
+    System.out.println();
+
+    // 인스턴스에 저장된 값을 int 형 정수로 반환
+    int num  = r1.intValueExact();
+    System.out.println("Form BigInteger = " + num);
+}
+```
+- BigInteger 클래스도 Immutable 인스턴스이다.
+
+-  BigInteger big1 = new BigInteger("10000000000000000000");  
+왜 문자열로 표현했을까?  
+문자열이 아닌 리터럴 정수로 넣었다면 이를 컴파일러가 보는 순간 int 형으로 표현할 수 있는 값의 범위를 넘어섰다고 판단하고 종료시킨다.  
+값의 범위를 넘어서는 값은 ""로 묶어서 문자열로 넘긴다.  
+<br>
+
+```bash
+최대 정수: 9223372036854775807
+최소 정수: -9223372036854775808
+
+덧셈 결과: 1
+곱셈 결과: -99999999999999999990000000000000000000
+
+Form BigInteger = 1
+```
+<br>
+<br>
+
+## 2.2 오차 없는 실수를 표현 하기 위한 BigDecimal 클래스
+```java
+public static void main(String[] args) {
+    BigDecimal d1 = new BigDecimal("1.6");
+    BigDecimal d2 = new BigDecimal("0.1");
+    System.out.println("덧셈 결과 = " + d1.add(d2));
+    System.out.println("곱셈 결과 = " + d1.multiply(d2));
+}
+```
+- BigDecimal 클래스도 Immutable 인스턴스이다.
+
+- BigDecimal d1 = new BigDecimal("1.6");  
+여기에는 왜 또 문자열로 표현했을까?  
+1.6 리터럴 정수를 쓰면 메모리 공간 어딘가에 저장이 되어야한다.  
+자바가 1.6 이라고 표현하는 순간 여기에는 오차가 존재한다.  
+BigDecimal에 전달하는 1.6이라는 리터럴 정수는 오차가 존재하는 1.6이기 때문에 오차를 발생시키지 않기 위해서 문자열로 생성한 것이다.  
+<br>
+
+```bash
+덧셈 결과 = 1.7
+곱셈 결과 = 0.16
+```
+<br>
+
+```java
+덧셈    public BigDecimal add(BigDecimal augend)
+뺄셈    public BigDecimal subtract(BigDecimal subtrahend)
+곱셈    public BigDecimal multiply(BigDecimal multiplicand)
+나눗셈  public BigDecimal divide(BigDecimal divisor)
 ```
