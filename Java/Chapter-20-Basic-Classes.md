@@ -454,8 +454,13 @@ StringTokenizer st = new StringTokenizer("PM:08:45", ":");
 - public String nextToken()
 다음 토큰을 반환
 
+- 구분자가 무엇이냐에 따라서 토큰이 달라진다.  
+만일 구분자를 0으로 지정한다면 토큰은 2개가 된다. 
+
+- 토큰이 남아있는지 확인을 하고 다음 토큰을 반환하는 메소드를 사용해야 코드의 안정성이 높아진다.
 <br>
 <br>
+
 
 ## 3.5 문자열의 토큰 구분의 예
 ```java
@@ -467,7 +472,8 @@ public static void main(String[] args) {
     }
     System.out.println();
 
-    StringTokenizer st2 = new StringTokenizer("12 + 36 - 8 / 2 = 44", "+-/=");
+
+    StringTokenizer st2 = new StringTokenizer("12 + 36 - 8 / 2 = 44", "+-/= ");
 
     while (st2.hasMoreTokens()) {
         System.out.print(st2.nextToken() + ' ');
@@ -475,9 +481,10 @@ public static void main(String[] args) {
     System.out.println();
 }
 ```
+- 공백도 구분자에 포함되므로 공백을 포함시켜서 숫자만 토큰으로 남게 하였다.
 <br>
 
 ```bash
 PM 08 45 
-12   36   8   2   44 
+12 36 8 2 44 
 ```
