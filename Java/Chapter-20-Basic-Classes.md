@@ -8,6 +8,9 @@
    1.4 [박싱과 언박싱의 예](#14-박싱과-언박싱의-예)  
    1.5 [오토 박싱과 오토 언박싱](#15-오토-박싱과-오토-언박싱)  
    1.6 [오토 박싱, 오토 언박싱의 또 다른 예](#16-오토-박싱-오토-언박싱의-또-다른-예)  
+   1.7 [Number 클래스](#17-number-클래스)  
+   1.8 [Number 클래스의 추상 메소드 호출의 예](#18-number-클래스의-추상-메소드-호출의-예)  
+   1.9 [래퍼 클래스의 다양한 static 메소드들](#19-래퍼-클래스의-다양한-static-메소드들)  
 
 2. []()
 3. []()
@@ -187,6 +190,7 @@ public static void main(String[] args) {
     System.out.println(num2.doubleValue());    // double형 값으로 반환
 }
 ```
+- Number 클래스를 상속한 래퍼 클래스들은 각각 intValue(), longValue(), doubleValue() 메소드를 정의해놓고 있다.
 <br>
 
 ```bash
@@ -217,4 +221,17 @@ public static void main(String[] args) {
     System.out.println("12의 8진 표현: " + Integer.toOctalString(12));
     System.out.println("12의 16진 표현: " + Integer.toHexString(12));
 }
+```
+- Integer n1 = Integer.valueOf(5);  
+= new Integer(5); 와 같다.
+static 메소드 호출을 통해서 인스턴스 생성이 가능하다.
+
+```bash
+큰 수: 1024
+작은 수: 5
+합: 1029
+
+12의 2진 표현: 1100
+12의 8진 표현: 14
+12의 16진 표현: c
 ```
