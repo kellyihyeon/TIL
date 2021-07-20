@@ -326,3 +326,158 @@ BigDecimal에 전달하는 1.6이라는 리터럴 정수는 오차가 존재하�
 곱셈    public BigDecimal multiply(BigDecimal multiplicand)
 나눗셈  public BigDecimal divide(BigDecimal divisor)
 ```
+<br>
+<br>
+
+
+## 3. Math 클래스와 난수의 생성 그리고 문자열 토큰(Token)의 구분
+## 3.1 수학 관련 연산 기능을 제공하는 Math 클래스
+```java
+public static void main(String[] args) {
+    System.out.println("원주율: " + Math.PI);
+    System.out.println("2의 제곱근: " + Math.sqrt(2));
+    System.out.println();
+
+    System.out.println("파이에 대한 Degree: " + Math.toDegrees(Math.PI));
+    System.out.println("2 파이에 대한 Degree: " + Math.toDegrees(2.0 * Math.PI));
+    System.out.println();
+
+    double radian45 = Math.toRadians(45);   // 라디안으로 변환
+    System.out.println("싸인 45: " + Math.sin(radian45));
+    System.out.println("코싸인 45: " + Math.cos(radian45));
+    System.out.println("탄젠트 45: " + Math.tan(radian45));
+    System.out.println();
+
+    System.out.println("로그 25: " + Math.log(25));
+    System.out.println("2의 16승: " + Math.pow(2, 16));
+}
+```
+<br>
+
+```bash
+원주율: 3.141592653589793
+2의 제곱근: 1.4142135623730951
+
+파이에 대한 Degree: 180.0
+2 파이에 대한 Degree: 360.0
+
+싸인 45: 0.7071067811865475
+코싸인 45: 0.7071067811865476
+탄젠트 45: 0.9999999999999999
+
+로그 25: 3.2188758248682006
+2의 16승: 65536.0
+```
+- Math 클래스  
+수학 관련된 연산을 하는 데 사용하는 클래스
+
+- Math는 인스턴스를 생성할 필요가 없다.   
+메소드가 static으로 선언되어있어서 가져다 쓰면 된다.
+<br>
+<br>
+
+
+## 3.2 난수의 생성
+```java
+Random rand = new Random();
+
+public boolean nextBoolean()    boolean형 난수 반환
+
+public int nextInt()            int형 난수 반환
+
+public long nextLong()          long형 난수 반환
+
+public int nextInt(int bound)   0 이상 bound 미만 범위의 int형 난수 반환
+
+public float nextFloat()        0.0 이상 1.0 미만의 float형 난수 반환
+
+public double nextDouble()      0.0 이상 1.0 미만의 double형 난수 반환
+```
+- 난수  
+무작위의 수를 말한다. 예측도 불가능하고 규칙을 찾을 수도 없다.
+
+- pseudo random number   
+가짜 난수. 컴퓨터가 뽑아낸 수. 난수처럼 보이는 난수.  
+난수를 뽑아내는 알고리즘이 있고, 여기서 난수를 뽑아낸다.
+<br>
+<br>
+
+
+## 3.3 난수 생성의 예
+```java
+public static void main(String[] args) {
+    Random rand = new Random();
+    for (int i = 0; i < 7; i++) {
+        System.out.println(rand.nextInt(1000));
+    }
+}
+```
+```java
+public Random() {
+    // Random(long seed) 생성자를 호출한다.
+    this(System.currentTimeMillis());
+}
+```
+- 컴퓨터의 현재 시간을 반환한다. 밀리세컨까지 나오기 때문에 실행할 때마다 다른 결과가 나오기 때문에 진짜 난수처럼 보인다.
+- 실행할 때마다 다른 결과를 보인다.
+<br>
+
+```java
+public static void main(String[] args) {
+    Random rand = new Random(12);
+    for (int i = 0; i < 7; i++) {
+        System.out.println(rand.nextInt(1000));
+    }
+}
+```
+- 실행할 때마다 같은 결과를 보인다.
+<br>
+<br>
+
+
+## 3.4 문자열의 토큰 구분
+```text
+"PM:08:45"
+```
+- 이 문자열의 구분자가 :일 경우 토큰은 다음 세 가지이다.  
+PM  08  45
+<br>
+
+```java
+StringTokenizer st = new StringTokenizer("PM:08:45", ":");
+```
+- 위와 같이 토큰을 나누는 방법이다.
+  
+- public boolean hasMoreTokens()  
+반환할 토큰이 남아 있는가?
+
+- public String nextToken()
+다음 토큰을 반환
+
+<br>
+<br>
+
+## 3.5 문자열의 토큰 구분의 예
+```java
+public static void main(String[] args) {
+    StringTokenizer st1 = new StringTokenizer("PM:08:45", ":");
+
+    while (st1.hasMoreTokens()) {
+        System.out.print(st1.nextToken() + ' ');
+    }
+    System.out.println();
+
+    StringTokenizer st2 = new StringTokenizer("12 + 36 - 8 / 2 = 44", "+-/=");
+
+    while (st2.hasMoreTokens()) {
+        System.out.print(st2.nextToken() + ' ');
+    }
+    System.out.println();
+}
+```
+<br>
+
+```bash
+PM 08 45 
+12   36   8   2   44 
+```
