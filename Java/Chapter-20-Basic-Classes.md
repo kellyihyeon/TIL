@@ -16,8 +16,15 @@
    2.1 [매우 큰 정수를 표현하기 위한 java.math.BigInteger 클래스](#21-매우-큰-정수를-표현하기-위한-javamathbiginteger-클래스)  
    2.2 [오차 없는 실수를 표현 하기 위한 BigDecimal 클래스](#22-오차-없는-실수를-표현-하기-위한-bigdecimal-클래스)  
 
-3. []()
-4. []()
+3. [Math 클래스와 난수의 생성 그리고 문자열 토큰](#3-math-클래스와-난수의-생성-그리고-문자열-토큰token의-구분)  
+   3.1 [수학 관련 연산 기능을 제공하는 Math 클래스](#31-수학-관련-연산-기능을-제공하는-math-클래스)  
+   3.2 [난수의 생성](#32-난수의-생성)  
+
+4. [Arrays 클래스](#4-arrays-클래스)  
+   4.1 [Arrays 클래스의 배열 복사 메소드](#41-arrays-클래스의-배열-복사-메소드)  
+   4.2 [copyOf 메소드 호출의 예](#42-copyof-메소드-호출의-예)  
+   4.3 [arraycopy 메소드 호출의 예](#43-arraycopy-메소드-호출의-예)  
+   4.4 [두 배열의 내용 비교](#44-두-배열의-내용-비교)  
 
 <br>
 
@@ -488,3 +495,196 @@ public static void main(String[] args) {
 PM 08 45 
 12 36 8 2 44 
 ```
+<br>
+<br>
+
+
+# 4. Arrays 클래스
+## 4.1 Arrays 클래스의 배열 복사 메소드
+### 4.1.1 복제
+*원본이 있으면 원본과 똑같은 형태를 새롭게 만들어 내는 것이다.*
+```java
+public static int[] copyOf(int[] original, int newLength)
+```
+- original에 전달된 배열을 첫 번째 요소부터 newLength의 길이만큼 복사
+<br>
+
+```java
+public static int[] copyOfRange(int[] original, int from, int to)
+```
+- original에 전달된 배열을 인덱스 from부터 to 이전 요소까지 복사
+<br>
+
+
+### 4.1.2 복사
+*A가 가지고 있는 내용을 B에 옮기는 것이다.  
+A와 B라는 종이가 2장이 마련되어 있는 상황을 전제한다.*
+
+```java
+public static void arraycopy(Object src, int srcPos, Object dest, int destPos, int length)
+```
+- 배열 src의 srcPos에서 배열 dest의 destPos로 length 길이만큼 복사
+
+- 복사할 원본 배열이 있고, 원본을 복사할 다른 배열이 존재한다.   
+배열을 2개 마련해놓고 arraycopy 메소드를 호출한다. 
+<br>
+<br>
+
+
+## 4.2 copyOf 메소드 호출의 예
+```java
+public static void main(String[] args) {
+    double[] arOrg = {1.1, 2.2, 3.3, 4.4, 5.5};
+
+    // 배열 전체를 복사
+    double[] arCpy1 = Arrays.copyOf(arOrg, arOrg.length);
+
+    // 세 번째 요소까지만 복사
+    double[] arCpy2 = Arrays.copyOf(arOrg, 3);
+
+    for (double d : arCpy1) {
+        System.out.print(d + "\t");
+    }
+    System.out.println();
+
+    for (double d : arCpy2) {
+        System.out.print(d + "\t");
+    }
+    System.out.println();
+}
+```
+```bash
+1.1	2.2	3.3	4.4	5.5	
+1.1	2.2	3.3	
+```
+<br>
+<br>
+
+
+## 4.3 arraycopy 메소드 호출의 예
+```java
+public static void main(String[] args) {
+    double[] org = {1.1, 2.2, 3.3, 4.4, 5.5};
+    double[] cpy = new double[3];
+
+    // 배열 org의 인덱스 1에서 배열 cpy 인덱스 0으로 세 개의 요소 복사
+    System.arraycopy(org, 1, cpy, 0, 3);
+
+    for (double d : cpy) {
+        System.out.print(d + "\t");
+    }
+    System.out.println();
+}
+```
+```bash
+2.2 3.3 4.4
+```
+- org
+참조하는 배열
+
+- cpy
+복사할 배열이 미리 존재해야 한다.
+
+- System.arraycopy(org, 1, cpy, 0, 3);  
+첫번째, 두번째 인자는 원본을 말하고, 세번째 네번째 인자는 `어디로?`를 의미하고, 다섯번째 배열은 몇개를 복사할 것인지를 의미한다.
+<br>
+<br>
+
+
+## 4.4 두 배열의 내용 비교
+*Arrays의 equals 메소드*
+
+```java
+public static voolean equals(int[] a, int[] a2)
+```
+- static 메소드이다.
+
+- 매개변수 a와 a2로 전달된 배열의 `내용을 비교`하여 true 또는 false 반환
+<br>
+
+```java
+public static void main(String[] args) {
+    int[] ar1 = {1, 2, 3, 4, 5};
+    int[] ar2 = Arrays.copyOf(ar1, ar1.length);
+    System.out.println(Arrays.equals(ar1, ar2));
+}
+```
+```bash
+true
+```
+- `내용 비교`를 한다는 사실이 매우 중요하다.
+<br>
+<br>
+
+
+## 4.5 인스턴스 저장 배열의 비교 예
+```java
+class INum {
+    private int num;
+
+    public INum(int num) {
+        this.num =  num;
+    }
+}
+```
+
+```java
+class ArrayObjEquals {
+    public static void main(String[] args) {
+        INum[] ar1 = new INum[3];
+        INum[] ar2 = new INum[3];
+        ar1[0] = new INum(1);
+        ar2[0] = new INum(1);
+
+        ar1[1] = new INum(2);
+        ar2[1] = new INum(2);
+
+        ar1[2] = new INum(3);
+        ar2[2] = new INum(3);
+
+        System.out.println(Arrays.equals(ar1, ar2));
+    }
+}
+```
+```bash
+false
+```
+- 내용만 비교하는데 왜 false가 나왔지?
+
+- 결과가 의미하는 바는? 어떤 식으로 비교 한 것일까?
+
+<br>
+<br>
+
+## 4.6 Arrays의 equals 메소드가 내용을 비교하는 방식
+```java
+publci static boolean equals(Object[] a, Obhect[] a2) {
+    ...
+    for (int i = 0; i < length; i++) {
+        Object o1 = a[i];
+        Object o2 = a2[i];
+
+        if (!(o1 == null ? o2 == null : o1.equals(o2))) {
+            return false;
+        }
+    }
+    ...
+}
+```
+<br>
+<br>
+
+
+## 4.7 Object 클래스의 equals 메소드는?
+```java
+public boolean equals(Object obj) {
+    if(this == obj) {   // 두 인스턴스가 동일 인스턴스이면
+        return true;
+    } else {
+        return false;
+    }
+}
+```
+- Object 클래스에 정의된 equals 메소드는 참조 값 비교를 한다.
+
+- Arrays 클래스의 equals 메소드가 두 배열의 내용 비교를 하도록 하려면 비교 대상의 equals 메소드를 내용 비교의 형태로 오버라이딩 해야 한다.
