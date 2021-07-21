@@ -25,6 +25,10 @@
    4.2 [copyOf 메소드 호출의 예](#42-copyof-메소드-호출의-예)  
    4.3 [arraycopy 메소드 호출의 예](#43-arraycopy-메소드-호출의-예)  
    4.4 [두 배열의 내용 비교](#44-두-배열의-내용-비교)  
+   4.5 [인스턴스 저장 배열의 비교 예](#45-인스턴스-저장-배열의-비교-예)  
+   4.6 [Arrays의 equals 메소드가 내용을 비교하는 방식](#46-arrays의-equals-메소드가-내용을-비교하는-방식)  
+   4.7 [Object 클래스의 equals 메소드는?](#47-object-클래스의-equals-메소드는)  
+   4.8 [Object 클래스의 equals 메소드 오버라이딩 결과](#48-object-클래스의-equals-메소드-오버라이딩-결과)  
 
 <br>
 
@@ -651,10 +655,21 @@ false
 ```
 - 내용만 비교하는데 왜 false가 나왔지?
 
-- 결과가 의미하는 바는? 어떤 식으로 비교 한 것일까?
+- equals 메소드가 어떻게 정의되어 있는지에 따라 다르다.
+equals 메소드는 인스턴스별 비교를 한다.  
+ar1[0] = new INum(1);  
+ar2[0] = new INum(1);  
+이렇게 각 요소끼리 비교를 한다. 비교를 해서 각 요소가 저장하고 있는 인스턴스가 전부 같으면 true를 반환한다.
 
+- 인스턴스끼리 비교는?   
+equals 메소드를 호출해서 비교를 한다.
+
+- INum 인스턴스를 보자.  
+equals 메소드를 오버라이딩 하지 않았다. 이는 즉 Object의 equals 메소드를 사용한다는 의미이다.  (참조 값 비교)  
+하나만 false가 나도 전체 false를 반환하는데, 세 인스턴스는 전부 false이다.
 <br>
 <br>
+
 
 ## 4.6 Arrays의 equals 메소드가 내용을 비교하는 방식
 ```java
@@ -688,3 +703,260 @@ public boolean equals(Object obj) {
 - Object 클래스에 정의된 equals 메소드는 참조 값 비교를 한다.
 
 - Arrays 클래스의 equals 메소드가 두 배열의 내용 비교를 하도록 하려면 비교 대상의 equals 메소드를 내용 비교의 형태로 오버라이딩 해야 한다.
+<br>
+<br>
+
+
+## 4.8 Object 클래스의 equals 메소드 오버라이딩 결과
+```java
+class INum {
+    private int num;
+
+    public INum(int num) {
+        this.num =  num;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this.num == ((INum)obj).num) {
+            return true;
+        } else {
+            return false;
+        }
+    }   
+}
+```
+- [x] (this.num == ((INum)obj).num)  
+비교하고 있는 게 int형 이어서 == 으로 참조값 비교했을 때 내용이 같으면 동일한 참조값이 나오는 거구나!
+<br>
+
+```java
+public static void main(String[] args) {
+    INum[] ar1 = new INum[3];
+    INum[] ar2 = new INum[3];
+    ar1[0] = new INum(1);
+    ar2[0] = new INum(1);
+
+    ar1[1] = new INum(2);
+    ar2[1] = new INum(2);
+
+    ar1[2] = new INum(3);
+    ar2[2] = new INum(3);
+
+    System.out.println(Arrays.equals(ar1, ar2));
+}
+```
+```bash
+true
+```
+<br>
+<br>
+
+
+
+## 4.9 배열의 정렬: Arrays 클래스의 sort 메소드
+```java
+public static void sort(int[] a)
+```
+- 매개변수 a로 전달된 배열을 오름차순(Ascending Numerical Order)으로 정렬
+<br>
+
+```java
+public static void main(String[] args) {
+    int[] ar1 = {1, 5, 3, 2, 4};
+    double[] ar2 = {3.3, 2.2, 5.5, 1.1, 4.4};
+
+    Arrays.sort(ar1);
+    Arrays.sort(ar2);
+
+    for (int n : ar1) {
+        System.out.print(n + "\t");
+    }
+    System.out.println();
+
+    for (double d : ar2) {
+        System.out.print(d + "\t");
+    }
+    System.out.println();
+}
+```
+```bash
+1    2     3    4    5
+1.1  2.2.  3.3  4.4  5.5
+```
+<br>
+<br>
+
+## 오름차순 정렬이란?
+
+
+## compareTo 메소드 정의 기준
+```java
+interface Comparable
+```
+- int compareTo(Object o)
+
+- 인자로 전달된 o가 작다면 양의 정수 반환.  
+  인자로 전달된 o가 크다면 음의 정수 반환.  
+  인자로 전달된 o와 같다면 0을 반환
+<br>
+<br>
+
+
+## 클래스에 정의하는 오름차순 기준
+```java
+class Person implements Comparable {
+    private String name;
+    private int age;
+
+    @Override
+    public int compareTo(Object o) {
+        Person p = (Person)o;
+
+        if (this.age > p.age) {
+            return 1;       // 인자로 전달된 o가 작다면 양의 정수 반환
+        } else if (this.age < p.age) {
+            return -1;      // 인자로 전달된 o가 크다면 음의 정수 반환
+        } else {
+            return 0;       // 인자로 전달된 o와 같다면 0을 반환
+        }
+    }
+}
+```
+
+## 다음과 같이 구현도 가능
+```java
+@Override
+public int compareTo(Object o) {
+    Person p = (Person)o;
+    return this.age - p.age;
+}
+```
+
+
+
+
+## 배열에 저장된 인스턴스들의 정렬의 예
+```java
+class Person implements Comparable {
+    private String name;
+    private int age;
+
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Person p = (Person) o;
+        return this.age - p.age;
+    }
+
+    public String toString() {
+        return name + ": " + age;
+    }
+}
+```
+```java
+public static void main(String[] args) {
+    Person[] ar = new Person[3];
+    ar[0] = new Person("Lee", 29);
+    ar[1] = new Person("Goo", 15);
+    ar[2] = new Person("Soo", 37);
+
+    Arrays.sort(ar);
+    for (Person p : ar) {
+        System.out.println(p);
+    }
+}
+```
+```bash
+Goo: 15
+Lee: 29
+Soo: 37
+```
+
+
+## 배열의 탐색: 기본 자료형 값 대상
+```java
+public static int binarySearch(int[] a, int key)
+```
+- 배열 a에서 key를 찾아서 있으면 key의 인덱스 값, 없으면 0보다 작은 수 반환
+
+- binarySearch는 이진 탐색을 진행한다.
+그리고 이진 탐색을 위해서는 탐색 이전에 데이터들이 오름차순으로 정렬되어 있어야 한다.
+
+
+## 배열의 탐색: 기본 자료형 값 대상의 예
+```java
+class ArraySearch {
+    public static void main(String[] args) {
+        int[] ar = {33, 55, 11, 44, 22};
+        Arrays.sort(ar);    // 탐색 이전에 정렬이 선행되어야 한다.
+
+        for (int n : ar) {
+            System.out.print(n + "\t");
+        }
+        System.out.println();
+
+        int idx = Arrays.binarySearch(ar, 33);  // 배열 ar 에서 33을 찾아라.
+        System.out.println("index of 33 = " + idx);
+    }
+}
+```
+```bash
+11	22	33	44	55	
+index of 33 = 2
+```
+
+
+
+## 배열의 탐색: 인스턴스 대상
+```java
+public static int binarySearch(Object[] a, Object key)
+```
+- 마찬가지로 탐색 대상들은 오름차순으로 정렬되어 있어야 한다.
+그리고 탐색 대상의 확인 여부는 compareTo 메소드의 호출 결과를 근거로 한다.
+즉, 탐색 방식은 인스턴스의 내용 비교이다.
+
+
+
+## 배열의 탐색: 인스턴스 대상의 예
+```java
+class Person implements Comparable {
+    private String name;
+    private int age;
+
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        Person p = (Person) o;
+        return this.age - p.age;
+    }
+
+    public String toString() {
+        return name + ": " + age;
+    }
+
+    public static void main(String[] args) {
+        Person[] ar = new Person[3];
+        ar[0] = new Person("Lee", 29);
+        ar[1] = new Person("Goo", 15);
+        ar[2] = new Person("Soo", 37);
+
+        Arrays.sort(ar);
+        int idx = Arrays.binarySearch(ar, new Person("Who are you?", 37));
+        System.out.println(ar[idx]);
+    }
+}
+```
+```bash
+Soo: 37
+```
