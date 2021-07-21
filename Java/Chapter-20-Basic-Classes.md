@@ -29,6 +29,11 @@
    4.6 [Arrays의 equals 메소드가 내용을 비교하는 방식](#46-arrays의-equals-메소드가-내용을-비교하는-방식)  
    4.7 [Object 클래스의 equals 메소드는?](#47-object-클래스의-equals-메소드는)  
    4.8 [Object 클래스의 equals 메소드 오버라이딩 결과](#48-object-클래스의-equals-메소드-오버라이딩-결과)  
+   4.9 [배열의 정렬: Arrays 클래스의 sort 메소드](#49-배열의-정렬-arrays-클래스의-sort-메소드)  
+   4.10 [오름차순 정렬이란?](#410-오름차순-정렬이란)  
+   4.11 [compareTo 메소드 정의 기준](#411-compareto-메소드-정의-기준)  
+   4.12 [클래스에 정의하는 오름차순 기준](#412-클래스에-정의하는-오름차순-기준)  
+   4.13 [다음과 같이 구현도 가능](#413-다음과-같이-구현도-가능)  
 
 <br>
 
@@ -753,7 +758,6 @@ true
 <br>
 
 
-
 ## 4.9 배열의 정렬: Arrays 클래스의 sort 메소드
 ```java
 public static void sort(int[] a)
@@ -787,23 +791,37 @@ public static void main(String[] args) {
 <br>
 <br>
 
-## 오름차순 정렬이란?
+## 4.10 오름차순 정렬이란?
+- 수의 경우는 오름차순에 대한 기준이 명확하다.  
+하지만 인스턴스는 다르다. 인스턴스를 어떤 기준으로 오름차순 할 것인가?  
+이 때에는 기준이 필요하다. 오름차순 순서상 크고 작음에 대한 기준이 필요하다.  
+무엇을 기준으로 오름차순하느냐에 따라 결과가 달라지기 때문이다.  
+<br>
+<br>
 
 
-## compareTo 메소드 정의 기준
+## 4.11 compareTo 메소드 정의 기준
 ```java
 interface Comparable
 ```
 - int compareTo(Object o)
 
+- 기준이 필요하다고 생각되면 Comparable 인터페이스를 구현하면 된다.
+
 - 인자로 전달된 o가 작다면 양의 정수 반환.  
   인자로 전달된 o가 크다면 음의 정수 반환.  
   인자로 전달된 o와 같다면 0을 반환
+
+- 위의 내용을 기준으로 메소드를 정의하면 반환값을 통해서 어떤 인스턴스가 어떤 인스턴스보다 크거나 작은지 판단이 가능하다.
+
+- A.compareTo(B);  
+반환 값이 헷갈리면 앞에 있는 인스턴스 A를 기준으로 생각해보자.  
+A가 인자 값보다 더 크면 양의 정수, A가 인자 값보다 작으면 음의 정수, A와 인자 값이 같으면 0
 <br>
 <br>
 
 
-## 클래스에 정의하는 오름차순 기준
+## 4.12 클래스에 정의하는 오름차순 기준
 ```java
 class Person implements Comparable {
     private String name;
@@ -823,8 +841,14 @@ class Person implements Comparable {
     }
 }
 ```
+- Comparable 인터페이스를 구현한다는 것은 오름차순 순서상 크고 작음에 대한 기준을 제공한다는 의미이다.
 
-## 다음과 같이 구현도 가능
+- Person 클래스에서 나이를 기준으로 오름차순을  순서를 정의했다.
+<br>
+<br>
+
+
+## 4.13 다음과 같이 구현도 가능
 ```java
 @Override
 public int compareTo(Object o) {
@@ -832,7 +856,9 @@ public int compareTo(Object o) {
     return this.age - p.age;
 }
 ```
-
+- return 되는 값이 기준에 맞기 때문에 이렇게 간단하게 구현을 할 수도 있다.
+<br>
+<br>
 
 
 
@@ -877,6 +903,9 @@ Goo: 15
 Lee: 29
 Soo: 37
 ```
+- sort 메소드 내에서 인스턴스들을 비교해보고 계산하여 오름차순 정렬을 해준다.
+<br>
+<br>
 
 
 ## 배열의 탐색: 기본 자료형 값 대상
