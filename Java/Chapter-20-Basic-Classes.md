@@ -34,6 +34,11 @@
    4.11 [compareTo 메소드 정의 기준](#411-compareto-메소드-정의-기준)  
    4.12 [클래스에 정의하는 오름차순 기준](#412-클래스에-정의하는-오름차순-기준)  
    4.13 [다음과 같이 구현도 가능](#413-다음과-같이-구현도-가능)  
+   4.14 [배열에 저장된 인스턴스들의 정렬의 예](#414-배열에-저장된-인스턴스들의-정렬의-예)  
+   4.15 [배열의 탐색: 기본 자료형 값 대상](#415-배열의-탐색-기본-자료형-값-대상)  
+   4.16 [배열의 탐색: 기본 자료형 값 대상의 예](#416-배열의-탐색-기본-자료형-값-대상의-예)  
+   4.17 [배열의 탐색: 인스턴스 대상](#417-배열의-탐색-인스턴스-대상)  
+   4.18 [배열의 탐색: 인스턴스 대상의 예](#418-배열의-탐색-인스턴스-대상의-예)  
 
 <br>
 
@@ -843,7 +848,7 @@ class Person implements Comparable {
 ```
 - Comparable 인터페이스를 구현한다는 것은 오름차순 순서상 크고 작음에 대한 기준을 제공한다는 의미이다.
 
-- Person 클래스에서 나이를 기준으로 오름차순을  순서를 정의했다.
+- Person 클래스에서 나이를 기준으로 오름차순 순서를 정의했다.
 <br>
 <br>
 
@@ -862,7 +867,7 @@ public int compareTo(Object o) {
 
 
 
-## 배열에 저장된 인스턴스들의 정렬의 예
+## 4.14 배열에 저장된 인스턴스들의 정렬의 예
 ```java
 class Person implements Comparable {
     private String name;
@@ -908,17 +913,19 @@ Soo: 37
 <br>
 
 
-## 배열의 탐색: 기본 자료형 값 대상
+## 4.15 배열의 탐색: 기본 자료형 값 대상
 ```java
 public static int binarySearch(int[] a, int key)
 ```
 - 배열 a에서 key를 찾아서 있으면 key의 인덱스 값, 없으면 0보다 작은 수 반환
 
-- binarySearch는 이진 탐색을 진행한다.
+- binarySearch는 이진 탐색을 진행한다.  
 그리고 이진 탐색을 위해서는 탐색 이전에 데이터들이 오름차순으로 정렬되어 있어야 한다.
+<br>
+<br>
 
 
-## 배열의 탐색: 기본 자료형 값 대상의 예
+## 4.16 배열의 탐색: 기본 자료형 값 대상의 예
 ```java
 class ArraySearch {
     public static void main(String[] args) {
@@ -939,20 +946,23 @@ class ArraySearch {
 11	22	33	44	55	
 index of 33 = 2
 ```
+<br>
+<br>
 
 
 
-## 배열의 탐색: 인스턴스 대상
+## 4.17 배열의 탐색: 인스턴스 대상
 ```java
 public static int binarySearch(Object[] a, Object key)
 ```
-- 마찬가지로 탐색 대상들은 오름차순으로 정렬되어 있어야 한다.
-그리고 탐색 대상의 확인 여부는 compareTo 메소드의 호출 결과를 근거로 한다.
+- 마찬가지로 탐색 대상들은 오름차순으로 정렬되어 있어야 한다.  
+그리고 탐색 대상의 확인 여부는 compareTo 메소드의 호출 결과를 근거로 한다.  
 즉, 탐색 방식은 인스턴스의 내용 비교이다.
+<br>
+<br>
 
 
-
-## 배열의 탐색: 인스턴스 대상의 예
+## 4.18 배열의 탐색: 인스턴스 대상의 예
 ```java
 class Person implements Comparable {
     private String name;
@@ -989,3 +999,4 @@ class Person implements Comparable {
 ```bash
 Soo: 37
 ```
+- 각 인스턴스의 compareTo 메소드를 호출해서 0이 반환되면 찾은 것
