@@ -11,7 +11,11 @@
    1.7 [제네릭 이후의 코드: 개선된 결과](#17-제네릭-이후의-코드-개선된-결과)  
    1.8 [실수가 컴파일 오류로 이어진다](#18-실수가-컴파일-오류로-이어진다)   
 
-2. []()
+2. [제네릭의 기본 문법](#2-제네릭의-기본-문법)  
+   2.1 [다중 매개변수 기반 제네릭 클래스의 정의](#21-다중-매개변수-기반-제네릭-클래스의-정의)  
+   2.2 [타입 매개변수의 이름 규칙](#22-타입-매개변수의-이름-규칙)  
+   2.3 [기본 자료형에 대한 제한 그리고 래퍼 클래스](#23-기본-자료형에-대한-제한-그리고-래퍼-클래스)  
+   2.4 [다이아몬드 기호](#24-다이아몬드-기호)  
 
 <br>
 
@@ -237,3 +241,287 @@ java: incompatible types: java.lang.String cannot be converted to Orange
 ```
 - 타입 불일치  
 프로그래머의 실수가 1번 그물, 컴파일 과정에서 다 잡힌다.
+<br>
+<br>
+
+
+# 2. 제네릭의 기본 문법
+## 2.1 다중 매개변수 기반 제네릭 클래스의 정의
+```java
+class DBox<L, R> {
+    private L left;
+    private R right;
+
+    public void set(L o, R r) {
+        left = o;
+        right = r;
+    }
+
+    @Override
+    public String toString() {
+        return left + " & " + right;
+    }
+}
+```
+
+```java
+public static void main(String[] args) {
+    DBox<String, Integer> box = new DBox<>();
+    box.set("Apple", 25);
+    System.out.println(box);
+}
+```
+- box.set("Apple", 25);  
+Integer형 인스턴스가 와야 하는데, 값이 왔다.  
+여기서 오토 박싱이 진행됐음을 알 수 있다.
+<br>
+<br>
+
+
+## 2.2 타입 매개변수의 이름 규칙
+### 2.2.1 일반적인 관례
+- 한 문자로 이름을 짓는다.
+- 대문자로 이름을 짓는다.
+<br>
+
+### 2.2.2 보편적인 선택
+```text
+E       Element
+K       Key
+N       Number
+T       Type
+V       Value
+```
+<br>
+<br>
+
+## 2.3 기본 자료형에 대한 제한 그리고 래퍼 클래스
+```java
+class Box<T> {
+    private T ob;
+
+    public void set(T o) {
+        ob = o;
+    }
+
+    public T get() {
+        return ob;
+    }
+}
+```
+
+```java
+class PrimitiveAndGeneric {
+    public static void main(String[] args) {
+        Box<Integer> iBox = new Box<>();
+        iBox.set(125);  // 오토 박싱 진행
+        int num = iBox.get();   // 오토 언박싱 진행
+        System.out.println(num);
+    }
+}
+```
+- Box\<int> box = new Box<>();  
+**`타입 인자로 기본 자료형이 올 수 없으므로`** 컴파일 오류가 발생한다.
+
+- 클래스 이름만 올 수 있는데, int 값을 넣고 싶다면?  
+int 값을 넣어도 오토 박싱, 오토 언박싱이 진행되기 때문에 넣을 수 있다.
+<br>
+<br>
+
+## 2.4 다이아몬드 기호
+```java
+Box<Apple> aBox = new Box<Apple>();    
+이 문장을 대신하여  
+
+Box<Apple> aBox = new Box<>();  
+이렇게 쓸 수 있다.  
+```
+- 참조변수 선언을 통해서 컴파일러가 <> 사이에 Apple이 와야 함을 유추한다.
+<br>
+<br>
+
+## 2.5 '매개변수화 타입'을 '타입 인자'로 전달
+```java
+class Box<T> {
+    private T ob;
+
+    public void set(T o) {
+        ob = o;
+    }
+
+    public T get() {
+        return ob;
+    }
+}
+```
+
+```java
+public static void main(String[] args) {
+    Box<String> sBox = new Box<>();
+    sBox.set("I am so happy.");
+
+    Box<Box<String>> wBox = new Box<>();
+    wBox.set(sBox);
+
+    Box<Box<Box<String>>> zBox = new Box<>();
+    zBox.set(wBox);
+
+    System.out.println(zBox.get().get().get());
+}
+```
+
+```bash
+I am so happy.
+```
+<br>
+<br>
+
+## 2.6 제네릭 클래스의 타입 인자 제한하기
+```java
+Class Box<T extends Number> {...}
+```
+- 인스턴스 생성 시 타입 인자로 Number 또는 이를 상속하는 클래스만 올 수 있다.
+
+```java
+class Box<T extends Number> {
+    private T ob;
+
+    public void set(T o) {
+        ob = o;
+    }
+
+    public T get() {
+        return ob;
+    }
+}
+```
+
+```java
+public static void main(String[] args) {
+    Box<Integer> iBox = new Box<>();
+    iBox.set(24);
+
+    Box<Double> dBox = new Box<>();
+    dBox.set(5.97);
+}
+```
+
+<br>
+<br>
+
+## 2.7 타입 인자 제한의 효과
+```java
+class Box<T> {
+    private T ob;
+
+    ...
+    public int toIntValue() {
+        return ob.intValue();   // ERROR
+    }
+}
+```
+
+```java
+class Box<T extends Number> {
+    private T ob;
+
+     ...
+    public int toIntValue() {
+        return ob.intValue();   // OK
+    }
+}
+```
+
+<br>
+<br>
+
+## 2.8 제네릭 클래스의 타입 인자를 인터페이스로 제한하기
+```java
+interface Eatable {
+    public String eat();
+}
+```
+
+```java
+class Apple implements Eatable {
+    public String eat() {
+        return "it tastes so good!";
+    }
+    ...
+}
+```
+
+```java
+class Box<T extends Eatable> {
+    T ob;
+
+    public void set(T o) {
+        ob = o;
+    }
+
+    public T get() {
+        System.out.println(ob.eat());
+        return ob;
+    }
+}
+```
+- Eatable로 제한하였기 때문에 eat 메소드 호출이 가능하다.
+<br>
+<br>
+
+
+## 2.9 하나의 클래스와 하나의 인터페이스에 대해 동시 제한
+```java
+class Box<T extends Number & Eatable> {...}
+```
+ - Number는 클래스 이름, Eatable은 인터페이스 이름
+<br>
+<br>
+
+## 2.10 제네릭 메소드의 정의
+```java
+class BoxFactory {
+    public static <T> Box<T> makeBox(T o) {
+        Box<T> box = new Box<>();
+        box.set(o);
+        return box;
+    }
+}
+```
+- 클래스 전부가 아닌 메소드 하나에 대해 제네릭으로 정의했다.
+
+- <T> 얘는 왜 오는 거지?
+
+- 제네릭 메소드의 T는 메소드 호출 시점에 결정한다.  
+    ```java
+    Box<String> sBox = BoxFactory.<String>makeBox("Sweet");
+
+    Box<Double> dBox = BoxFactory.<Double>makeBox(7.59);    // 7.59에 대해 오토 박싱 진행됨
+    ```
+
+- 다음과 같이 타입 인자 생략이 가능하다.  
+    ```java
+    Box<String> sBox = BoxFactory.makeBox("Sweet");
+
+    Box<Double> dBox = BoxFactory.makeBox(7.59);    // 7.59에 대해 오토 박싱 진행됨
+    ```
+<br>
+<br>
+
+
+## 2.11 제네릭 메소드의 제한된 타입 매개변수 선언
+```java
+public static <T extends Number> Box<T> makeBox(T o) {
+    ...
+            
+    // 타입 인자 제한으로 intValue 호출 가능
+    System.out.println("Boxed data = " + o.intValue());
+    return box;
+}
+
+public static <T extends Number> T openBox(Box<T> box) {
+    // 타입 인자 제한으로 intValue 호출 가능
+    System.out.println("Unboxed data = " + box.get().intValue());
+    return box.get();
+} 
+```
