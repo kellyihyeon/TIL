@@ -16,6 +16,8 @@
    2.2 [타입 매개변수의 이름 규칙](#22-타입-매개변수의-이름-규칙)  
    2.3 [기본 자료형에 대한 제한 그리고 래퍼 클래스](#23-기본-자료형에-대한-제한-그리고-래퍼-클래스)  
    2.4 [다이아몬드 기호](#24-다이아몬드-기호)  
+   2.5 ['매개변수화 타입'을 '타입 인자'로 전달](#25-매개변수화-타입을-타입-인자로-전달)  
+   2.6 [제네릭 클래스의 타입 인자 제한하기](#26-제네릭-클래스의-타입-인자-제한하기)  
 
 <br>
 
@@ -373,14 +375,18 @@ public static void main(String[] args) {
 ```bash
 I am so happy.
 ```
+- [x] 그림으로 그리면서 코드를 읽어나가면 이해가 쉽다.
 <br>
 <br>
+
 
 ## 2.6 제네릭 클래스의 타입 인자 제한하기
 ```java
 Class Box<T extends Number> {...}
 ```
 - 인스턴스 생성 시 타입 인자로 Number 또는 이를 상속하는 클래스만 올 수 있다.
+
+- T에는 누구나 다 올 수 있었는데, 이 T에 올 수 있는 클래스를 제한하겠다.
 
 ```java
 class Box<T extends Number> {
@@ -395,6 +401,7 @@ class Box<T extends Number> {
     }
 }
 ```
+- T에 Number가 와도 되고, Integer, Double 등 Number를 상속한 클래스가 올 수 있다.
 
 ```java
 public static void main(String[] args) {
@@ -405,11 +412,14 @@ public static void main(String[] args) {
     dBox.set(5.97);
 }
 ```
+- Integer? Double?  
+Number는 아니지만 Number를 상속하기 때문에 문제 없다.
+<br>
+<br>
 
-<br>
-<br>
 
 ## 2.7 타입 인자 제한의 효과
+*왜 타입 인자에 올 수 있는 것들을 제한 하는 것일까?*
 ```java
 class Box<T> {
     private T ob;
