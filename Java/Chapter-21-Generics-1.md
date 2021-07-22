@@ -21,6 +21,8 @@
    2.7 [타입 인자 제한의 효과](#27-타입-인자-제한의-효과)   
    2.8 [제네릭 클래스의 타입 인자를 인터페이스로 제한하기](#28-제네릭-클래스의-타입-인자를-인터페이스로-제한하기)   
    2.9 [하나의 클래스와 하나의 인터페이스에 대해 동시 제한](#29-하나의-클래스와-하나의-인터페이스에-대해-동시-제한)   
+   2.10 [제네릭 메소드의 정의](#210-제네릭-메소드의-정의)  
+   2.11 [제네릭 메소드의 제한된 타입 매개변수 선언](#211-제네릭-메소드의-제한된-타입-매개변수-선언)  
 
 <br>
 
@@ -533,23 +535,34 @@ class BoxFactory {
     }
 }
 ```
-- 클래스 전부가 아닌 메소드 하나에 대해 제네릭으로 정의했다.
+- 클래스 전부가 아닌 메소드 하나에 대해 제네릭으로 정의하는 것이다.
 
-- <T> 얘는 왜 오는 거지?
+- 클래스가 아니라 메소드 하나에 대해 선언하는 것이므로 \<T>를 메소드로 끌고 와야한다.
 
-- 제네릭 메소드의 T는 메소드 호출 시점에 결정한다.  
-    ```java
-    Box<String> sBox = BoxFactory.<String>makeBox("Sweet");
+- \<T> 
+이 메소드가 제네릭임을 선언한 것이다.
+<br>
 
-    Box<Double> dBox = BoxFactory.<Double>makeBox(7.59);    // 7.59에 대해 오토 박싱 진행됨
-    ```
 
-- 다음과 같이 타입 인자 생략이 가능하다.  
-    ```java
-    Box<String> sBox = BoxFactory.makeBox("Sweet");
+```java
+Box<String> sBox = BoxFactory.<String>makeBox("Sweet");
 
-    Box<Double> dBox = BoxFactory.makeBox(7.59);    // 7.59에 대해 오토 박싱 진행됨
-    ```
+Box<Double> dBox = BoxFactory.<Double>makeBox(7.59);    // 7.59에 대해 오토 박싱 진행됨
+```
+- T가 결정되는 시기  
+제네릭 클래스는 제네릭 클래스를 기반으로 인스턴스 생성할 때 T를 결정해줘야했다.  
+제네릭 메소드의 T는 메소드가 호출될 때 결정해주면 된다.
+<br>
+
+
+```java
+Box<String> sBox = BoxFactory.makeBox("Sweet");
+
+Box<Double> dBox = BoxFactory.makeBox(7.59);    // 7.59에 대해 오토 박싱 진행됨
+```
+- 타입 인자 생략이 가능하다. 
+
+- 전달되는 인자를 통해서 컴파일러가 판단할 수 있으므로 생략이 가능하다.
 <br>
 <br>
 
@@ -570,3 +583,12 @@ public static <T extends Number> T openBox(Box<T> box) {
     return box.get();
 } 
 ```
+- \<T extends Number> Box\<T> makeBox(T o)  
+메소드 모양 때문에 혼란이 올 수 있지만, 제네릭 클래스를 떠올리며 이해해보자. 클래스 정의했을 때와 똑같다.  
+클래스에 있었던 선언이 메소드의 위치로 내려온 것일뿐이다.
+
+- T에 올 수 있는 것은 Number이거나 Number를 상속한 클래스이어야 한다고 제한을 하고 있다.
+ 
+- Number로 제한을 했기 때문에 Number에 정의되어있는 메소드 호출이 가능하다.
+
+- 제네릭 클래스와 제네릭 메소드는 T의 결정 시기에서 차이가 난다.
