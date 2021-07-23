@@ -11,6 +11,11 @@
    1.7 [상한이 제한된 와일드카드](#17-상한이-제한된-와일드카드upper-bounded-wildcards)  
    1.8 [하한이 제한된 와일드카드(Lower-Bounded Wildcards)](#18-하한이-제한된-와일드카드lower-bounded-wildcards)  
    1.9 [와일드카드 제한 이유를 설명하기 위한 도입](#19-와일드카드-제한-이유를-설명하기-위한-도입)  
+   1.10 [상한 제한의 목적](#110-상한-제한의-목적)  
+   1.11 [상한 제한의 결과](#111-상한-제한의-결과)  
+   1.12 [하한 제한의 목적](#112-하한-제한의-목적)  
+   1.13 [하한 제한의 결과](#113-하한-제한의-결과)  
+   1.14 [상한 제한과 하한 제한의 좋은 예](#114-상한-제한과-하한-제한의-좋은-예)  
 
 <br>
 
@@ -297,6 +302,16 @@ public static void outBox(Box<? extends Toy> box) {
 }
 ```
 - Box<? extends Toy> box 대상으로 넣는 것은 불가능하다.
+
+- [ ] 제대로 이해한 게 맞는지 확인  
+    타입에 상한 제한을 걸어서 Box\<Toy>, Box\<Car>, Box\<Robot> 세 개만 올 수 있다.  
+    이게 set 메소드 호출하는 것과 무슨 상관이 있는지?
+
+    set 메소드를 호출 할 때 set(Toy o)처럼 
+    Toy형은 set 메소드를 호출하는 게 가능하다.  
+    그렇다면 Car형과 Robot형은?  
+    set(Car o), set(Robot o)로 메소드의 인자에 자료형으로 전달할 수가 없어서 불가능하다.
+    
 <br>
 <br>
 
@@ -313,6 +328,7 @@ class BoxHandler {
     }
 }
 ```
+- 코드의 안전성이 높아졌다.
 <br>
 <br>
 
@@ -370,12 +386,14 @@ class BoxHandler {
 ## 1.14 상한 제한과 하한 제한의 좋은 예
 ```java
 class BoxContentsMover {
-    // from 에 저장된 내용물을 to 로 이동
+    // from에 저장된 내용물을 to로 이동
     public static void moveBox(Box<? super Toy> to, Box<? extends Toy> from) {
         to.set(from.get());
     }
 }
 ```
+- from.set(to.get());  
+상한과 하한을 제한해서 코드를 작성해놓으면 이런 실수를 하지 않는다.
 <br>
 <br>
 
