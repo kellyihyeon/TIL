@@ -9,6 +9,8 @@
    1.5 [기능적으로는 두 메소드 완전 동일](#15-기능적으로는-두-메소드-완전-동일)  
    1.6 [와일드 카드의 상한과 하한의 제한: Bounded Wildcards](#16-와일드-카드의-상한과-하한의-제한-bounded-wildcards)  
    1.7 [상한이 제한된 와일드카드](#17-상한이-제한된-와일드카드upper-bounded-wildcards)  
+   1.8 [하한이 제한된 와일드카드(Lower-Bounded Wildcards)](#18-하한이-제한된-와일드카드lower-bounded-wildcards)  
+   1.9 [와일드카드 제한 이유를 설명하기 위한 도입](#19-와일드카드-제한-이유를-설명하기-위한-도입)  
 
 <br>
 
@@ -183,9 +185,22 @@ public static void peekBox(Box<? super Integer> box) {
    System.out.println(box); 
 }
 ```
+
+```text
+Object
+  ↑
+Number
+  ↑
+Integer
+```
 - box는 Box\<T> 인스턴스의 참조 값을 전달 받는 매개변수이다.  
 단 전달되는 인스턴스의 T는 Integer 또는 Integer가 상속하는 클래스 이어야 한다.  
 즉 위 메소드의 인자로 전달 가능한 인스턴스는 Box\<Integer>, Box\<Number>, Box\<Object>로 제한된다.
+
+- Integer로 하한 제한을 했다. 
+최소 Integer를 기준으로 Integer 위로, Integer가 직접 또는 간접적으로 상속하는 클래스만 허용한다.
+
+- 예를들어 Number를 상속하는 Double, Boolean 등은 오지 못한다.
 <br>
 <br>
 
@@ -214,16 +229,21 @@ class Toy {
 
 ```java
 class BoxHandler {
+
+    // 상자에서 꺼내는 메소드
     public static void outBox(Box<Toy> box) {
-        Toy t = box.get();  // 상자에서 꺼내기
+        Toy t = box.get();
         System.out.println(t);
     }
 
+    // 상자에 넣는 메소드
     public static void inBox(Box<Toy> box, Toy n) {
-        box.set(n);    // 상자에 넣기
+        box.set(n);
     }
 }
 ```
+- 프로그래머가 두 가지 메소드를 정의했다.  
+각 메소드의 기능에 맞는 동작이 일어나야 하는데, outBox에서 상자에 넣는 동작이 일어난다면, 그것은 프로그래머의 실수이고 이 실수가 컴파일 오류로 이어지는 게 가장 바람직하다.
 
 ```java
 // 아래의 오류 상황에서 컴파일 오류가 발생하지 않는다.
@@ -237,7 +257,15 @@ class BoxHandler {
         Toy myToy = box.get();  // 꺼내는 것도 OK
     }
 ```
+- 각 메소드의 기능에 맞지 않는 동작이 일어났지만 컴파일 오류가 발생하지 않는다.  
+무엇인가를 박스에서 꺼내려고 하는데 set 메소드를 호출하는 것 자체가 오류이다.  
+오류임에도 불구하고 컴파일과정에서 오류가 드러나지 않는다.  
 
+- 좋은 프로그래밍 언어는 프로그래머의 의도에서 벗어난 코드에 대해 컴파일 오류를 일으켜 주는 언어이다.   
+따라서 컴파일 오류를 일으켜주는 장치가 있다고 부각시키는 것이다.
+
+- 이런 실수를 누가하느냐?  
+처음부터 끝까지 전부 타이핑을 하는 경우가 아니라 일부 검증된 코드를 copy & paste 할 때, copy는 잘했는데 paste 할 위치를 잘못 찍었을 때 이런 실수가 일어난다.
 <br>
 <br>
 
