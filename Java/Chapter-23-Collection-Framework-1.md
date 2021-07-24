@@ -9,6 +9,8 @@
    2.2 [ArrayList\<E> 클래스](#22-arrayliste-클래스)   
    2.3 [LinkedList\<E> 클래스](#23-linkedliste-클래스)  
    2.4 [ArrayList\<E> vs LinkedList\<E>](#24-arrayliste-vs-linkedliste)   
+   2.5 [저장된 인스턴스의 순차적 접근 방법 1: enhanced for문의 사용](#25-저장된-인스턴스의-순차적-접근-방법-1-enhanced-for문의-사용)  
+   2.6 [저장된 인스턴스의 순차적 접근 방법 2](#26-저장된-인스턴스의-순차적-접근-방법-2)  
 
 3. []()
 4. []()
@@ -254,10 +256,16 @@ public static void main(String[] args) {
     Interable\<T> 인터페이스의 구현
 
 - public interface Collection\<E> extends Iterable\<E>
+
+- 반복자 Iterable 등장과 iterator() 메소드
 <br>
 <br>
 
+
 ## 2.6 저장된 인스턴스의 순차적 접근 방법 2
+A에서 값을 꺼내오는 방법, B에서 값을 꺼내오는 방법, C에서 값을 꺼내오는 방법이 각각 다르다.  
+사용자의 입장에서는 A,B,C에서 값을 꺼내오는 방법이 동일한 것이 좋은데, 이를 가능하게 해주는 것이 반복자이다.
+
 ```java
 public static void main(String[] args) {
     List<String> list = new LinkedList<>();
@@ -271,6 +279,17 @@ public static void main(String[] args) {
     }
 }
 ```
+- Iterator<String> itr = list.iterator();  
+iterator() 반복자를 호출했다. 
+
+- str = itr.next();  
+반복자가 값을 하나씩 꺼내준다. 우리는 반복자가 어떤 방법을 써서 값을 꺼내오는지는 알 필요가 없다.  
+next() 메소드를 사용하기만 하면 된다.  
+반복자를 사용하는 방법만 일단 습득하면 대상이 누구이든지간에 순차적인 참조를 쉽게할 수 있다.
+
+- itr.hasNext()  
+반환받을 값이 있는지 반복자에게 물어보는 메소드이다.  
+있다면 true를 반환해주고, 없다면 false를 반환해준다.  
 
 ```java
 public interface Iterble<T> {
@@ -280,6 +299,7 @@ public interface Iterble<T> {
 ```
 <br>
 <br>
+
 
 ## 2.7 Iterator 반복자의 세 가지 메소드
 ```java
