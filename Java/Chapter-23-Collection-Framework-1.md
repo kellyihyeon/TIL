@@ -1,0 +1,369 @@
+# 컬렉션 프레임워크 1
+
+## 목차
+1. [컬렉션 프레임워크의 이해](#1-컬렉션-프레임워크의-이해)  
+   1.1 [컬렉션 프레임워크](#11-컬렉션-프레임워크)  
+
+2. []()
+3. []()
+4. []()
+5. []()
+
+<br>
+
+# 1. 컬렉션 프레임워크의 이해
+- 인스턴스의 저장에 관련된 것이다.  
+어떻게 저장할 것인가?   
+어떻게 저장할 것인가를 고민하는 것이 아니라 저장하는 방법을 클래스로 정의를 해서 우리에게 제공해준다. 그렇게해서 만들어진 것이 **`컬렉션 프레임워크`** 이다.
+
+- 저장을 했으면 경우에 따라서 참조, 삭제도 가능해야한다. 전반적으로 인스턴스의 저장, 참조, 삭제에 대한 것을 모아 놓은 것이 컬렉션 프레임워크이다.
+
+- 인스턴스를 저장하는 데는 다양한 방법이 있다.   
+이런 다양한 방법들을 모아놓은 학문을 자료구조 라고 한다.  
+자바에서는 이 방법을 클래스별로 만들어놓았다.  
+<br>
+
+## 1.1 컬렉션 프레임워크
+```text
+      Collection<E>
+            ↑               Map<K, V>
+┌───────────┴──────────┐
+Set<E>   List<E>   Queue<E>
+```
+- 컬렉션 프레임워크의 골격에 해당하는 **`인터페이스`** 들
+
+- 자료구조 및 알고리즘을 구현해 놓은 일종의 라이브러리이다.  
+제네릭 기반으로 구현이 되어 있다.
+
+- 구현하는 인터페이스에 따라 **`사용방법`** 과 **`특성`** 이 결정된다.
+
+- Set\<E> 이라는 것은 인스턴스의 저장, 삭제, 참조하는 방법의 하나이다.   
+List\<E>도 마찬가지이다.   
+"List\<E>, Set\<E>을 기반으로 인스턴스를 저장하고 삭제하겠다."  
+List\<E>, Set\<E> 등은 자료구조의 이름이다.
+<br>
+<br>
+
+
+# 2. List\<E> 인터페이스를 구현하는 컬렉션 클래스들
+## 2.1 List\<E> 인터페이스
+- List\<E> 인터페이스를 구현하는 대표적인 컬렉션 클래스 둘은 다음과 같다.
+  - ArrayList\<E>   
+    **`배열 기반`** 자료구조, 배열을 이용하여 인스턴스 저장
+  - LinkedList\<E>  
+    **`리스트 기반`** 자료구조, 리스트를 구성하여 인스턴스 저장
+
+- List\<E> 인터페이스를 구현하는 컬렉션 클래스들의 공통 특성
+  - 인스턴스 저장 순서 유지
+  - 동일 인스턴스의 중복 저장을 허용한다.
+<br>
+<br>
+
+## 2.2 ArrayList\<E> 클래스
+```java
+public static void main(String[] args) {
+    List<String> list = new ArrayList<>();  // 컬렉션 인스턴스 생성
+
+    // 컬렉션 인스턴스에 문자열 인스턴스 저장
+    list.add("Toy");
+    list.add("Box");
+    list.add("Robot");
+
+    // 저장된 문자열 인스턴스의 참조
+    for (int i = 0; i < list.size(); i++) {
+        System.out.print(list.get(i) + '\t');
+    }
+    System.out.println();
+
+    list.remove(0); // 첫 번째 인스턴스 삭제
+
+    // 첫 번째 인스턴스 삭제 후 나머지 인스턴스들을 참조
+    for (int i = 0; i < list.size(); i++) {
+        System.out.print(list.get(i) + '\t');
+    }
+    System.out.println();
+}
+```
+
+```bash
+Toy	Box	Robot	
+Box	Robot
+```
+- 배열 기반 자료구조이지만 공간의 확보 및 확장은 ArrayList 인스턴스가 스스로 처리한다.
+
+<br>
+<br>
+
+## 2.3 LinkedList\<E> 클래스
+```java
+public static void main(String[] args) {
+    List<String> list = new LinkedList<>();  // 유일한 변화
+
+    // 컬렉션 인스턴스에 문자열 인스턴스 저장
+    list.add("Toy");
+    list.add("Box");
+    list.add("Robot");
+
+    // 저장된 문자열 인스턴스의 참조
+    for (int i = 0; i < list.size(); i++) {
+        System.out.print(list.get(i) + '\t');
+    }
+    System.out.println();
+
+    list.remove(0); // 첫 번째 인스턴스 삭제
+
+    // 첫 번째 인스턴스 삭제 후 나머지 인스턴스들을 참조
+    for (int i = 0; i < list.size(); i++) {
+        System.out.print(list.get(i) + '\t');
+    }
+    System.out.println();
+}
+```
+- 리스트 기반 자료구조는 열차 칸을 더하고 빼는 형태의 자료구조이다.
+  
+- 인스턴스 저장:  
+열차 칸을 하나 더한다.
+
+- 인스턴스 삭제:  
+해당 열차 칸을 삭제한다.
+<br>
+<br>
+
+## 2.4 ArrayList\<E> vs LinkedList\<E>
+### 2.4.1 ArrayList\<E>
+- ArrayList\<E>의 단점  
+  - 저장 공간을 늘리는 과정에서 시간이 비교적 많이 소요된다.
+  - 인스턴스의 삭제 과정에서 많은 연산이 필요할 수 있다. 따라서 느릴 수 있다.
+
+- ArrayList\<E>의 장점
+  - 저장된 인스턴스의 참조가 빠르다
+<br>
+
+### 2.4.2 LinkedList\<E>
+- LinkedList\<E>의 단점
+  - 저장된 인스턴스의 참조 과정이 배열에 비해 복잡하다. 따라서 느릴 수 있다.
+
+- LinkedList\<E>의 장점
+  - 저장 공간을 늘리는 과정이 간단하다.
+  - 저장된 인스턴스의 삭제 과정이 단순하다.
+<br>
+<br>
+
+## 2.5 저장된 인스턴스의 순차적 접근 방법 1: enhanced for문의 사용
+```java
+public static void main(String[] args) {
+    List<String> list = new LinkedList<>(); 
+
+    // 인스턴스 저장
+    list.add("Toy");
+    list.add("Box");
+    list.add("Robot");
+
+    // 전체 인스턴스의 참조
+    for (String s : list) {
+        System.out.print(s + '\t');
+    }
+    ...
+}
+```
+- for-each문의 대상이 되기 위한 조건  
+    Interable\<T> 인터페이스의 구현
+
+- public interface Collection\<E> extends Iterable\<E>
+<br>
+<br>
+
+## 2.6 저장된 인스턴스의 순차적 접근 방법 2
+```java
+public static void main(String[] args) {
+    List<String> list = new LinkedList<>();
+    ...
+    Iterator<String> itr = list.iterator();  // 반복자 획득. itr이 지팡이를 참조한다.
+
+    // 반복자를 이용한 순차적 참조
+    while (itr.hasNext()) {    // next 메소드가 반환할 대상이 있다면, 
+        str = itr.next();      // next 메소드를 호출한다.
+        ...
+    }
+}
+```
+
+```java
+public interface Iterble<T> {
+    Iterator<T> iterator();
+    ...
+}
+```
+<br>
+<br>
+
+## 2.7 Iterator 반복자의 세 가지 메소드
+```java
+E next()              다음 인스턴스의 참조 값을 반환  
+boolean hasNext()     next 메소드 호출 시 참조 값 반환 가능 여부 확인
+void remove()         next 메소드 호출을 통해 반환했던 인스턴스 삭제
+```
+
+```java
+// 반복자를 이용한 참조 과정 중 인스턴스의 삭제
+while (itr.hasNext()) {    
+    str = itr.next();      
+    if (str.equals("Box")) {
+        itr.remove();   // 위에서 next 메소드가 반환한 인스턴스 삭제
+    }
+}
+```
+<br>
+<br>
+
+## 2.8 배열보다는 컬렉션 인스턴스가 좋다: 컬렉션 변환 1
+```text
+1. 인스턴스의 저장과 삭제가 편하다.
+2. 반복자를 쓸 수 있다.
+```
+- 두 가지의 이유로 배열보다 ArrayList\<E>가 더 좋다.
+
+- 하지만 배열처럼 선언과 동시에 초기화가 불가능하다.
+<br>
+
+```java
+List<String> list = Arrays.asList("Toy", "Robot", "Box");
+```
+- 초기화를 위해 쓸 수 있는 방법
+
+- 인자로 전달된 인스턴스들을 저장한 컬렉션 인스턴스의 생성 및 반환
+
+- 이렇게 생성된 리스트 인스턴스는 Immutable 인스턴스이다.
+<br>
+<br>
+
+
+## 2.9 배열보다는 컬렉션 인스턴스가 좋다: 컬렉션 변환 2
+```java
+public ArrayList(Collection<? extends E> c) {...}
+```
+- 생성자를 통해서 새로운 ArrayList 인스턴스 생성이 가능하다.
+
+- Collection\<E>를 구현한 컬렉션 인스턴스를 인자로 전달받는다.  
+그리고 E는 인스턴스 생성 과정에서 결정되므로 무엇이든 될 수 있다.  
+덧붙여서 매개변수 c로 전달된 컬렉션 인스턴스에서는 참조만(꺼내기만) 가능하다.
+<br>
+
+```java
+public static void main(String[] args) {
+    List<String> list = Arrays.asList("Toy", "Box", "Robot", "Box");
+
+    // 생성자 public ArrayList(Collection<? extends E> c)를 통한 인스턴스 생성
+    list = new ArrayList<>(list);
+    ...
+}
+```
+<br>
+<br>
+
+## 2.10 배열 기반 리스트를 연결 기반 리스트로
+```java
+public ArrayList(Collection<? extends E> c)     // ArrayList<E> 생성자 중 하나
+```
+- 인자로 전달된 컬렉션 인스턴스로부터 ArrayList\<E> 인스턴스 생성
+<br>
+
+```java
+public LinkedList(Collection<? extends E> c)     // LinkedList<E> 생성자 중 하나
+```
+- 인자로 전달된 인스턴스로부터 LinkedList\<E> 인스턴스 생성
+<br>
+
+```java
+public static void main(String[] args) {
+    List<String> list = Arrays.asList("Toy", "Box", "Robot", "Box");
+    list = new ArrayList<>(list);
+
+    ...   
+    // ArrayList<E> 인스턴스 기반으로 LinkedList<E> 인스턴스 생성
+    list = new LinkedList<>(list);
+    ...
+
+}
+```
+<br>
+<br>
+
+
+## 2.11 기본 자료형 데이터의 저장과 참조
+```java
+public static void main(String[] args) {
+    LinkedList<Integer> list = new LinkedList<>();
+    list.add(10);   // 저장 과정에서 오토 박싱 진행
+    list.add(20);
+    list.add(30);
+    
+    int n;
+    for (Iterator<Integer> itr = list.iterator(); itr.hasNext(); ) {
+        n = itr.next();     // 오토 언박싱 진행
+        System.out.print(n + "\t");
+    }
+    System.out.println();
+}
+```
+- 오토 박싱과 오토 언박싱 덕분에 컬렉션 인스턴스에 기본 자료형의 값도 저장 가능하다.
+<br>
+<br>
+
+## 2.12 리스트만 갖는 양방향 반복자
+```java
+public ListIterator<E> listIterator()   // List<E> 인터페이스의 메소드
+```
+- ListIterator\<E>는 Iterator\<E>을 상속한다.
+
+```java
+E next()                다음 인스턴스의 참조 값을 반환
+boolean hasNext()       next 메소드 호출 시 참조 값 반환 가능 여부 확인
+void remove()           next 메소드 호출을 통해 반환했던 인스턴스를 삭제
+
+E previous()            next 메소드와 기능은 같고 방향만 반대
+boolean hasPrevious()   hasNext 메소드와 기능은 같고 방향만 반대
+
+void add(E e)           인스턴스의 추가
+void set(E e)           인스턴스의 변경
+```
+<br>
+<br>
+
+## 2.13 양방향 반복자의 예
+```java
+public static void main(String[] args) {
+    List<String> list = Arrays.asList("Toy", "Box", "Robot", "Box");
+    list = new ArrayList<>(list);
+
+    ListIterator<String> litr = list.listIterator();    // 양방향 반복자 획득
+
+    String str;
+    while (litr.hasNext()) {    // 왼쪽에서 오른쪽으로 이동을 위한 반복문
+        str = litr.next();
+        System.out.print(str + '\t');
+        if (str.equals("Toy")) {     // "Toy" 만나면 "Toy2" 저장
+            litr.add("Toy2");
+        }
+    }
+    System.out.println();
+
+    while (litr.hasPrevious()) {    // 오른쪽에서 왼쪽으로 이동을 위한 반복문
+        str = litr.previous();
+        System.out.print(str + '\t');
+        if (str.equals("Robot")) {  // "Robot" 만나면 "Robot2" 저장
+            litr.add("Robot2");
+        }
+    }
+}
+```
+
+```bash
+Toy	Box	Robot	Box	
+Box	Robot	Robot2	Box	Toy2	Toy	
+```
+<br>
+<br>
+
+
+# 3. Set\<E> 인터페이스를 구현하는 컬렉션 클래스들
