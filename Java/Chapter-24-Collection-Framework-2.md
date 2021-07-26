@@ -8,6 +8,7 @@
    1.4 [<T extends Comparable\<? super T>>의 이해 1](#14-t-extends-comparable-super-t의-이해-1)  
    1.5 [<T extends Comparable\<? super T>>의 이해 2](#15-t-extends-comparable-super-t의-이해-2)  
    1.6 [<T extends Comparable\<? super T>>의 이해 3](#16-t-extends-comparable-super-t의-이해-3)  
+   1.7 [정렬: Comparator\<T> 기반](#17-정렬-comparatort-기반)  
 
 <br>
 
@@ -196,6 +197,8 @@ public static void main(String[] args) {
     Collections.sort(elist, comp);
 }
 ```
+- Collections.sort(elist, comp);  
+sort 메소드의 Comparator<? super T> 부분이 Comparator\<T>였다면 clist를 전달 할 때는 문제 없었지만 elist를 전달하려 할 때에는 CarComp가 Comparator\<Ecar>를 구현하고 있지 않기 때문에 인자로 전달할 수 없다.  
 <br>
 <br>
 
