@@ -9,6 +9,8 @@
    1.5 [<T extends Comparable\<? super T>>의 이해 2](#15-t-extends-comparable-super-t의-이해-2)  
    1.6 [<T extends Comparable\<? super T>>의 이해 3](#16-t-extends-comparable-super-t의-이해-3)  
    1.7 [정렬: Comparator\<T> 기반](#17-정렬-comparatort-기반)  
+   1.8 [찾기](#18-찾기)  
+   1.9 [찾기의 예](#19-찾기의-예)  
 
 <br>
 
@@ -234,11 +236,11 @@ class StringBinarySearch {
     }
 }
 ```
-
 ```bash
 Robot
 ```
-
+- Collections.binarySearch(list, "Robot");  
+앞의 예시였던 Car와 ECar 관계를 떠올리면 이해가 쉽다.
 <br>
 <br>
 
