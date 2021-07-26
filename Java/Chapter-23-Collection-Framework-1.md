@@ -35,7 +35,13 @@
    3.13 [Comparator\<T> 인터페이스 기반 TreeSet\<E>의 예 2](#313-comparatort-인터페이스-기반-treesete의-예-2)  
    3.14 [중복된 인스턴스의 삭제](#314-중복된-인스턴스의-삭제)  
 
-4. []()
+4. [Queue\<E> 인터페이스를 구현하는 컬렉션 클래스들](#4-queuee-인터페이스를-구현하는-컬렉션-클래스들)  
+   4.1 [스택과 큐의 이해](#41-스택과-큐의-이해)  
+   4.2 [큐 인터페이스](#42-큐-인터페이스)  
+   4.3 [큐의 구현](#43-큐의-구현)  
+   4.4 [스택(Stack)의 구현](#44-스택stack의-구현)  
+   4.5 [스택의 예](#45-스택의-예)
+
 5. []()
 
 <br>
@@ -936,13 +942,19 @@ Box	Toy
 <br>
 
 
-## 4. Queue\<E> 인터페이스를 구현하는 컬렉션 클래스들
+# 4. Queue\<E> 인터페이스를 구현하는 컬렉션 클래스들
 ## 4.1 스택과 큐의 이해
+### 4.1.1 스택
+![Stack](./Img/Stack.png)
 - LIFO(last-in-first-out)  
 먼저 저장된 데이터가 마지막에 빠져나간다.
+<br>
 
+### 4.1.2 큐
+![Queue](./Img/Queue.png)
 - FIFO(first-in-first-out)  
-먼저 저장된 데이터가 먼저 빠져나간다.
+먼저 저장된 데이터가 먼저 빠져나간다.  
+들어간 순서대로 나온다.
 <br>
 <br>
 
@@ -958,6 +970,16 @@ boolean offer(E e)      넣기, 넣을 공간이 부족하면 false반환
 E poll()                꺼내기, 꺼낼 대상 없으면 null 반환
 E peek()               확인하기, 확인할 대상이 없으면 null 반환
 ```
+- remove()도 element()도 인스턴스의 참조값을 반환을 한다.  
+remove는 참조값을 반환하면서 Queue 에서 빼버리고, element는 Queue에서 꺼내지않고 내버려둔다는 차이가 있다. 
+
+- 차이점  
+    add(E e), remove(), element()   
+    offer(E e), poll(), peek()은 기능은 동일하다.  
+    차이는 위의 3가지 메소드들은 더 이상 넣거나, 꺼내거나 확인할 수 없는 상황일 때 자바의 예외처리 메커니즘이 동작한다. (예외가 발생한다.)  
+
+    예외가 아니라 이런 상황 자체가 알고리즘의 일부일 수도 있는데 예외처리가 돼버리면 상황 자체를 활용할 수 없다. (Queue\<E>가 다른 알고리즘 구현에 일부러 적용될 경우)  
+    이를 위해 offer(E e), poll(), peek() 메소드들을 제공해준다.  
 <br>
 <br>
 
@@ -990,38 +1012,52 @@ Toy
 next: Robot
 Robot
 ```
-- LinkedList\<E>는 List\<E>와 동시에 Queue\<E>를 구현하는 컬렉션 클래스이다.  
+- Queue\<String> que = new LinkedList<>();  
+LinkedList\<E>는 List\<E>와 동시에 Queue\<E>를 구현하는 컬렉션 클래스이다.  
 따라서 어떠한 타입의 참조변수로 참조하느냐에 따라 '리스트'로도 '큐'로도 동작한다.  
+
+- 데이터를 꺼내는 방법에서 차이가 나지만 List와 Queue는 데이터가 저장되는 방식은 같다.  
 <br>
 <br>
 
 ## 4.4 스택(Stack)의 구현
+![Deque](./Img/Deque.png)  
+- Deque  
+Queue는 입구와 출구가 명확했다.  
+Deque같은 경우는 양쪽이 뚫려 있기 때문에 뚫려 있는 쪽으로 넣고 꺼낼 수 있다.
+
 - Deque를 기준으로 스택을 구현하는 것이 자바에서의 원칙이다.
+<br>
 
+### 4.4.1 Deque\<E> 인터페이스의 메소드들
 ```text
-Deque\<E> 인터페이스의 메소드들
-
-- 앞으로 넣고, 꺼내고, 확인하기
+앞으로 넣고, 꺼내고, 확인하기
 boolean offerFirst(E e)     넣기, 공간 부족하면 false 반환
 E pollFirst()               꺼내기, 꺼낼 대상 없으면 null 반환
 E peekFirst()               확인하기, 확인할 대상 없으면 null 반환
 
-- 뒤로 넣고, 꺼내고, 확인하기
+뒤로 넣고, 꺼내고, 확인하기
 boolean offerLast(E e)      넣기, 공간이 부족하면 false반환
 E pollLast()                꺼내기, 꺼낼 대상 없으면 null 반환
 E peekLast()                확인하기, 확인할 대상이 없으면 null 반환
+```
+- 앞, 뒤라는 상대적인 개념으로 이해하자.  
 
-- 앞으로 넣고, 꺼내고, 확인하기
+- 예외가 발생되지 않는다.
+<br>
+
+```text
+앞으로 넣고, 꺼내고, 확인하기
 void addFirst(E e)          넣기
 E removeFirst()             꺼내기
 E getFirst()                확인하기
 
-- 뒤로 넣고, 꺼내고, 확인하기
+뒤로 넣고, 꺼내고, 확인하기
 void addLast(E e)          넣기
 E removeLast()             꺼내기
 E getLast()                확인하기
 ```
-
+- 예외가 발생한다.
 <br>
 <br>
 
@@ -1046,13 +1082,16 @@ public static void main(String[] args) {
 2. Toy
 3. Robot
 ```
-- 다음 문장도 구성 가능하다.  
-Deque\<String> deq = new LinkedList<>();
+- Deque\<String> deq = new ArrayDeque<>();  
+Deque를 구현하고 스택처럼 쓰고 있다. (배열을 기반으로 Deque를 구현했다.)  
+그리고 이 문장은 다음 문장으로도 구성 가능하다.  
+`Deque<String> deq = new LinkedList<>();`
 
 - LinkedList\<E>가 구현하는 인터페이스들  
-Deque\<E>, Queue\<E>
+  - Deque\<E>, List\<E>, Queue\<E>
 <br>
 <br>
+
 
 ## 5. Map\<K, V> 인터페이스를 구현하는 컬렉션 클래스들
 ## 5.1 Key-Value 방식의 데이터 저장과 HashMap<K,V> 클래스
