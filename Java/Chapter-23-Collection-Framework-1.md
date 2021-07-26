@@ -42,8 +42,11 @@
    4.4 [스택(Stack)의 구현](#44-스택stack의-구현)  
    4.5 [스택의 예](#45-스택의-예)
 
-5. []()
-
+5. [Map\<K, V> 인터페이스를 구현하는 컬렉션 클래스들](#5-mapk-v-인터페이스를-구현하는-컬렉션-클래스들)  
+   5.1 [Key-Value 방식의 데이터 저장과 HashMap<K, V> 클래스](#51-key-value-방식의-데이터-저장과-hashmapk-v-클래스)  
+   5.2 [HashMap\<K, V>의 순차적 접근 방법](#52-hashmapk-v의-순차적-접근-방법)  
+   5.3 [HashMap\<K, V>의 순차적 접근의 예](#53-hashmapk-v의-순차적-접근의-예)  
+   5.4 [TreeMap\<K, V>의 순차적 접근의 예](#54-treemapk-v의-순차적-접근의-예)  
 <br>
 
 # 1. 컬렉션 프레임워크의 이해
@@ -1093,8 +1096,8 @@ Deque를 구현하고 스택처럼 쓰고 있다. (배열을 기반으로 Deque�
 <br>
 
 
-## 5. Map\<K, V> 인터페이스를 구현하는 컬렉션 클래스들
-## 5.1 Key-Value 방식의 데이터 저장과 HashMap<K,V> 클래스
+# 5. Map\<K, V> 인터페이스를 구현하는 컬렉션 클래스들
+## 5.1 Key-Value 방식의 데이터 저장과 HashMap<K, V> 클래스
 ```java
 public static void main(String[] args) {
     HashMap<Integer, String> map = new HashMap<>();
@@ -1130,9 +1133,9 @@ public static void main(String[] args) {
 ## 5.2 HashMap\<K, V>의 순차적 접근 방법
 - HashMap\<K, V>클래스는 Iterable\<T> 인터페이스를 구현하지 않으니 for-each문을 통해서, 혹은 '반복자'를 얻어서 순차적 접근을 진행할 수 없다.
 
-- 대신 ketSet() 메소드 호출을 통해서 Key를 따로 모아 놓은 컬렉션 인스턴스를 얻을 수 있다.  
+- 대신 keySet() 메소드 호출을 통해서 Key를 따로 모아 놓은 컬렉션 인스턴스를 얻을 수 있다.  
 그리고 이때 반환된 컬렉션 인스턴스를 대상으로 반복자를 얻을 수 있다.
-  - public Set\<K> ketset()
+  - public **`Set<K>`** keySet()
 <br>
 <br>
 
@@ -1211,5 +1214,5 @@ public static void main(String[] args) {
 Lumpy	Bubblegum	Marcelline	
 Lumpy	Bubblegum	Marcelline	
 ```
-- Tree 자료구조의 특성상 반복자가 정렬된 순서대로 key들에 접근을 하고 있다.  
+- Tree 자료구조의 특성상 반복자가 **`정렬된 순서`** 대로 key들에 접근을 하고 있다.  
 이렇듯 반복자의 접근 순서는 컬렉션 인스턴스에 따라 달라질 수 있다.
