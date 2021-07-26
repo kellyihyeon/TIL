@@ -30,6 +30,10 @@
    3.8 [TreeSet\<E> 클래스의 이해와 활용](#38-treesete-클래스의-이해와-활용)  
    3.9 [TreeSet\<E> 클래스의 오름차순 출력이란?](#39-treesete-클래스의-오름차순-출력이란)  
    3.10 [TreeSet 인스턴스에 저장될 것을 고려한 클래스의 예](#310-treeset-인스턴스에-저장될-것을-고려한-클래스의-예)  
+   3.11 [Comparator\<T> 인터페이스 기반으로 TreeSet\<E>의 정렬 기준 제시하기](#311-comparatort-인터페이스-기반으로-treesete의-정렬-기준-제시하기)  
+   3.12 [Comparator\<T> 인터페이스 기반 TreeSet\<E>의 예](#312-comparatort-인터페이스-기반-treesete의-예)  
+   3.13 [Comparator\<T> 인터페이스 기반 TreeSet\<E>의 예 2](#313-comparatort-인터페이스-기반-treesete의-예-2)  
+   3.14 [중복된 인스턴스의 삭제](#314-중복된-인스턴스의-삭제)  
 
 4. []()
 5. []()
@@ -796,10 +800,21 @@ public interface Comparator<T>
 o1이 o2보다 작으면 음의 정수 반환  
 o1과 o2가 같다면 0을 반환
 
+ ```java
+public TreeSet(Comparator<? super E> comparator)
+```
 - 위 인터페이스를 구현한 클래스의 인스턴스를 TreeSet\<E>의 다음 생성자를 통해 전달한다.
-    ```java
-    public TreeSet(Comparator<? super E> comparator)
-    ```
+
+- String 클래스도 Comparable 인터페이스를 구현한 클래스여서 compareTo 메소드가 정의되어있다. 
+문자열의 정렬기준은 사전편찬 순이다.  
+사전 편찬 순으로 문자열이 정렬이 되는데, 이 기준을 사전편찬 순이 아니라 문자열의 길이라든지 다른 기준으로 바꾸고 싶다면 String 클래스의 compareTo 메소드를 뜯어 고칠 수도 없고 어떻게 해야 할까?  
+바꾸는 방법을 TreeSet 에서 제공해준다.
+
+- TreeSet 인스턴스를 생성할 때, 이 생성자 호출 시에 정렬의 기준 정보를 인자로 전달해주면 이 기준 정보를 가지고 Tree 구조로 인스턴스들을 저장하겠다는 의미이다.  
+
+- public MyClass Comparator\<T>  
+Comparator\<T> 인터페이스를 구현하고 있는 클래스를 하나 만든다.  
+그리고 int compare(T o1, T o2) 메소드를 사용해서 내가 원하는 정렬 기준을 만들고 이 클래스를 TreeSet 생성자의 인자로 넘겨준다.   
 <br>
 <br>
 
@@ -815,6 +830,10 @@ class Person implements Comparable<Person> {
     }
 }
 ```
+- Person 클래스에는 compareTo 메소드가 정의되어있다.  
+정의 기준이 age 이므로 나이 순으로 Tree 구조로 저장이 될 것이다.
+  - 나이가 작은 순으로
+<br>
 
 ```java
 class PersonComparator implements Comparator<Person> {
@@ -824,6 +843,10 @@ class PersonComparator implements Comparator<Person> {
     }
 }
 ```
+- Comparator<Person> 을 구현하고 있는 클래스이다.  
+
+- 기준이 나이가 많은 순으로 정의가 되어있다. (기준을 바꿨다.)
+<br>
 
 ```java
 public static void main(String[] args) {
@@ -837,6 +860,9 @@ public static void main(String[] args) {
     }
 }
 ```
+- TreeSet 생성자를 생성하면서 PersonComparator 인스턴스를 인자로 넘겼다.  
+정렬은 PersonComparator의 compare 메소드에서 정의해 놓은대로 된다.
+<br>
 
 ```bash
 HONG: 53
@@ -874,13 +900,14 @@ public static void main(String[] args) {
 Box     Robot     Rabbit
 ```
 - String 클래스의 정렬 기준은 사전 편찬순이다.  
-이를 길이 순으로 바꾸는 문장
+이 정렬 기준을 길이 순으로 바꿔서 정의하였다.
 <br>
 <br>
 
 ## 3.14 중복된 인스턴스의 삭제
 ```java
 public static void main(String[] args) {
+    // 중복을 허용하는 리스트
     List<String> lst = Arrays.asList("Box", "Toy", "Box", "Toy");
     ArrayList<String> list = new ArrayList<>(lst);
 
@@ -907,6 +934,7 @@ Box	Toy
 ```
 <br>
 <br>
+
 
 ## 4. Queue\<E> 인터페이스를 구현하는 컬렉션 클래스들
 ## 4.1 스택과 큐의 이해
