@@ -11,6 +11,9 @@
    1.7 [정렬: Comparator\<T> 기반](#17-정렬-comparatort-기반)  
    1.8 [찾기](#18-찾기)  
    1.9 [찾기의 예](#19-찾기의-예)  
+   1.10 [찾기: Comparator\<T> 기반](#110-찾기-comparatort-기반)  
+   1.11 [찾기: Comparator\<T> 기반의 예](#111-찾기-comparatort-기반의-예)  
+   1.12 [복사하기](#112-복사하기)  
 
 <br>
 
@@ -284,6 +287,8 @@ class StringComparator {
 ```
 ROBOT
 ```
+- 주의할 것:  
+정렬 기준과 탐색 기준이 같기 때문에 sort 할 때의 정렬 기준과, Search 할 때의 정렬 기준이 다르면 의외의 결과를 얻을 수 있다. 
 <br>
 <br>
 
