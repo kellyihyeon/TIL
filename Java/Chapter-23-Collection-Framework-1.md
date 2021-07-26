@@ -348,7 +348,7 @@ while (itr.hasNext()) {
     }
 }
 ```
-![Iterator](./img/Iterator.png)  
+![Iterator](./Img/Iterator.png)  
 - str = itr.next();   
 반복자가 지팡이를 가지고 있다.  
 아무것도 참조하고 있지 않다가 next() 메소드를 호출함과 동시에 지팡이로 0번째 인덱스의 값을 가리키고, 그 값을 반환한다.  
