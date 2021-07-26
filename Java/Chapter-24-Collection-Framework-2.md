@@ -4,6 +4,10 @@
 1. [컬렉션 기반 알고리즘](#1-컬렉션-기반-알고리즘)    
    1.1 [정렬](#11-정렬)  
    1.2 [리스트 대상 정렬의 예](#12-리스트-대상-정렬의-예)  
+   1.3 [<T extends Comparable\<T>> 아니고 <T extends Comparable\<? super T>>](#13-t-extends-comparablet-아니고-t-extends-comparable-super-t)  
+   1.4 [<T extends Comparable\<? super T>>의 이해 1](#14-t-extends-comparable-super-t의-이해-1)  
+   1.5 [<T extends Comparable\<? super T>>의 이해 2](#15-t-extends-comparable-super-t의-이해-2)  
+   1.6 [<T extends Comparable\<? super T>>의 이해 3](#16-t-extends-comparable-super-t의-이해-3)  
 
 <br>
 
@@ -58,9 +62,9 @@ String 클래스는 Comparable\<String>를 구현하고 있으니 T의 조건에
 <br>
 
 
-## 1.3 \<T extends Comparable\<T>> 아니고 \<T extends Comparable\<? super T>>
+## 1.3 <T extends Comparable\<T>> 아니고 <T extends Comparable\<? super T>>
 - public static <T extends Comparable\<T>> void sort(List\<T> list)  
-위에서는 이해를 쉽게 하기 위해 임시로 이러한 메소드를 정의했다.
+위에서는 이해를 쉽게 하기 위해 임시로 이러한 메소드를 정의했다. 실제 있는 메소드가 아니다.
 
 - public static <T extends Comparable\<? super T>> void sort(List\<T> list)    
 실제로는 이 메소드이다.  
@@ -119,14 +123,19 @@ public static void main(String[] args) {
 }
 ```
 - Collections.sort(list);  
-이 메소드 호출이 성공할 수 있을까?
+이 메소드 호출이 성공할 수 있을까?  
+상식적으로 보면 이 메소드 호출은 성공해야 한다.  
+ECar가 Car를 상속하고 있고, Car가 Comparable\<Car>를 구현하고 있기 때문이다.  
 
 - public static <Ecar extends Comparable\<Ecar>> void sort(List\<Ecar> list)  
-이 메소드만 보면 불가능한 거 아니야???
-Comparable<Ecar> 이 자료형이 한 세트니까
-매개변수화 인자.
+메소드의 정의에 따라 ECar를 대입하였다.  
+이 메소드를 보면 ECar는 Comparable\<Ecar>를 구현해야 한다.  
+하지만 ECar는 Comparable\<Car>는 구현하지만 Comparable\<Ecar>는 구현하고 있지 않다.
+
+- sort 메소드 호출이 허용이 되게 해야 하는데, 이 상황에선 호출을 할 수가 없다.  
 <br>
 <br>
+
 
 ## 1.6 <T extends Comparable\<? super T>>의 이해 3
 ```java
@@ -141,10 +150,15 @@ public static void main(String[] args) {
     ...
 }
 ```
-- Collections.sort(list);  
-이 메소드는 호출이 가능하다.
+- <T extends Comparable\<? super T>>  
+실제 메소드의 제네릭 선언 부분이다.  
+여기에 Ecar를 대입해보자.  
 
-- public static <T extends Comparable\<? super T>> void sort(List\<T> list)   
+- Collections.sort(list);  
+이 메소드는 호출이 가능하다.  
+이제는 왜 Camparable 타입을 이렇게 정의했는지 이해할 수 있다.
+
+- **`public static <T extends Comparable<? super T>> void sort(List<T> list)`**  
 실제 메소드의 정의를 살펴보자.  
 -> public static <Ecar extends Comparable\<? super Ecar>> void sort(List\<Ecar> list)
 <br>
