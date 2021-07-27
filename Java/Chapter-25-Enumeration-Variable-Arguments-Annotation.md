@@ -6,10 +6,21 @@
    1.2 [이전 방식의 문제점](#12-이전-방식의-문제점)  
    1.3 [자료형의 부여를 돕는 열거형](#13-자료형의-부여를-돕는-열거형)  
    1.4 [열거형 기반으로 수정한 결과와 개선된 부분](#14-열거형-기반으로-수정한-결과와-개선된-부분)  
-   1.5 [클래스 내에 열거형 정의 가능](#15-클래스-내에-열거형-정의-가능)   
+   1.5 [클래스 내에 열거형 정의 가능](#15-클래스-내에-열거형-정의-가능)  
+   1.6 [열거형 값의 정체: 이런 문장 삽입 가능](#16-열거형-값의-정체-이런-문장-삽입-가능)  
+   1.7 [열거형 값의 정체: 열거형 값이 인스턴스라는 증거 1](#17-열거형-값의-정체-열거형-값이-인스턴스라는-증거-1)  
+   1.8 [열거형 값의 정체: 열거형 값이 인스턴스라는 증거 2](#18-열거형-값의-정체-열거형-값이-인스턴스라는-증거-2)  
+   1.9 [열거형 값의 정체: 결론](#19-열거형-값의-정체-결론)  
+   1.10 [열거형 생성자에 인자 전달하기](#110-열거형-생성자에-인자-전달하기)     
 
-2. []()
-3. []()
+2. [매개변수의 가변 인자 선언](#2-매개변수의-가변-인자-선언)  
+   2.1 [매개변수의 가변 인자 선언과 호출](#21-매개변수의-가변-인자-선언과-호출)  
+   2.2 [가변 인자 선언에 대한 컴파일러 처리](#22-가변-인자-선언에-대한-컴파일러-처리)  
+
+3. [어노테이션](#3-어노테이션)  
+   3.1 [어노테이션의 설명 범위](#31-어노테이션의-설명-범위)  
+   3.2 [\@Override](#32-override)  
+   3.3 [\@Deprecated](#33-deprecated)  
    
 <br>
 
@@ -305,11 +316,11 @@ I am 25 years old.
 # 2. 매개변수의 가변 인자 선언
 ## 2.1 매개변수의 가변 인자 선언과 호출
 ```java
-class Varargs {
-    public static void showAll(String... varargs) {
-        System.out.println("LENGTH: " + varargs.length);
+class Vargs {
+    public static void showAll(String... vargs) {
+        System.out.println("LENGTH: " + vargs.length);
 
-        for (String s : varargs) {
+        for (String s : vargs) {
             System.out.print(s + '\t');
         }
         System.out.println();
@@ -330,35 +341,44 @@ Box	Toy
 LENGTH: 3
 Box	Toy	Apple	
 ```
+- showAll(String... vargs)  
+가변 인자 선언.  
+하나, 하나 이상이 되어도 몇개든지 참조변수 vargs 다 받아주겠다는 의미이다. 
+
+- showAll("Box", "Toy", "Apple");  
+길이가 3인 배열이 만들어지고, 이 배열을 참조하는 참조값이 showAll 의 인자로 전달이 되는 것이다.  
 <br>
 <br>
 
 ## 2.2 가변 인자 선언에 대한 컴파일러 처리
 ```java
-public static void showAll(String... varargs) {...}
+public static void showAll(String... vargs) {...}
 
-    public static void main(String[] args) {
-        showAll("Box");
-        showAll("Box", "Toy");
-        showAll("Box", "Toy", "Apple");
-    }
+public static void main(String[] args) {
+    showAll("Box");
+    showAll("Box", "Toy");
+    showAll("Box", "Toy", "Apple");
+}
 ```
 - 컴파일러는 이를 아래와 같이 배열 기반 코드로 수정을 한다.
 
 ```java
-public static void showAll(String[] varargs) {...}
+public static void showAll(String[] vargs) {...}
 
-    public static void main(String[] args) {
-        showAll(new String[]{"Box"});
-        showAll(new String[]{"Box", "Toy"});
-        showAll(new String[]{"Box", "Toy", "Apple"});
-    }
+public static void main(String[] args) {
+    showAll(new String[]{"Box"});
+    showAll(new String[]{"Box", "Toy"});
+    showAll(new String[]{"Box", "Toy", "Apple"});
+}
 ```
+- vargs를 배열의 참조변수로 간주하고 코드로 작성하면 된다.
 <br>
 <br>
 
 
 # 3. 어노테이션
+*@annotation  
+컴파일러에게 메세지를 전달 하는 것이다.*
 ## 3.1 어노테이션의 설명 범위
 ```text
 @Override
@@ -375,7 +395,7 @@ public static void showAll(String[] varargs) {...}
 <br>
 <br>
 
-## 3.2 @Override
+## 3.2 \@Override
 ```java 
 interface Viewable {
     public void showIt(String str);
@@ -389,10 +409,15 @@ class Viewer implements Viewable {
     }
 }
 ```
+- public void showIt(int n)  
+프로그래머가 오버라이딩할 의도로 Viewer 클래스에 이 메소드를 정의했다.  
+이것은 오버라이딩이 아니라 오버로딩이다. 프로그래머의 실수로 오버로딩이 되버렸는데 실수를 찾지 못하고 넘어갈 수도 있다.
+
+- @Override 어노테이션을 사용하면 컴파일 단계에서 위와 같은 실수를 발견할 수 있다.
 <br>
 <br>
 
-## 3.3 @Deprecated
+## 3.3 \@Deprecated
 ```java
 interface Viewable {
 
@@ -406,7 +431,7 @@ class Viewer implements Viewable {
 
     @Override
     public void showIt(String str) {
-        System.out.println(str);    // 컴파일러 경고
+        System.out.println(str);    // 컴파일러 경고 -> 나는 경고 안뜨는데..?
     }
 
     @Override
@@ -423,6 +448,8 @@ class Viewer implements Viewable {
 - 결과 잘 나오는데...?
 -  Deprecated  
 문제의 발생 소지가 있거나 개선된 기능의 다른 것으로 대체되어서 더 이상 필요 없게 되었음을 뜻한다.
+
+- 기존 코드, 하위 코드의 호환성을 위해 없애지 않고 그냥 두지만 표시는 해두기 위해 사용한다.  
 <br>
 <br>
 
@@ -462,3 +489,6 @@ class AtSuppressWarnings {
 ```
 - @SuppressWarnings("deprecation")  
 deprecation 관련 경고 메세지를 생략하라는 의미이다. 
+
+- 컴파일러가 주는 경고를 무조건 무시하면 안된다.  
+경고 메세지를 무조건 끄는 건 바람직한 것은 아니므로 제한적인 상황에서 사용하자.
