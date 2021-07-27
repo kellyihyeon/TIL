@@ -10,6 +10,7 @@
    1.6 [반복자가 멤버 클래스라는 사실](#16-반복자가-멤버-클래스라는-사실)   
    1.7 [로컬 클래스 (Local Class)](#17-로컬-클래스-local-class)  
    1.8 [익명 클래스 (Anonymous Class)](#18-익명-클래스-anonymous-class)  
+   1.9 [익명 클래스 사용의 예](#19-익명-클래스-사용의-예)  
 
 2. []()
 
@@ -340,6 +341,16 @@ public Printable getPrinter() {
 - new Printable() {...};  
 Printable 인터페이스를 구현한 인스턴스를 생성해라.  
 근데 이름이 없다. 그냥 Printable 인터페이스를 구현한 인스턴스일 뿐이다. 
+
+- 이름이 필요가 없으면 Printable도 안써도 되는 거 아닌가 하는 생각이 들지만, print() 메소드를 구현한 출처는 적어줘야 한다.
+
+- 인스턴스를 생성하는 데 필요한 본질인 내용 {...}, 이 내용물은 Printable 인터페이스의 구현 결과이다.  
+이렇게 생성된 인스턴스는 Printable형 참조변수로 참조가 가능한 인스턴스가 된다.
+
+- 결론:  
+이름이 없어도 인스턴스 생성하는 데는 문제 없다.
+실제로 인스턴스 생성에 필요한 것은 클래스의 이름이 아니라 그 클래스의 내용물, 본질, 정의이기 때문이다.  
+정의를 덧붙여버리면 인스턴스를 생성할 수 있도록 문법을 만들어 놓았고, 그것이 익명 클래스이다.
 <br>
 <br>
 
@@ -351,7 +362,11 @@ class StrComp implements Comparator<String> {
         return s1.length() - s2.length();
     }
 }
+```
+- compare() 메소드의 정의.
+<br>
 
+```java
 class SortComparator {
     public static void main(String[] args) {
         List<String> list = new ArrayList<>();
@@ -386,6 +401,11 @@ class AnonymousComparator {
     }
 }
 ```
+- 익명 클래스를 사용함으로써 클래스의 정의를 하나 줄였다. 그리고 추후에 람다를 사용해서 더 줄일 수 있다.
+
+- 익명 클래스 사용한 부분을 해석해보면서 완전히 이해해보자.
+
+- 자바 8에서 추구하는 구현 방식이다. 이해 수준이 아니라 기억해놓아야 한다.
 <br>
 <br>
 
