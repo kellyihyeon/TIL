@@ -8,6 +8,8 @@
    1.4 [멤버 클래스](#14-멤버-클래스)   
    1.5 ['멤버 클래스'를 언제 사용하는가?](#15-멤버-클래스를-언제-사용하는가)   
    1.6 [반복자가 멤버 클래스라는 사실](#16-반복자가-멤버-클래스라는-사실)   
+   1.7 [로컬 클래스 (Local Class)](#17-로컬-클래스-local-class)  
+   1.8 [익명 클래스 (Anonymous Class)](#18-익명-클래스-anonymous-class)  
 
 2. []()
 
@@ -240,6 +242,31 @@ public class ArrayList<E> implements List<E> {
 
 ## 1.7 로컬 클래스 (Local Class)
 ```java
+class Papers {
+    private String con;
+    public Papers(String s) { con = s; }
+    
+    public Printable getPrinter() {
+        return new Printer();
+    }
+
+    private class Printer implements Printable {
+        public void print() {
+            System.out.println(con);
+        }
+    }
+}
+```
+- 멤버 클래스의 사용 예시이다.  
+Printer 클래스는 getPrinter() 메소드 내에서밖에 쓰지 않는다.  
+그렇다면 Printer 클래스를 getPrinter() 메소드 안에 넣어버리면 안될까?  
+
+- 넣을 때 private만 빼주고 클래스를 넣을 수 있다.  
+넣어버리면 getPrinter() 메소드는 어차피 지역적으로 선언이 되고 그 지역을 벗어나면 접근이 되지 않기 때문에 접근 수준 지시자 private 이라는 의미가 없어진다.  
+그래서 등장한 것이 로컬 클래스이다.
+<br>
+
+```java
 interface Printable {
     void print();
 }
@@ -269,6 +296,13 @@ public static void main(String[] args) {
 ```
 - 로컬 클래스는 멤버 클래스와 상당 부분 유사하다.  
 다만 지역 내에 정의된다는 점에서만 차이를 보인다.
+
+- 메소드 안으로 더 깊이 감추었다.
+
+- getPrinter() 내의 Printer 클래스를 다시 살펴보자.  
+아주 깊이 감추다보니 메소드 안으로 넣어버려서 사실 클래스 이름이 더 이상 의미가 없다.   
+인스턴스를 생성하는 목적으로만 존재하고 있다. (new Printer();)  
+클래스 이름이 굳이 필요해? 줄여서 표현하는 방법이 없을까 해서 등장한 것이 익명 클래스이다. 
 <br>
 <br>
 
@@ -284,17 +318,28 @@ public Printable getPrinter() {
 }
 ```
 - 로컬 클래스 Printer의 정의이다.
-  
+
+- Printer 클래스 안에는 Printable 인터페이스를 구현한 결과밖에 없다.  
+인터페이스의 구현 결과밖에 없는 간단한 경우에는 인터페이스의 이름을 근거로 인스턴스를 생성하도록 하자고 약속했다.  
+
+- return new Printable();  
+약속을 지켜서 만들었는데, Printable 인터페이스를 기반으로 인스턴스를 생성하는 것도 불가능할 뿐 아니라 print()라는 메소드를 구현하여야 한다.  
+
+- 그래서 나온 것이 이 print() 메소드를 구현한 내용을 new Printable()에 이어서 덧붙여주자는 약속이다.
+<br>
+
 ```java
 public Printable getPrinter() {
-    return new Printable() {
+    return new Printable() {    // 익명 클래스의 정의와 인스턴스 생성
         public void print() {
             System.out.println(con);
         }
     };
 }
 ```
-- 익명 클래스의 정의와 인스턴스 생성
+- new Printable() {...};  
+Printable 인터페이스를 구현한 인스턴스를 생성해라.  
+근데 이름이 없다. 그냥 Printable 인터페이스를 구현한 인스턴스일 뿐이다. 
 <br>
 <br>
 
