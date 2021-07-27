@@ -4,6 +4,8 @@
 1. [네스티드(Nested) 클래스와 이너(Inner) 클래스](#1-네스티드nested-클래스와-이너inner-클래스)  
    1.1 [네스티드 클래스의 구분](#11-네스티드-클래스의-구분)  
    1.2 [Static 네스티드 클래스](#12-static-네스티드-클래스)  
+   1.3 [이너 클래스의 구분](#13-이너-클래스의-구분)  
+   1.4 [멤버 클래스](#14-멤버-클래스)  
 
 2. []()
 
@@ -79,11 +81,13 @@ Nested1, Nested2 인스턴스들끼리만 공유하는 static 변수이다.
 ## 1.3 이너 클래스의 구분
 - 멤버 클래스 (Member Class)  
 인스턴스 변수, 인스턴스 메소드와 동일한 위치에 정의
-  - ```java
+   ```java
     class Outer {
         class MemberInner {...}
     }
     ```
+    - Outer 클래스와 MemberInner클래스는 깊은 관계를 맺고 있다.  
+    어떤 관계를 맺고 있을지 아래에서 확인하자.
 
 - 로컬 클래스 (Local Class)    
 중괄호 내에, 특히 메소드 내에 정의
@@ -92,6 +96,10 @@ Nested1, Nested2 인스턴스들끼리만 공유하는 static 변수이다.
       class LocalInner {...}
   } 
   ```
+  - 지역 변수를 떠올리자. 
+  - MemberInner클래스는 Outer 관점에서 보면 Outer 안에 존재한다.  
+  하지만 더 깊이 숨기고 싶을 때 특정 메소드 내로 완전히 숨겨버린다. 이처럼 보이는 범위를 좁혀버린 것이 로컬 클래스이다.  
+
 
 - 익명 클래스 (Anonymous Class)  
 클래스인데 이름이 없다.
@@ -106,10 +114,14 @@ class Outer {
     class Member {  // 멤버 클래스의 정의
         void add(int n) { num += n; }
         int get() { return num; }
-
     }
 }
 ```
+- Member 클래스의 메소드 내에서 Outer 클래스의 인스턴스 변수 num에 직접 접근을 하고 있다.  
+
+- 위 코드에 인스턴스 메소드가 있었다면 인스턴스 메소드도 num에 직접 접근을 할 수가 있다.  
+인스턴스 메소드 내에서 변수에 접근하는 것을 가능하게 했던 것처럼 Member 클래스도 허용하게 해준다. (우리는 패밀리다!)  
+<br>
 
 ```java
 class MemberInner {
@@ -141,7 +153,14 @@ class MemberInner {
 ```
 - 멤버 클래스의 인스턴스는 외부 클래스의 인스턴스에 종속적이다.
 
-- 결과가 왜 나오는 거지?? o1m2에 add 한적이 없는데 o1m2에서 get하니까 왜 5가 나오냐
+- Member 클래스는 Outer 클래스 없이 독립적으로 존재할 수 없다.  
+main 메소드에서 Outer 인스턴스도 없이 먼저 Member 인스턴스를 떡하니 만들어 내는 게 불가능하다.   
+무조건 Member 클래스의 인스턴스는 외부에 존재하는 Outer 클래스의 인스턴스에 종속되어야 한다.
+  - o1.new Member();
+
+- 관계   
+  ![Member-Class](./Img/Member-Class.png)  
+  Member 클래스의 메소드 내에서 Outer 클래스의 인스턴스 변수 num에 직접 접근이 가능하다는 것이 중요하다.
 <br>
 <br>
 
