@@ -12,8 +12,14 @@
    1.8 [익명 클래스 (Anonymous Class)](#18-익명-클래스-anonymous-class)  
    1.9 [익명 클래스 사용의 예](#19-익명-클래스-사용의-예)  
 
-2. []()
-
+2. [람다의 소개](#2-람다의-소개)  
+   2.1 [람다의 이해 1](#21-람다의-이해-1)  
+   2.2 [람다의 이해 2](#22-람다의-이해-2)  
+   2.3 [람다의 이해 3: 생략 가능한 것을 지워보자](#23-람다의-이해-3-생략-가능한-것을-지워보자)  
+   2.4 [람다의 이해 4](#24-람다의-이해-4)  
+   2.5 [람다의 이해 5](#25-람다의-이해-5)  
+   2.6 [람다식의 인자 전달](#26-람다식의-인자-전달)  
+   
 <br>
 
 # 1. 네스티드(Nested) 클래스와 이너(Inner) 클래스
@@ -415,7 +421,11 @@ class AnonymousComparator {
 interface Printable {
     void print(String s);
 }
+```
+- Printable 인터페이스에 정의된 메소드 하나를 넘겨주기 위해서는 Printable을 구현한 클래스를 정의하고 인스턴스를 생성해서 그 안에 메소드를 담는 방법밖에 없다.  
+<br>
 
+```java
 class Printer implements Printable {
 
     public void print(String s) {
@@ -442,5 +452,141 @@ class Lambda2 {
     }
 }
 ```
+- 아직 람다는 등장하지 않았다. 
+<br>
+<br>
+
+## 2.2 람다의 이해 2
+```java
+interface Printable {
+    void print(String s);
+}
+
+class Lambda2 {
+    public static void main(String[] args) {
+        // 익명 클래스
+        Printable prn = new Printable() {
+            public void print(String s) {
+                System.out.println(s);
+            }
+        };
+        prn.print("What is Lambda?");
+    }
+}
+```
+
+```java
+// 추상 메소드가 하나인 인터페이스
+interface Printable {
+    void print(String s);
+}
+
+class Lambda3 {
+    public static void main(String[] args) {
+        Printable prn = (s) -> {
+            System.out.println(s);
+        };
+        prn.print("What is Lambda?");
+    }
+}
+```
+- 람다의 등장
+
+- 이게 뭐야...?
+<br>
+<br>
+
+## 2.3 람다의 이해 3: 생략 가능한 것을 지워보자
+```java
+interface Printable {
+    void print(String s);
+}
+
+Printable prn = new Printable() {
+    public void print(String s) {
+        System.out.println(s);
+    }
+};
+```
+- prn이 Printable형 참조변수이니 = 의 왼편에는 new 가 당연히 올 것이고, 메소드의 정의가 온 것을 보니 익명 클래스를 기반으로 보건대 이는 인스턴스의 생성이다.
+<br>
+
+```java
+Printable prn = new Printable() {
+    public void print(String s) {
+        System.out.println(s);
+    }
+};
+```
+- **`new Printable() {`** ... **`}`**;  
+지워보자. 
+<br>
+<br>
 
 
+## 2.4 람다의 이해 4
+```java
+interface Printable {
+    void print(String s);
+}
+
+Printable prn = 
+    public void print(String s) {
+        System.out.println(s);
+    } ;
+```
+
+```java
+Printable prn = 
+    {
+        System.out.println(s);
+    } ;
+```
+- 이렇게 정의가 되어있다면, 우리는 Printable 인터페이스를 보면 유추가 가능하므로 void print(String s) 선언이 빠져 있다는 것을 알 수 있다.  
+print() 메소드의 몸체만 와 있다. 
+
+- Printable 인터페이스에 있는 메소드를 보고 **`public void print(String s)`** 가 생략되었음을 알 수 있다. 
+<br>
+<br>
+
+## 2.5 람다의 이해 5
+```java
+interface Printable {
+    void print(String s);
+}
+
+Printable prn =  { System.out.println(s); };
+```
+- 컴파일러가 저 s가 매개변수라고 판단해 주길 바라는 것은 무리이므로, Printable 인터페이스 print() 메소드의 매개변수 타입을 그대로 가져와서 적어준다.  
+Printable prn = **`(String s) -> { System.out.println(s);}`**;
+
+- s가 String형 임은 Printable 인터페이스를 보면 알 수 있지 않나?  
+Printable prn = **`(s) -> { System.out.println(s);}`**;
+
+- **`(s)`** ->   
+컴파일러는 { System.out.println(s) }의 s가 매개변수 s 임을 알 수 있다.
+<br>
+<br>
+
+## 2.6 람다식의 인자 전달
+```java
+interface Printable {
+    void print(String s);
+}
+```
+
+```java
+Printable prn = (s) -> { System.out.println(s); };
+
+method((s) -> System.out.println(s));     // void method(Printable prn) {...}
+```
+- int num1 = num2;   
+void mmm(int num1)  
+이 코드를 기반으로 이해를 해보자.  
+num1을 num2의 참조값으로 초기화 시키고, mmm 메소드의 인자로 넘겨줬다.  
+그리고 이는 num2를 mmm 메소드의 인자로 전달하면서 매개변수를 초기화 하는 것과 차이가 없다.
+
+- method(Printable prn)  
+이렇게 매개변수 선언이 되었을 때, method()를 호출하면서 람다식을 매개변수로 전달할 수 있다.  
+method() 를 람다식으로 초기화 해주는 것이다.  
+method 메소드의 Printable prn = (s) -> System.out.println(s)
