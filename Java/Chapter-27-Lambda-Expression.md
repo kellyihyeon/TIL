@@ -20,6 +20,9 @@
    2.6 [Supplier\<T>를 구체화 한 인터페이스들](#26-suppliert를-구체화-한-인터페이스들)  
    2.7 [Consumer\<T>](#27-consumert)  
    2.8 [Consumer\<T>를 구체화하고 다양화한 인터페이스들](#28-consumert를-구체화하고-다양화한-인터페이스들)  
+   2.9 [Function\<T, R>](#29-functiont-r)  
+   2.10 [Function\<T, R>을 구체화하고 다양화 한 인터페이스들](#210-functiont-r을-구체화하고-다양화-한-인터페이스들)  
+   2.11 [추가](#211-추가)  
 
 <br>
 
@@ -433,7 +436,9 @@ ObjIntConsumer<String> c = (s, i) -> System.out.println(i + ". " + s);
 <br>
 
 ## 2.9 Function\<T, R>
-- R apply(T t)
+- R apply(T t)  
+
+![Function<T,R>](./Img/Function.png)  
 
 ```java
 class FunctionDemo {
@@ -448,6 +453,8 @@ class FunctionDemo {
 5
 6
 ```
+- T는 매개변수형, R은 반환형  
+String 인스턴스를 전달 받아서 Integer 형으로 반환한다.
 <br>
 <br>
 
@@ -469,6 +476,9 @@ ToDoubleFunction<T>         double applyAsDouble(T value)
 ToIntViFunction<T, U>       int applyAsInt(T t, U u)
 ToDoubleBiFunction<T, U>    double applyAsDouble(T t, U u)
 ```
+- a TO b  
+to를 기준으로, to 의 왼쪽에 전달 인자, to의 오른쪽에 반환형.  
+'`a를 b로`' 패턴으로 해석하자.
 <br>
 <br>
 
@@ -480,6 +490,11 @@ BiFunction<T, U, R>         R apply(T t, U u)
 UnaryOperator<T>            T apply(T t)
 BinaryOperator<T>           T apply(T t1, T t2)
 ```
+- BiFunction<T, U, R>   
+전달 인자가 2개, T와 U를 인자로 받아서 R로 반환한다.  
+
+- T와 R을 일치시킨 인터페이스들.  
+Function\<String, String>을 UnaryOperator\<String>으로 쓰면 된다. 
 <br>
 <br>
 
