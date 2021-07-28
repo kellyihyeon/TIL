@@ -15,6 +15,11 @@
    2.1 [미리 정의되어 있는 함수형 인터페이스](#21-미리-정의되어-있는-함수형-인터페이스)  
    2.2 [대표 선수들](#22-대표-선수들)  
    2.3 [Predicate\<T>](#23-predicatet)  
+   2.4 [Predicate\<T>를 구체화하고 다양화한 인터페이스들](#24-predicatet를-구체화하고-다양화한-인터페이스들)  
+   2.5 [Supplier\<T>](#25-suppliert)  
+   2.6 [Supplier\<T>를 구체화 한 인터페이스들](#26-suppliert를-구체화-한-인터페이스들)  
+   2.7 [Consumer\<T>](#27-consumert)  
+   2.8 [Consumer\<T>를 구체화하고 다양화한 인터페이스들](#28-consumert를-구체화하고-다양화한-인터페이스들)  
 
 <br>
 
@@ -330,7 +335,7 @@ public static int sum(Predicate<Integer> p, List<Integer> lst) { ... }
                             ↓
 public static int sum(IntPredicate p, List<Integer> lst) { ... }
 ```
-- 대체 가능하고 박싱, 언박싱 과정이 필요 없어졌다.
+- sum 메소드의 인자로 기본 자료형 값을 전달 할 수 있으므로 오토 박싱, 오토 언박싱이 일어날 필요가 없게 만들어 놓았다.
 <br>
 <br>
 
@@ -382,7 +387,7 @@ public static List<Integer> makeIntList(Supplier<Integer> s, int n) { ... }
                                 ↓
 public static List<Integer> makeIntList(IntSupplier s, int n) { ... }
 ```
-- 대체 가능하고 박싱, 언박싱 과정이 필요 없어졌다.
+- 불필요한 박싱과 언박싱을 피할 수 있다.
 <br>
 <br>
 
