@@ -23,6 +23,8 @@
    2.9 [Function\<T, R>](#29-functiont-r)  
    2.10 [Function\<T, R>을 구체화하고 다양화 한 인터페이스들](#210-functiont-r을-구체화하고-다양화-한-인터페이스들)  
    2.11 [추가](#211-추가)  
+   2.12 [removeIf 메소드를 사용해보자 1](#212-removeif-메소드를-사용해보자-1)  
+   2.13 [removeIf 메소드를 사용해보자 2](#213-removeif-메소드를-사용해보자-2)  
 
 <br>
 
@@ -507,6 +509,9 @@ Function\<String, String>을 UnaryOperator\<String>으로 쓰면 된다.
 default boolean removeIf(Predicate<? super E> filter)
 ```
 - Collection\<E> 인터페이스의 디폴트 메소드
+  - 우리가 구현해야 할 메소드가 아니라 기능이 이미 완성되어 있는 메소드 
+
+- Collection\<E> 인터페이스를 구현하는 컬렉션 인스턴스를 대상으로 removeIf 메소드를 호출할 수 있다.
 <br>
 
 ```java
@@ -536,7 +541,20 @@ public static void main(String[] args) {
 ```bash
 [1, 3, 5]
 [2.2, 3.3, 5.5]
-```
-- 람다식 정의한 게 Predicate\<T> 인터페이스 filter 메소드의 몸체를 채운 거고 removeIf(p)는 ArrayList\<T>에 정의된 메소드.
+``` 
+-   ```java
+    public boolean removeIf(Predicate<? super E> filter)
+    ```
+    ArrayList\<E>의 removeIf 메소드이다.  
+    ls1과 ls2의 removeIf(p) 메소드에 p를 전달할 수 있는 이유는 Predicate 인터페이스의 타입을 Number로 정했기 때문이다.  
 
+    ls1은 ArrayList\<Integer>, ls2는 ArrayList\<Double>인데 람다식을 각각 정의하면 아래와 같다.  
+    - Predicate\<Integer> p1 = ...;  
+      Predicate\<Double> p2 = ...;  
 
+    - ls1.removeIf(p1);  
+      ls2.removeIf(p2);
+
+- `Predicate<Number> p = ...;`  
+    Integer와 Double이 공통으로 상속하는 Number를 타입으로 지정하면 람다식을 한 번만 정의해도 된다.  
+    p는 ArrayList\<Integer>를 참조하는 ls1, ArrayList\<Double>를 참조하는 ls2의 removeIf 메소드의 인자로 전달 될 수 있다.
