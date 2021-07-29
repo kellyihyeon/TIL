@@ -260,8 +260,9 @@ applyAsInt 메소드의 몸체를 IBox::larger 로 채웠다.
 
 ## 1.8 생성자 참조
 ```java
-Function<T, R>  
+Function<T, R> {
     R apply(T t)
+}
 
 
 class StringMaker {
@@ -287,8 +288,18 @@ Function<char[], String> f = ar -> new String(ar);
                         ↓
 Function<char[], String> f = String::new;
 ```
+- String::new  
+클래스의 이름을 남겨라.  
+나는 이 String을 new 하겠다 (=생성하겠다)라는 정보만 남겨라.  
+이런식으로 클래스의 이름 정보만 남기라는 것이 세번째 약속이다. 
+
+- new를 보고서는 직감해야 한다. 왼쪽에 있는 String이 생성자 정보라는 것을.  
+String을 생성하겠다라는 것이라고 판단하고 new String()을 떠올린다.  
+인자로 정보를 받아야 하므로 Function을 보고 Function의 첫번째 인자 char[]를 그대로 new String의 인자에 전달하겠다라는 것을 판단해서 이제 apply라는 몸체를 채운다.  
+String apply\<char[] t>의 몸체는 new String(t) 라고 정의할 수 있다.
 <br>
 <br>
+
 
 # 2. Optional 클래스
 ## 2.1 NullPointerException 예외의 발생 상황 1
