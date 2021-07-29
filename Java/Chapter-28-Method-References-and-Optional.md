@@ -6,7 +6,8 @@
    1.2 [static 메소드의 참조: 람다식 기반 예제](#12-static-메소드의-참조-람다식-기반-예제)  
    1.3 [static 메소드의 참조: 메소드 참조 기반으로 수정](#13-static-메소드의-참조-메소드-참조-기반으로-수정)  
    1.4 [인스턴스 메소드 참조 1: effectively final](#14-인스턴스-메소드-참조-1-effectively-final)  
-   1.5 [인스턴스 메소드 참조 1: 인스턴스 존재 상황에서 참조](#15-인스턴스-메소드-참조-1-인스턴스-존재-상황에서-참조)  
+   1.5 [인스턴스 메소드 참조 1: 인스턴스 존재 상황에서 참조](#15-인스턴스-메소드-참조-1-인스턴스-존재-상황에서-참조)    
+   1.6 [인스턴스 메소드 참조 1: forEach 메소드](#16-인스턴스-메소드-참조-1-foreach-메소드)  
 
 2. []()
 3. []()
@@ -174,6 +175,15 @@ class ArrangeList3 {
 
 ## 1.6 인스턴스 메소드 참조 1: forEach 메소드
 ```java
+// Iterable\<T>의 디폴트 메소드
+default void forEach(Consumer<? super T> action) {
+    for (T t : this) {  // this는 이 메소드가 속한 컬렉션 인스턴스를 의미한다.
+        action.accept(t);   // 모든 저장된 데이터들에 대해 이 문장을 반복한다.
+    }
+}
+```
+
+```java
 class ForEachDemo {
     public static void main(String[] args) {
         List<String> ls = Arrays.asList("Box", "Robot");
@@ -182,15 +192,11 @@ class ForEachDemo {
     }
 }
 ```
+- System.out::println  
+전달되는 인자를 println으로 흘려보내는 구나 라고 판단할 수 있다.  
+그리고나서 forEach 메소드의 참조 변수 선언을 보고 Consumer의 추상 메소드 accept를 보고 이 안에 println 메소드가 들어간다고 생각하면 된다. (메소드 참조의 약속)
 
-```java
-default void forEach(Consumer<? super T> action) {
-    for (T t : this) {  // this는 이 메소드가 속한 컬렉션 인스턴스를 의미한다.
-        action.accept(t);   // 모든 저장된 데이터들에 대해 이 문장을 반복한다.
-    }
-}
-```
-- Iterable\<T>의 디폴트 메소드
+- **`Consumer<? super T> action = System.out::println`**
 <br>
 <br>
 
