@@ -9,8 +9,12 @@
    1.5 [인스턴스 메소드 참조 1: 인스턴스 존재 상황에서 참조](#15-인스턴스-메소드-참조-1-인스턴스-존재-상황에서-참조)    
    1.6 [인스턴스 메소드 참조 1: forEach 메소드](#16-인스턴스-메소드-참조-1-foreach-메소드)  
    1.7 [인스턴스 메소드 참조 2: 인스턴스 없이 인스턴스 메소드 참조](#17-인스턴스-메소드-참조-2-인스턴스-없이-인스턴스-메소드-참조)  
+   1.8 [생성자 참조](#18-생성자-참조)  
 
-2. []()
+2. [Optional 클래스](#2-optional-클래스)  
+   2.1 [NullPointerException 예외의 발생 상황 1](#21-nullpointerexception-예외의-발생-상황-1)  
+   2.2 [NullPointerException 예외의 발생 상황 2](#22-nullpointerexception-예외의-발생-상황-2)    
+
 3. []()
 
 <br>
@@ -302,6 +306,20 @@ String apply\<char[] t>의 몸체는 new String(t) 라고 정의할 수 있다.
 
 
 # 2. Optional 클래스
+- if ~ else 문으로 인해 코드의 흐름이 나뉜다는 것은 Reading 하는 입장에서는 불편하다.  
+없앨 수 있으면 없애는 것이 좋은데 어떻게 없앨 수가 있을까?
+
+- if ~ else문 자체를 없애지는 못하는데, 내가 작성해야 될 if ~ else에 대한 책임을 누군가에게 떠넘길 수는 있다.  
+우리가 작성하는 코드는 if ~ else가 안보이게 할 수 있다. 다른 코드 영역으로 떠넘겨서 안보이게끔 할 수 있다.  
+
+- 그렇다면 우리 코드에서 if ~ else가 등장해야 될 때 누구에게 떠넘길 수 있을까?  
+자바에서 제공하는 **`Optional`** 클래스에게 떠넘길 수 있다. (100%는 아님)  
+우리 코드 라인에서는 if ~ else 가 사라진다.
+
+- if ~ elae 문의 구성을 Optional 클래스에게 대신 떠넘김으로 인해서 코드의 흐름을 단순화 시킬 수가 있다.  
+그렇다면 어떠한 경우에 대체할 수 있는지 알아보자.
+<br>
+
 ## 2.1 NullPointerException 예외의 발생 상황 1
 ```java
 class Friend {
@@ -363,7 +381,7 @@ class ContInfo {    // 회사 정보에 속하는 회사 연락처
 <br>
 <br>
 
-## 2.2 NullPointerException 예외의 발생 상황 1
+## 2.2 NullPointerException 예외의 발생 상황 2
 ```java
 public static void showComAddr(Friend f) {
     String addr = null;
