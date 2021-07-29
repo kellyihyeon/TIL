@@ -8,6 +8,7 @@
    1.4 [인스턴스 메소드 참조 1: effectively final](#14-인스턴스-메소드-참조-1-effectively-final)  
    1.5 [인스턴스 메소드 참조 1: 인스턴스 존재 상황에서 참조](#15-인스턴스-메소드-참조-1-인스턴스-존재-상황에서-참조)    
    1.6 [인스턴스 메소드 참조 1: forEach 메소드](#16-인스턴스-메소드-참조-1-foreach-메소드)  
+   1.7 [인스턴스 메소드 참조 2: 인스턴스 없이 인스턴스 메소드 참조](#17-인스턴스-메소드-참조-2-인스턴스-없이-인스턴스-메소드-참조)  
 
 2. []()
 3. []()
@@ -202,6 +203,23 @@ class ForEachDemo {
 
 ## 1.7 인스턴스 메소드 참조 2: 인스턴스 없이 인스턴스 메소드 참조
 ```java
+public interface ToIntBiFunction<T, U> {
+    int applyAsInt(T t, U u);
+}
+```
+- 두개의 인자를 전달받고 int 형 값을 반환해주면 된다.
+
+```java
+int applyAsInt(T t, U u){
+    t.method(U u);
+}
+```
+- 어떠한 메소드든 마음대로 정의할 수 있지만, 이런 메소드를 정의하고 싶다고 가정하자.    
+첫 번째 인자를 대상으로해서 첫 번째 인자가 가지고 있는 메소드를 호출하고, 이 메소드의 인자로 두 번째 인자를 흘려보내는 상황이다.  
+이 상황에서는 메소드 정보만 남기자 라고 약속을 한다.  
+<br>
+
+```java
 class IBox {
     private int n;
 
@@ -229,9 +247,14 @@ class IBox {
     }
 }
 ```
-- **`ToIntBiFunction<IBox, IBox> bf = (b1, b2) -> b1.larger(b2);`**  
--> ToIntBiFunction<IBox, IBox> bf = IBox::larger;  
-약속에 근거한 줄인 표현
+- ToIntBiFunction<IBox, IBox> bf = (b1, b2) -> b1.larger(b2);  
+-> **`ToIntBiFunction<IBox, IBox> bf = IBox::larger;`**  
+약속에 근거한 줄인 표현  
+IBox 클래스를 찾아봐야한다. larger가 static 메소드가 아니다. 인스턴스 메소드이다.  
+첫 번째 약속에 해당하는 경우가 아니다. 그렇다면 첫 번째 인자를 대상으로 메소드를 호출하면서 두 번째 혹은 그 이후에 등장하는 인자를 larger 메소드의 인자로 흘려보낸다 라는 약속을 떠올려야 한다.  
+
+- 약속을 근거로 해서 문장을 해석할 수 있어야 한다.  
+applyAsInt 메소드의 몸체를 IBox::larger 로 채웠다.
 <br>
 <br>
 
