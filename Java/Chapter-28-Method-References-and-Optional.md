@@ -13,9 +13,19 @@
 
 2. [Optional 클래스](#2-optional-클래스)  
    2.1 [NullPointerException 예외의 발생 상황 1](#21-nullpointerexception-예외의-발생-상황-1)  
-   2.2 [NullPointerException 예외의 발생 상황 2](#22-nullpointerexception-예외의-발생-상황-2)    
+   2.2 [NullPointerException 예외의 발생 상황 2](#22-nullpointerexception-예외의-발생-상황-2)  
+   2.3 [Optional 클래스의 기본적인 사용 방법 1](#23-optional-클래스의-기본적인-사용-방법-1)  
+   2.4 [Optional 클래스의 기본적인 사용 방법 2](#24-optional-클래스의-기본적인-사용-방법-2)  
+   2.5 [Optional 클래스를 사용하면 if ~ else 문을 대신할 수 있다](#25-optional-클래스를-사용하면-if--else-문을-대신할-수-있다)  
+   2.6 [Optional 클래스를 사용하면 if ~ else 문을 대신할 수 있다: map 메소드의 소개](#26-optional-클래스를-사용하면-if--else-문을-대신할-수-있다-map-메소드의-소개)  
+   2.7 [Optional 클래스를 사용하면 if ~ else 문을 대신할 수 있다: orElse 메소드의 소개](#27-optional-클래스를-사용하면-if--else-문을-대신할-수-있다-orelse-메소드의-소개)  
+   2.8 [Optional 클래스를 사용하면 if ~ else 문을 대신할 수 있다: 최종 결론](#28-optional-클래스를-사용하면-if--else-문을-대신할-수-있다-최종-결론)
+   2.9 [showCompAddr 메소드의 개선 결과](#29-showcompaddr-메소드의-개선-결과)  
+   2.10 [Optional 클래스의 flatMap 메소드: Optional 클래스를 코드 전반에 사용하기 1](#210-optional-클래스의-flatmap-메소드-optional-클래스를-코드-전반에-사용하기-1)  
+   2.11 [Optional 클래스의 flatMap 메소드: Optional 클래스를 코드 전반에 사용하기 2](#211-optional-클래스의-flatmap-메소드-optional-클래스를-코드-전반에-사용하기-2)  
 
-3. []()
+3. [OptionalInt, OptionalLong, OptionalDouble 클래스](#3-optionalint-optionallong-optionaldouble-클래스)  
+   3.1 [Optional과 OptionalXXX와의 차이점](#31-optional과-optionalxxx와의-차이점)  
 
 <br>
 
@@ -411,6 +421,18 @@ public static void showComAddr(Friend f) {
 <br>
 
 ## 2.3 Optional 클래스의 기본적인 사용 방법 1
+- 내용물을 담을 수 있는 기능이 뛰어난 상자라고 생각하자.  
+우리가 써야되는 if ~ else 문을 대신하는 기능이 있다.  
+action을 명령하기만 하면 된다.  
+
+- 원래는 상자를 열어서 있는지 없는지 보고 있으면 action을 명령하고, 없으면 그냥 집으로 가야겠다라고 작성했는데, Optional은 있으면 a, 없으면 b 이 코드를 내부적으로 가지고 있다.  
+
+- action을 명령하면 상황의 흐름에 따른 실행의 분기를 Optional이 대신 해준다.  
+이것이 Optional 클래스이다.
+
+- 상자를 만드는 방법, 만든 상자에 내용물을 담는 방법을 알아보자.  
+<br>
+
 ```java
 public final class Optional<T> extends Object{
     private final T value;
@@ -438,14 +460,28 @@ public static void main(String[] args) {
 Toy1
 Toy2
 ```
+- Optional.of()와 Optional.ofNullable()
+상자를 만들면서 내용물을 담는 방법.
+of 메소드에 담아야 할 것을 담으면 상자의 참조값을 반환한다.
+
+- get()  
+참조값을 얻을 때 쓰는 메소드
+
+- isPresent()  
+내용물이 있는지 물어보는 메소드. 있으면 true
 <br>
 <br>
 
 ## 2.4 Optional 클래스의 기본적인 사용 방법 2
 ```java
-public void ifPresent(Consumer<? super T> consumer)
-    Consumer<T> 
-        void accept(T t)
+public void ifPresent(Consumer<? super T> consumer) {
+    if (value != null)
+        consumer.accept(value);
+}
+
+Consumer<T> {
+    void accept(T t)
+}
 
 class StringOptional2 {
     public static void main(String[] args) {
@@ -460,10 +496,12 @@ class StringOptional2 {
 Toy1
 Toy2
 ```
+- ifPresent()  
+만약에 존재한다면.  
 <br>
 <br>
 
-## 2.5 Optional 클래스를 사용하면 if ~ else 문을 대신할 수 있다.
+## 2.5 Optional 클래스를 사용하면 if ~ else 문을 대신할 수 있다
 ```java
 class ContInfo {    
     String phone;   // null 일 수 있음(가정)
@@ -562,6 +600,12 @@ Empty
 So Basic
 ```
 - Optional 인스턴스를 대상으로 orElse 메소드를 호출하면 orElse를 호출하면서 전달된 인스턴스가 대신 반환된다.
+
+- orElse()  
+내용물을 반환하는 메소드. 있는 것 단순히 꺼내는 메소드.  
+get() 메소드와 비슷한데, orElse("Empty")는 인자를 전달받고 있다.  
+만일 빈 상자를 대상으로 orElse() 메소드가 호출이 되면 Empty 문자열이 대신 반환된다.  
+내용물이 없으면 인자를 반환하라는 의미이다.
 <br>
 <br>
 
@@ -718,16 +762,16 @@ public static void main(String[] args) {
     System.out.println(addr);
 }
 ```
-<br>
-<br>
+- 프로젝트 만들 때 null일 수도 있는 변수에 Optional 적용해보자.
 
-## 2.12 Optional 클래스의 flatMap 메소드: Optional 클래스를 코드 전반에 사용하기 3
-
+- flatMap을 map으로 바꿔버리면 Optional로 감싸진 인스턴스를 또 Optional로 감싸진 형태로 만들어버린다.
 <br>
 <br>
 
 
 # 3. OptionalInt, OptionalLong, OptionalDouble 클래스
+*과도한 박싱과 언박싱을 줄이기 위해 만들었다.*
+
 ## 3.1 Optional과 OptionalXXX와의 차이점
 ### 3.1.1 Optional
 ```java
@@ -766,3 +810,7 @@ public static void main(String[] args) {
 }
 ```
 - OptionalXXX 클래스들은 Optional 클래스보다 그 기능이 제한적이다.  
+
+- Optional과 OptionalInt  
+
+    ![OptionalInt](./Img/OptionalInt.png)  
