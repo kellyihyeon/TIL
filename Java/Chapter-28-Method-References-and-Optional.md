@@ -73,8 +73,8 @@ public static void reverse(List<?> list)
     ```java
     Consumer<List<Integer>> c = new Consumer<List<Integer>>() {
             @Override
-            public void accept(List<Integer> int) {
-                Collections.reverse(int));
+            public void accept(List<Integer> list) {
+                Collections.reverse(list));
             }
         };
     ```
@@ -121,10 +121,7 @@ class ArrangeList3 {
 
         Consumer<List<Integer>> c = e -> js.sort(e);    // 람다식 기반
         c.accept(ls);
-        System.out.println(ls);     
-
-        // js.sort(ls);
-        // System.out.println("그냥 바로 " + ls);  // 굳이 왜 저렇게 부르는 거지   
+        System.out.println(ls);       
     }
 }
 ```
@@ -139,11 +136,7 @@ class ArrangeList3 {
 위의 예제에서 봤던 Collections::reverse 은 Collections 클래스가 왔으므로 Collections 클래스의 static 메소드 reverse를 참조한다는 의미가 된다. 
 <br>
 
-### 1.4.1 effectively final
-- JustSort js = new JustSort();  
-js.sort(e) 는 새로운 인스턴스 생성으로 이어지고 이 인스턴스는 main 메소드와는 전혀 다른 곳에 존재하는데 js라는 참조변수는 main 메소드 내에 존재하는 지역 변수이다.  
-main 이라는 지역을 벗어난 다른 인스턴스에 존재하는 것이 개념을 벗어난 것으로 치부될 수 있다. 그래서 제약 조건을 하나 건다.
-    
+### 1.4.1 effectively final   
 - effectively final 이라는 제약 조건을 걸었다.  
 final은 상수를 의미하는데, **`상수`** 란 js 가 참조하고 있는 JustSort 인스턴스의 내부가 바뀌지 않는 것을 의미하는 것이 아니라 **`js가 이 인스턴스를 참조한다는 사실이 바뀌지 않는다는 것`** 을 의미한다.  
 
@@ -812,5 +805,5 @@ public static void main(String[] args) {
 - OptionalXXX 클래스들은 Optional 클래스보다 그 기능이 제한적이다.  
 
 - Optional과 OptionalInt  
-
-    ![OptionalInt](./Img/OptionalInt.png)  
+    ![OptionalInt](./Img/OptionalInt.png)    
+    OptionalInt는 value의 자료형이 int 이다.  
