@@ -14,7 +14,9 @@
    2.3 [맵핑 1: map의 친구들](#23-맵핑-1-map의-친구들)  
    2.4 [맵핑 2: 필터링 후 맵핑의 예](#24-맵핑-2-필터링-후-맵핑의-예)  
 
-3. []()
+3. [리덕션, 병렬 스트림](#3-리덕션-병렬-스트림)  
+   3.1 [리덕션과 reduce 메소드: 최종 연산](#31-리덕션과-reduce-메소드-최종-연산)  
+   3.2 [병렬 스트림](#32-병렬-스트림)  
 
 <br>
 
@@ -248,7 +250,7 @@ sum = 550
 
 # 3. 리덕션, 병렬 스트림
 ## 3.1 리덕션과 reduce 메소드: 최종 연산
-- 리덕션(Reduction)   데이터를 축소하는 연산
+- 리덕션(Reduction): 데이터를 축소하는 연산
 
 ```java
 // Stream<T>에 존재
@@ -274,15 +276,44 @@ public static void main(String[] args) {
     };
 
     String str = ls.stream()
-                    .reduce("", lc);// 스트림 빈 경우 "" 반환
+                   .reduce("", lc);  // 스트림 빈 경우 "" 반환
     System.out.println(str);
 }
 ```
-- 뭔 말이야, reduce의 몸체는 어딨는데
+-  "Marcelline", "Bubblegum", "Lumpy", "Gunter" 로 이루어진 스트림이 하나 만들어진다.  
+첫 번째 인자와 두 번째 인자의 길이를 비교해서 길이가 더 긴 것을 반환한다. (Marcelline)  
+비교 후의 결과인 Marcelline과 세 번째 인자의 길이를 비교하고 결과를 반환한다.   
+reduce 메소드를 실행하고 나면 최종 결과인 Marcelline이 남고 이를 반환한다.  
+
+- 리덕션 연산의 진행 방식
+
+    ![](./Img/Reduction.png)
+
+- reduce("", lc);  
+reduce 메소드의 첫번째 인자는 무엇일까?  
+스트림을 생성 했는데 그 스트림 안에 데이터가 존재하지 않을 수도 있다. 그런 경우에 reduce 메소드 호출할 때 무엇을 반환할 것인지 에 대해 문제가 생긴다.  
+데이터가 비었을 때 반환할 녀석을 첫번째 인자로 지정하게 되어있다.
+
+- reduce의 첫 번째 전달 인자를 스트림의 첫 번째 데이터로 간주함에 주의하자.  
+"Marcelline", "Bubblegum", "Lumpy", "Gunter"으로 이루어져있는 스트림이 reduce 메소드를 통과하게 되는데 reduce 메소드의 첫 번째 인자 ""가 0번째 데이터가 된다.  
+사실은 데이터가 하나 늘어났다고 봐야한다.
+  - "", "Marcelline", "Bubblegum", "Lumpy", "Gunter"
+
+- 스트림에 데이터가 총 4개가 있고, reduce의 첫 번째 인자에 "1234567890"을 전달 했을 경우  
+스트림이 비어 있지 않고 데이터가 4개나 있지만 이 경우에 "1234567890"가 반환이 된다.  
+이 인스턴스("1234567890")를 스트림의 일부로 간주하기 때문이다.  
+스트림에 존재하는 데이터와 같이 경쟁을 해서 그 결과 "1234567890"가 반환이 된다. "1234567890"가 길이가 제일 길다.  
+이것을 고려해서 reduce의 첫번째 인자를 작성해야 한다.  
 <br>
 <br>
 
 ## 3.2 병렬 스트림
+- 하나의 작업을 둘 이상의 코어가 나누어 작업하는 것을 의미한다.
+
+    ![ParallelStream](./Img/ParallelStream.png)
+
+<br>
+
 ```java
 public static void main(String[] args) {
     List<String> ls = Arrays.asList("Marcelline", "Bubblegum9", "Lumpy", "Gunter");
@@ -303,3 +334,5 @@ public static void main(String[] args) {
 ```bash
 Bubblegum9
 ```
+- parallelStream()  
+병렬 스트림 메소드 호출을 하면 그 이후로는 병렬 처리가 된다.  
