@@ -7,7 +7,14 @@
    1.3 [병렬 스트림으로 변경](#13-병렬-스트림으로-변경)  
    1.4 [스트림의 연결](#14-스트림의-연결)  
 
-2. []()
+2. [스트림의 중간연산](#2-스트림의-중간연산)  
+   2.1 [맵핑(Mappting)에 대한 추가 정리](#21-맵핑mappting에-대한-추가-정리)  
+   2.2 [맵핑(Mapping)에 대한 추가 정리: 예제 1](#22-맵핑mapping에-대한-추가-정리-예제-1)  
+   2.3 [맵핑(Mapping)에 대한 추가 정리: 예제 2](#23-맵핑mapping에-대한-추가-정리-예제-2)  
+   2.4 [정렬](#24-정렬)  
+   2.5 [IntStream, LongStream, DoubleStream의 정렬](#25-intstream-longstream-doublestream의-정렬)  
+   2.6 [루핑(Looping)](#26-루핑looping)  
+
 3. []()
 
 <br>
@@ -125,7 +132,7 @@ public static void main(String[] args) {
 
 # 2. 스트림의 중간연산
 ## 2.1 맵핑(Mappting)에 대한 추가 정리
-- [Stream\<T>의 map 시리즈 메소드들] 1:1 맵핑
+[Stream\<T>의 map 시리즈 메소드들] 1:1 맵핑
 
 ```java
 <R> Stream<R> map(Function<T, R> mapper)
@@ -136,8 +143,10 @@ LongStream mapToLong(ToLongFunction<T> mapper)
 
 DoubleStream mapToDouble(ToDoubleFunction<T> mapper)
 ```
+- 하나의 데이터를 하나의 데이터로 바꿔준다.
 <br>
 
+[Stream\<T>의 flatMap 시리즈 메소드들] 1:* 맵핑
 ```java
 <R> Stream<R> flatMap(Function<T, Stream<R>> mapper)
 
@@ -148,6 +157,8 @@ LongStream flatMapToLong(ToLongFunction<T, LongStream> mapper)
 DoubleStream flatMapToDouble(ToDoubleFunction<T, DoubleStream> mapper)
 ```
 - flatMap에 전달할 람다식에서는 '스트림을 생성하고 이를 반환'
+
+- 하나의 데이터가 여러개의 데이터로 매핑이 된다.
 <br>
 <br>
 
@@ -163,7 +174,7 @@ public static void main(String[] args) {
 }
 ```
 ```bash
-MY	AGE	YOUR	LIFE	
+MY  AGE  YOUR  LIFE	
 ```
 <br>
 <br>
@@ -217,6 +228,7 @@ public static void main(String[] args) {
 ```bash
 avg = 80.0
 ```
+- ReportCard 인스턴스에서 국어, 영어, 수학 점수를 꺼낸 후 이것을 하나의 스트림으로 생성한다. (1:*)
 <br>
 <br>
 
@@ -269,12 +281,13 @@ public static void main(String[] args) {
 2	3	4	9	
 1.5	3.3	6.2	8.3	
 ```
+- 기본적으로 오름차순 정렬.
 <br>
 <br>
 
 ## 2.6 루핑(Looping)
-대표적인 루핑 연산으로 forEach가 있다.   
-이는 '최종 연산', 반면 다음 메소드들은 '중간 연산'으로 루핑 연산을 한다.
+대표적인 루핑 연산으로는 forEach가 있다. 이는 '최종 연산'으로 사용한다.  
+반면 다음 메소드들은 '중간 연산'으로 루핑 연산을 한다.
 
 ```java
 Stream<T> peek(Consumer<? super T> action)
@@ -301,6 +314,7 @@ public static void main(String[] args) {
 ```bash
 5	3	1	
 ```
+- sum의 결과를 가지고 아무것도 하지 않았지만, sum처럼 최종 연산을 하고 안하고의 차이는 중간 연산이 실행 되냐 안되느냐로 귀결이 된다.
 <br>
 <br>
 
