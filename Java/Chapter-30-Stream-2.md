@@ -15,7 +15,12 @@
    2.5 [IntStream, LongStream, DoubleStream의 정렬](#25-intstream-longstream-doublestream의-정렬)  
    2.6 [루핑(Looping)](#26-루핑looping)  
 
-3. []()
+3. [스트림의 최종 연산](#3-스트림의-최종-연산)  
+   3.1 [sum(), count(), average(), min(), max()](#31-sum-count-average-min-max)  
+   3.2 [forEach](#32-foreach)  
+   3.3 [allMatch, anyMatch, noneMatch](#33-allmatch-anymatch-nonematch)  
+   3.4 [collect: 스트림에 있는 데이터를 모아라](#34-collect-스트림에-있는-데이터를-모아라)  
+   3.5 [병렬 스트림에서의 collect](#35-병렬-스트림에서의-collect)  
 
 <br>
 
@@ -331,7 +336,8 @@ OptionalDouble average()
 OptionalInt min()
 
 OptionInt max()
-
+```
+```java
 public static void main(String[] args) {
     int sum = IntStream.of(1, 3, 5, 7, 9)
             .sum();
@@ -380,6 +386,7 @@ void forEach(DoubleConsumer action)
 ## 3.3 allMatch, anyMatch, noneMatch
 [Stream\<T> 의 메소드들]  
 IntStream, LongStream, DoubleStream에도 정의된 메소드들
+
 ```text
 boolean allMatch(Predicate<? super T> predicate)
 -> 스트림의 데이터가 조건을 모두 만족하는가?
@@ -436,9 +443,15 @@ public static void main(String[] args) {
     System.out.println(ls);
 }
 ```
+
 ```bash
 [Box, Toy]
 ```
+- filter 연산을 거친 후 살아남은 데이터들을 따로 모으고 싶을 때, 따로 모아서 출력이 아니라 다른 일을 해보고 싶을 때 collect를 사용한다.
+
+- stream을 통과한 데이터를 따로 모으기 위해서는 첫 번째 인자를 통해서 어디에 담을 것인지를, 두 번째 인자를 통해서 어떤 방법으로 담을 것인지를 전달한다.  
+세 번째 인자는 아래에서 설명.
+
 - (lst1, lst2) -> lst1.addAll(lst2));  
 순차 스트림에서는 의미 없다.  
 그러나 병렬 스트림을 고려하여 병렬 스트림에 의미 있는 문장을 작성해야 한다. null 전달 시 예외가 발생한다. 
@@ -451,13 +464,22 @@ public static void main(String[] args) {
     String[] words = {"Hello", "Box", "Robot", "Toy"};
     Stream<String> ss = Arrays.stream(words);
 
-    List<String> ls = ss.filter(s -> s.length() < 5)
-            .collect(() -> new ArrayList<>(),
-                    (c, s) -> c.add(s),
-                    (lst1, lst2) -> lst1.addAll(lst2));
+    List<String> ls = ss.parallel()
+                        .filter(s -> s.length() < 5)
+                        .collect(() -> new ArrayList<>(),
+                                (c, s) -> c.add(s),
+                                (lst1, lst2) -> lst1.addAll(lst2));
     System.out.println(ls);
 }
 ```
 ```bash
 [Box, Toy]
 ```
+- 병렬 스트림 생성을 통한 성능의 향상은 실행 결과를 기반으로 평가해야 한다.
+
+- 서로 공유하지 않는 형태의 병렬처리가 이루어진다. 
+코어가 각자 ArrayList를 만들어서 담는다. (3개의 컬렉션 인스턴스)
+
+- (lst1, lst2) -> lst1.addAll(lst2));  
+3개의 컬렉션 인스턴스를 취합해서 반환해야 하므로 어떤 식으로 취합을 할지 제시를 해줘야 한다.  
+이 람다식을 기반으로 데이터를 취합한다. 
