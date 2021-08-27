@@ -14,6 +14,7 @@
 6. [지역 변수와 메모리: 스택 프레임에 갇혔어요!](#6-지역-변수와-메모리-스택-프레임에-갇혔어요)
 7. [메서드 호출과 메모리: 메서드 스택 프레임](#7-메서드-호출과-메모리-메서드-스택-프레임)
 8. [전역 변수와 메모리: 전역 변수 쓰지 말라니까요!](#8-전역-변수와-메모리-전역-변수-쓰지-말라니까요)
+9. [멀티 스레드 / 멀티 프로세스의 이해](#9-멀티-스레드--멀티-프로세스의-이해)
 
 <br>
 
@@ -323,3 +324,41 @@ shart 변수는 전역 변수이기 때문에 스태틱 영역에 변수 공간�
 
 - 수천, 수만 줄이 되는 실무 코드에서 전역 변수의 값과 그 값이 변한 이유를 추적하고 파악하는 것은 어렵고 복잡하다.  
 읽기 전용으로 값을 공유해서 전역 상수로 쓰는 경우를 제외하고 전역 변수 사용은 피하자.
+<br>
+<br>
+
+# 9. 멀티 스레드 / 멀티 프로세스의 이해
+- 멀티 스레드
+
+  ![멀티 스레드](./Img/MultiThread.png)
+  - 멀티 스레드는 스택 영역을 스레드 개수만큼 분할해서 사용한다.
+
+- 멀티 프로세스
+  ![멀티 프로세스](./Img/MultiProcess.png)
+  - 멀티 프로세스는 다수의 데이터 저장 영역 (다수의 T 메모리)을 갖는 구조이다.
+
+- 예제 코드
+  ```java
+  public class Start6 extends Thread {
+      static int share;
+
+      public static void main(String[] args) {
+          Start6 t1 = new Start6();
+          Start6 t2 = new Start6();
+
+          t1.start();
+          t2.start();
+      }
+
+      public void run() {
+          for (int count = 0; count < 10; count++) {
+              System.out.println(share++);
+
+              try {sleep(1000);}
+              catch (InterruptedException e) { }
+          }
+      }
+  }
+  ``` 
+<br>
+<br>
