@@ -1,39 +1,30 @@
 package chapter03.encapsulation01.packageOne;
 
-public class ClassA {
-    private int pri;
-    int def;
-    protected int pro;
-    public int pub;
+public class ClassAA extends ClassA {
 
-    private static int priStatic;
-    static int defStatic;
-    protected static int proStatic;
-    public static int pubStatic;
-
-    void runSomeThing() {
-        pri = 1;
+    void runSomething() {
+//        pri = 1;
         def = 1;
         pro = 1;
         pub = 1;
 
-        this.pri = 2;
+//        this.pri = 1;
         this.def = 2;
         this.pro = 2;
         this.pub = 2;
 
         // static
-        priStatic = 1;
+//        priStatic = 1;
         defStatic = 1;
         proStatic = 1;
         pubStatic = 1;
 
-        ClassA.priStatic = 2;
+//        ClassA.priStatic = 2;
         ClassA.defStatic = 2;
         ClassA.proStatic = 2;
         ClassA.pubStatic = 2;
 
-        this.priStatic = 3;
+//        this.priStatic = 3;
         this.defStatic = 3;
         this.proStatic = 3;
         this.pubStatic = 3;
@@ -52,28 +43,33 @@ public class ClassA {
 //        this.pub = 2;
 
         // 객체 생성 후 객체 참조 변수를 통해 접근 가능
-        ClassA ca = new ClassA();
-        ca.pri = 1;
-        ca.def = 1;
-        ca.pro = 1;
-        ca.pub = 1;
+        ClassAA caa = new ClassAA();
+//        caa.pri = 1;
+        caa.def = 1;
+        caa.pro = 1;
+        caa.pub = 1;
 
         // static
-        priStatic = 1;
+//        priStatic = 1;
         defStatic = 1;
         proStatic = 1;
         pubStatic = 1;
 
-        ClassA.priStatic = 2;
+//        ClassA.priStatic = 2;
         ClassA.defStatic = 2;
         ClassA.proStatic = 2;
         ClassA.pubStatic = 2;
 
-        // 객체 참조 변수를 통해 정적 멤버도 접근 가능하지만 권장하지 않음
-        ca.priStatic = 1;
-        ca.defStatic = 1;
-        ca.proStatic = 1;
-        ca.pubStatic = 1;
+//        this.priStatic = 3;
+//        this.defStatic = 3;
+//        this.proStatic = 3;
+//        this.pubStatic = 3;
 
+        // 객체 참조 변수를 통해 정적 멤버도 접근 가능하지만 권장하지 않음
+        // 왜? 이유 설명하기
+        //caa.priStatic = 1;
+        caa.defStatic = 1;
+        caa.proStatic = 1;
+        caa.pubStatic = 1;
     }
 }
