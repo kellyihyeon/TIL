@@ -16,7 +16,9 @@
 4. [다대다](#4-다대다)  
    4.1 [다대다: 단방향](#41-다대다-단방향)   
    4.2 [다대다: 양방향](#42-다대다-양방향)  
-   4.3 [다대다: 매핑의 한계와 극복, 연결 엔티티 사용](#43-다대다-매핑의-한계와-극복-연결-엔티티-사용)
+   4.3 [다대다: 매핑의 한계와 극복, 연결 엔티티 사용](#43-다대다-매핑의-한계와-극복-연결-엔티티-사용)  
+   4.4 [다대다: 새로운 기본 키 사용](#44-다대다-새로운-기본-키-사용)  
+   4.5 [다대다 연관관계 정리](#45-다대다-연관관계-정리)  
 
 <br>
 <br>
@@ -443,3 +445,53 @@ private List<Member> members = new ArrayList<>();
   memberProduct.getOrderAmount() = 2
   memberProduct.getOrderDate() = 2021-12-14
   ```
+<br>
+<br>
+
+## 4.4 다대다: 새로운 기본 키 사용
+- 기본 키 생성 전략을 써보자.
+
+- 기본 키 타입이 String이 아닌 Long 타입을 사용하고, 데이터베이스에서 자동으로 생성해주는 전략을 사용한다.
+
+- 장점?  
+  - 간편하고, 거의 영구히 쓸 수 있고, 비즈니스에 의존하지 않는다.  
+  - ORM 매핑 시에 위에서 학습했던 것처럼 복합 키를 사용하지 않아도 되므로 간단히 매핑을 할 수 있다.
+
+- 코드
+  ```java
+  @Entity
+  public class Orders {
+
+    @Id
+    @GeneratedValue
+    @Column(name = "ORDERS_ID")
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
+
+    @ManyToOne
+    @JoinColumn(name = "PRODUCT_ID")
+    private Product product;
+
+    private int ordersAmount;
+
+    private LocalDate ordesrDate;
+    
+    ...
+  ```
+  - ⭐ 클래스명을 Order 로 했다가 sql exception 발생:   
+  콘솔 찍어보니 commit 할 때 'insert ORDER ...' 에서 에러 발생.  
+  원인은 ORDER가 sql keyword 여서였다...
+<br>
+<br>
+
+## 4.5 다대다 연관관계 정리
+- 다대다 관계를 일대다, 다대일로 풀어내기 위해서 연결 테이블을 만들 때 먼저 식별자를 어떻게 구성할 것인지 선택해야 한다.
+
+- 식별 관계: 받아온 식별자를 기본 키 + 외래 키로 사용한다.   
+(MemberProduct.class)
+
+- 비식별 관계: 받아온 식별자는 외래 키로만 사용하고 새로운 식별자를 추가한다.   
+(Order.class)
