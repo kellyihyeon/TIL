@@ -4,10 +4,15 @@
 1. [쓰레드의 이해와 쓰레드의 생성](#1-쓰레드의-이해와-쓰레드의-생성)  
    1.1 [쓰레드의 이해](#11-쓰레드의-이해)  
    1.2 [쓰레드를 생성하는 방법](#12-쓰레드를-생성하는-방법)   
-   1.3 [둘 이상의 쓰레드를 생성한 예](#13-둘-이상의-쓰레드를-생성한-예)
+   1.3 [둘 이상의 쓰레드를 생성한 예](#13-둘-이상의-쓰레드를-생성한-예)  
    1.4 [쓰레드를 생성하는 두 번째 방법](#14-쓰레드를-생성하는-두-번째-방법)
    
-2. []()
+2. [쓰레드의 동기화](#2-쓰레드의-동기화)  
+   2.1 [쓰레드의 메모리 접근 방식과 그에 따른 문제점](#21-쓰레드의-메모리-접근-방식과-그에-따른-문제점)  
+   2.2 [동일한 메모리 공간에 접근하는 것이 왜 문제가 되는가?](#22-동일한-메모리-공간에-접근하는-것이-왜-문제가-되는가)  
+   2.3 [동기화(Synchronization) 메소드](#23-동기화synchronization-메소드)  
+   2.4 [동기화(Synchronization) 블록](#24-동기화synchronization-블록)  
+
 3. []()
 <br>
 
@@ -185,3 +190,166 @@ Thread-0: 30
 
 Process finished with exit code 0
 ```
+<br>
+<br>
+
+# 2. 쓰레드의 동기화
+- 동기화가 왜 필요한 것인가?
+- 쓰레드가 가지고 있는 문제점이 무엇인가?
+
+## 2.1 쓰레드의 메모리 접근 방식과 그에 따른 문제점
+```java
+public class Counter {
+
+    // 공유되는 변수
+    int count = 0;
+
+    public void increment() {
+        count++;
+    }
+
+    public void decrement() {
+        count--;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+
+```
+```java
+public class MutualAccess {
+
+    public static Counter counter = new Counter();
+
+    public static void main(String[] args) throws InterruptedException {
+        // count 값을 1 증가
+        Runnable task1 = () -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.increment();
+            }
+        };
+
+        // count 값을 1 감소
+        Runnable task2 = () -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.decrement();
+            }
+        };
+
+        Thread t1 = new Thread(task1);
+        Thread t2 = new Thread(task2);
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+        System.out.println(counter.getCount());
+
+    }
+}
+```
+```java
+-62
+
+Process finished with exit code 0
+```
+- join():  
+쓰레드의 종료를 기다리고 있다.   
+마지막 출력문의 count 의 개수는 쓰레드 t1과 t2가 종료되고 난 후의 데이터이다.  
+(이해가 가지 않으면 join() 메서드를 주석으로 처리하고 실행 결과를 보면 된다.)  
+
+- 출력 결과는 실행할 때마다 다르다.
+
+<br>
+<br>
+
+## 2.2 동일한 메모리 공간에 접근하는 것이 왜 문제가 되는가?
+### 2.2.1 문제 상황 제시
+- 변수에 저장된 값을 1씩 증가시키는 연산을 두 쓰레드가 동시에 진행한다고 가정하자.
+
+![Thread1](./Img/Thread-Before.png) ![Thread2](./Img/Thread-After.png)
+<br>
+<br>
+
+### 2.2.2 thread1 이 num++ 을 하면 100이 된다.  
+이런식이면 문제가 없어 보이지만 `값의 증가` 라는 작업임을 다시 생각해보자.  
+값의 증가는 코어를 통한 연산 작업이 필요한 작업이다.   
+연산 작업을 하면서 단계를 거치게 되는데 ⓐ쓰레드는 변수 num 에 저장된 99를 가져온다. ⓑ코어에서 num + 1 을 계산하고 값을 내놓는다. ⓒ결과 100을 변수 num 에 가져다 놓는다. 이 과정을 거치면 num = 100이 된다.
+<br>
+<br>
+
+### 2.2.3 thread1 과 thread2가 num++ 을 한다면 값은 얼마가 될까?  
+thread1도 thread2도 num +1을 연산하기 위해 위 작업을 거친다. 두 쓰레드에서 num 에 저장된 값 99를 가져갈 때 시차를 두고 가져갈 수도 있고 코어가 여러개라면 동시에 가져갈 수도 있다.   
+두 쓰레드에서 각각 99 를 가져가고 각 연산 작업(num + 1)을 한 후 각각 num 에 100을 가져다 놓는다면 변수 num의 값은 101이 아닌 100이 된다.  
+두 쓰레드 모두 99를 가져가서 99 + 1을 한 100을 가져다 놓았기 때문이다.
+<br>
+<br>
+
+### 2.2.4 쓰레드의 동기화
+- 둘 이상의 쓰레드가 동일한 변수에 동시에 접근해서 생긴 문제이므로 한순간에 한 쓰레드만 변수에 접근하도록 제한한다.
+
+- thread1이 작업을 진행 하면 thread2는 thread1의 작업이 종료될 때까지 기다린다.   thread1이 작업을 종료하면 thread2가 작업을 시작한다.
+<br>
+<br>
+
+## 2.3 동기화(Synchronization) 메소드
+```java
+public class Counter {
+
+    // 공유되는 변수
+    int count = 0;
+
+    synchronized public void increment() {
+        count++;
+    }
+
+    synchronized public void decrement() {
+        count--;
+    }
+
+    public int getCount() {
+        return count;
+    }
+}
+```
+- synchronized  
+한순간에 한 쓰레드의 접근만을 허용하겠다. (메소드 전체에 적용)
+
+- 동기화 되었다.  
+t1 메소드가 메소드를 실행하면 메소드가 시작되고 종료될 때까지 다른 쓰레드인 t2 의 접근을 막겠다. 
+
+- 두 쓰레드가 각기 다른 메소드에 접근한다면?  
+t1은 increment() 메소드만 실행하고 t2는 decrement() 메소드만 실행 하는데 문제가 발생하는가?  
+두 메소드 모두 동일한 변수 count 를 공유하고 있기 때문에 문제가 생긴다.
+
+- t1이 increament() 를 호출했을 때 t2는 decrement()를 실행하지 못하고 t1의 작업이 끝날 때까지 기다려야한다.
+
+- increment() 메소드 내용이 간단하지 않다면?  
+코드가 count++; 앞에 10줄, 후에 30줄이 있다면 41개의 코드가 실행될 때까지 다른 쓰레드는 기다려야 한다. 이는 성능을 극단적으로 낮추는 결과로 이어질 수 있다.
+<br>  
+<br>  
+
+## 2.4 동기화(Synchronization) 블록
+```java
+public void increment() {
+        synchronized (this) {
+            count++;
+        }
+    }
+    
+public void decrement() {
+    synchronized (this) {
+        count--;
+    }
+}
+```
+- 특정 블록을 지정해서 블록 안에 있는 코드에만 접근을 막는 것이다.
+  
+- 메소드보다 더 작은 단위인 문장 단위로 동기화를 시킬 수 있다.
+  
+- this 는 뭐지?  
+이 인스턴스를 대상으로 동기화를 하겠다는 의미이다. -> ???
+- [ ] 무슨 말인지 이해가 안되므로 더 찾아보고 설명 추가 할 것
