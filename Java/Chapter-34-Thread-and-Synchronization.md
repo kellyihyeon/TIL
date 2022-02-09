@@ -13,7 +13,13 @@
    2.3 [동기화(Synchronization) 메소드](#23-동기화synchronization-메소드)  
    2.4 [동기화(Synchronization) 블록](#24-동기화synchronization-블록)  
 
-3. []()
+3. [쓰레드를 생성하는 더 좋은 방법](#3-쓰레드를-생성하는-더-좋은-방법)  
+   3.1 [쓰레드 풀 모델](#31-쓰레드-풀-모델)  
+   3.2 [쓰레드 풀의 유형](#32-쓰레드-풀의-유형)  
+   3.3 [쓰레드 풀 기반의 예제2](#33-쓰레드-풀-기반의-예제2)  
+   3.4 [Callable & Future](#34-callable--future)  
+   3.5 [synchronized를 대신하는 ReentrantLock](#35-synchronized를-대신하는-reentrantlock)  
+
 <br>
 
 # 1. 쓰레드의 이해와 쓰레드의 생성
@@ -353,3 +359,167 @@ public void decrement() {
 - this 는 뭐지?  
 이 인스턴스를 대상으로 동기화를 하겠다는 의미이다. -> ???
 - [ ] 무슨 말인지 이해가 안되므로 더 찾아보고 설명 추가 할 것
+
+<br>
+<br>
+
+# 3. 쓰레드를 생성하는 더 좋은 방법
+## 3.1 쓰레드 풀 모델 
+![Thread Pool](./Img/Thread-Pool.png)  
+- 쓰레드의 생성과 소멸은 리소스 소모가 많은 작업이다.
+
+- 쓰레드 풀은 쓰레드의 재활용을 위한 모델이다.  
+쓰레드 풀에 작업을 밀어 넣으면 쓰레드 풀에서 쓰레드를 할당해서 작업을 실행한다.  
+
+- 작업이 종료되면 쓰레드를 소멸시키지 않는다.
+
+- 자바에서는 쓰레드 풀을 제공해준다.   
+하나의 메소드만 호출하면 쓰레드 풀과 쓰레드를 만들어준다.
+
+- 왜 쓰레드 풀을 제공해줄까?  
+처리해야 될 일들이 있을 때 이 일들을 처리하기 위해서 몇개의 쓰레드를 구동 시켜야 하는지 이슈가 된다.
+    ```text  
+    쓰레드 생성 --Run--> 소멸
+    ```
+    쓰레드가 생성되고 소멸될 때까지 걸리는 시간이 크기 때문에 이 시간만 아껴도 작업을 더 할 수 있다.  
+    소멸시키지 말고 작업을 끝내면 잠깐 쉬게 하고 다음 작업에 할당시키자.
+<br>
+<br>
+
+### 3.1.1 쓰레드 풀 코드
+```java
+public class ExecutorsDemo {
+
+    public static void main(String[] args) {
+        Runnable task = () -> {
+            int n1 = 10;
+            int n2 = 20;
+            String name = Thread.currentThread().getName();
+            System.out.println(name + ": " + (n1 + n2));
+        };
+
+        ExecutorService exr = Executors.newSingleThreadExecutor();
+        exr.submit(task);
+
+        System.out.println("End " + Thread.currentThread().getName());
+        // 쓰레드 풀과 그 안에 있는 쓰레드의 소멸
+        exr.shutdown();
+    }
+}
+```
+- shutdown();  
+작업을 다 끝낸 쓰레드는 소멸 되는 게 아니라 쓰레드 풀로 돌아가기 때문에 쓰레드를 정말 소멸시키고 싶다면 shutdown() 메소드를 호출한다.  
+하지만 메소드를 호출 한다고 바로 소멸 되는 것은 아니다. 만약 처리해야 할 작업이 남아 있다면 작업을 마치고 사라진다.
+<br>
+<br>
+
+
+## 3.2 쓰레드 풀의 유형
+- newSingleThreadExecutor  
+풀 안에 하나의 쓰레드만 생성하고 유지한다.
+
+- newFixedThreadPool  
+풀 안에 인자로 전달된 수의 쓰레드를 생성하고 유지한다.
+
+- newCachedThreadPool  
+풀 안의 쓰레드의 수를 작업의 수에 맞게 유동적으로 관리한다.
+
+## 3.3 쓰레드 풀 기반의 예제2
+```java
+public static void main(String[] args) {
+    Runnable task1 = () -> {
+        String name = Thread.currentThread().getName();
+        System.out.println(name + ": " + (5 + 7));
+    };
+
+    Runnable task2 = () -> {
+        String name = Thread.currentThread().getName();
+        System.out.println(name + ": " + (7 - 5));
+    };
+
+    ExecutorService exr = Executors.newFixedThreadPool(2);
+    exr.submit(task1);
+    exr.submit(task2);
+    exr.submit(() -> {
+        String name = Thread.currentThread().getName();
+        System.out.println(name + ": " + (5 * 7));
+    });
+    exr.shutdown();
+}
+```
+```java
+pool-1-thread-2: 2
+pool-1-thread-1: 12
+pool-1-thread-1: 35
+
+Process finished with exit code 0
+```
+<br>
+<br>
+
+## 3.4 Callable & Future
+```java
+public interface Runnable {
+    void run();
+};
+```
+
+```java
+@FunctionalInterface
+public interface Callable<V> {
+    /**
+     * Computes a result, or throws an exception if unable to do so.
+     *
+     * @return computed result
+     * @throws Exception if unable to compute a result
+     */
+    V call() throws Exception;
+}
+```
+- run 은 반환형이 void 이고, call 은 반환형을 결정할 수 있다.
+
+```java
+public static void main(String[] args) throws InterruptedException, ExecutionException {
+        Callable<Integer> task = () -> {
+            int sum = 0;
+            for (int i = 0; i < 10; i++) {
+                sum += i;
+            }
+            return sum;
+        };
+
+        ExecutorService exr = Executors.newSingleThreadExecutor();
+        Future<Integer> fur = exr.submit(task);
+
+
+        Integer r = fur.get();  // 쓰레드의 반환 값 획득
+        System.out.println("result: " + r);
+        exr.shutdown();
+}
+```
+
+```java
+result: 45
+
+Process finished with exit code 0
+```
+<br>
+<br>
+
+## 3.5 synchronized를 대신하는 ReentrantLock
+```java
+public class MyClass {
+    
+    ReentrantLock criticObj = new ReentrantLock();
+
+    void myMethod(int arg) {
+        criticObj.lock();       // 문을 잠근다.
+        try {
+            // 한 쓰레드에 의해서만 실행되는 영역 //
+        } finally {
+            criticObj.unlock();     // 문을 연다.
+        }
+    }
+}
+```
+- unlock() 메소드 호출이 생략되는 것을 막기 위해 try-finally 문을 사용하는 것을 권고한다.
