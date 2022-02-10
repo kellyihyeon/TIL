@@ -19,7 +19,7 @@
    3.3 [쓰레드 풀 기반의 예제2](#33-쓰레드-풀-기반의-예제2)  
    3.4 [Callable & Future](#34-callable--future)  
    3.5 [synchronized를 대신하는 ReentrantLock](#35-synchronized를-대신하는-reentrantlock)  
-
+   3.6 [컬렉션 인스턴스 동기화](#36-컬렉션-인스턴스-동기화)
 <br>
 
 # 1. 쓰레드의 이해와 쓰레드의 생성
@@ -357,8 +357,9 @@ public void decrement() {
 - 메소드보다 더 작은 단위인 문장 단위로 동기화를 시킬 수 있다.
   
 - this 는 뭐지?  
-이 인스턴스를 대상으로 동기화를 하겠다는 의미이다. -> ???
-- [ ] 무슨 말인지 이해가 안되므로 더 찾아보고 설명 추가 할 것
+이 인스턴스를 대상으로 동기화를 하겠다는 의미이다. 
+  - [x] 무슨 말인지 이해가 안되므로 더 찾아보고 설명 추가 할 것
+    - [3.6.1 컬렉션 인스턴스 동기화의 예](#361-컬렉션-인스턴스-동기화의-예) 부분에 `synchronized (list)` 이 메서드의 사용을 보면 어떻게 사용하는 건지 이해가 간다.
 
 <br>
 <br>
@@ -523,3 +524,100 @@ public class MyClass {
 }
 ```
 - unlock() 메소드 호출이 생략되는 것을 막기 위해 try-finally 문을 사용하는 것을 권고한다.
+<br>
+<br>
+
+## 3.6 컬렉션 인스턴스 동기화
+- 동기화는 특성상 어쩔 수 없이 성능의 저하를 수반하므로 불필요하게 동기화를 진행하지 않도록 주의해야 한다.  
+이런 이유로 컬렉션 프레임워크의 클래스 대부분도 동기화 처리가 되어 있지 않다. 
+
+- 대신 Collections는 다음 메소드들을 통해 동기화 하는 방법을 제공하고 있다.
+
+```java
+public static <T> Set<T> synchronizedSet(Set<T> s)
+
+public static <T> List<T> synchronizedList(List<T> list)
+
+public static <K, V> Map<K, V> synchronizedMap(Map<K, V> m)
+
+public static <T> Collection<T> synchronizedCollection(Colection<T> c)
+
+```
+```java
+List<String> list = Collections.synchronizedList(new ArrayList<>());
+```
+- 이렇게 사용하면 쓰레드의 동시 접근에 안전한 상태가 된다. (과연 그럴까?)
+<br>
+<br>
+
+### 3.6.1 컬렉션 인스턴스 동기화의 예
+```java
+public class SyncArrayList {
+
+    public static List<Integer> list = Collections.synchronizedList(new ArrayList<>());
+
+    public static void main(String[] args) throws InterruptedException {
+
+        for (int i = 0; i < 16; i++) {
+            list.add(i);
+        }
+        System.out.println(list);   // [0 ~ 15]
+
+        Runnable task = () -> {
+            ListIterator<Integer> itr = list.listIterator();
+            while (itr.hasNext()) {
+                itr.set(itr.next() + 1);    // [1 ~ 16] 한 쓰레드씩 작업하는 게 보장 된다면
+            }
+        };
+
+        ExecutorService exr = Executors.newFixedThreadPool(3);
+        exr.submit(task);
+        exr.submit(task);
+        exr.submit(task);
+
+        exr.shutdown();
+        exr.awaitTermination(100, TimeUnit.SECONDS);
+        System.out.println(list);
+
+    }
+}
+```
+```java
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+
+Process finished with exit code 0
+```
+- list는 Collections.synchronizedList 를 사용해서 동기화를 했는데 왜 이런 결과가 나온 걸까?  
+`list를 통한 접근`이 동기화 되어있다는 의미이다.  
+위 코드에서는 반복자 Iterator 를 만들었는데 반복자를 통해서 접근을 할 때는 동기화가 안된다. 이 경우에는 보장을 못해준다.   
+반복자의 사용 자체를 또 동기화 시켜줘야 한다.
+
+- awaitTermination()  
+타이머를 걸어두는 것이다. 
+  - 파라미터1: @param timeout the maximum time to wait
+  - 파라미터2: @param unit the time unit of the timeout argument
+
+
+```java
+Runnable task = () -> {
+    synchronized (list) {
+        ListIterator<Integer> itr = list.listIterator();
+        while (itr.hasNext()) {
+            itr.set(itr.next() + 1);
+        }
+    }
+};
+```
+- synchronized 블록으로 iterator를 얻어서 진행하는 코드 부분에 동기화를 해줬다. 결과를 보자.
+
+- synchronized (list)  
+이 예시에서 synchronized(`here`)  이 부분에 this 가 아닌 list 를 보니까 어떻게 쓰는 건지 이해가 간다.
+
+```java
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+[3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+
+Process finished with exit code 0
+```
+- 마지막 쓰레드가 작업을 마치고 나면 동기화가 보장된 결과 [3 ~ 18] 가 나온다.
