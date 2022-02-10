@@ -52,3 +52,4 @@
 - [28. 메소드 참조와 Optional](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-28-Method-References-and-Optional.md)
 - [29. 스트림 1](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-29-Stream-1.md)
 - [30. 스트림 2](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-30-Stream-2.md)
+- [34. 쓰레드 그리고 동기화](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-34-Thread-and-Synchronization.md)
