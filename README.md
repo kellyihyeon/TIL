@@ -1,18 +1,21 @@
-# **Today I Learned**
-오늘 공부한 내용을 더 오래 기억하기 위해 정리하여 기록한다.
-<br>
+<div align="center">
+
+<h1> 🧑🏼‍💻 <b>Today I Learned</b> </h1>
+
+<b>얼마나 많은 노력을 했는지 기억하기 위해 남기는 공부 흔적</b>
+
+</div>
 <br>
 
 ## **[ RULES ]**
-① 폴더와 파일명은 영문으로 작성한다.  
+① 파일명은 영문 또는 한글로 작성한다.  
 ② 내가 이해할 수 있는 언어로 정리하자.  
 ③ 이해하지 못한 건 메모 정도만 남기고 넘어가고, 이해 했을 때 채워 넣자.  
-- // ? memo <- 추후에 추가 해야할 부분   
-
 ④ 네이밍 컨벤션  
 - 커밋 메세지 패턴
     ```
-    [🎉emoji] Add: chapter or content.
+    add: chapter or content
+    chore: memo
     ```
 ⑤ 헷갈리는 것은 모르는 것이다. 헷갈리는 건 모조리 기록하자.
 <br>
@@ -53,3 +56,7 @@
 - [29. 스트림 1](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-29-Stream-1.md)
 - [30. 스트림 2](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-30-Stream-2.md)
 - [34. 쓰레드 그리고 동기화](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-34-Thread-and-Synchronization.md)
+
+
+### **SQL**
+- [1. 데이터베이스](https://github.com/kellykang-tech/TIL/blob/main/SQL/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4.md)
