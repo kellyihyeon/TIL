@@ -1,6 +1,6 @@
 # 목차
 
-* [Intro] (README.md)
+* [Intro](README.md)
 
 ### JAVA
 
