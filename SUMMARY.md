@@ -3,9 +3,8 @@
 * [Intro](README.md)
 
 ### **CS**
-* [혼자 공부하는 컴퓨터 구조]()
-    * [03 명령어]()
-    * [1 소스코드와 명령어](/CS/hongong/Chapter-03-1-소스코드와-명령어.md)
+* [혼자 공부하는 컴퓨터 구조](/CS/hongong/README.md)
+    * [3-1 소스코드와 명령어](/CS/hongong/Chapter-03-1-소스코드와-명령어.md)
 
 
 ### **JAVA**
