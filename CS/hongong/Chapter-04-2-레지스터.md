@@ -79,7 +79,7 @@
 - **오퍼랜드** 필드의 값(변위)과 **특정 레지스터**의 값을 더하여 유효 주소를 얻어내는 주소 지정 방식
 - 변위 주소 지정 방식을 사용하는 명령어 필드 구조
     
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/19ac75ca-96cd-4608-aa84-56d0e48268c8/f4c784f7-47ce-48e5-b514-f6593bae1bfd/Untitled.png)
+    ![](/CS/hongong/img/변위_주소_지정_방식.png)
     
 - 오퍼랜드 필드의 주소와 어떤 레지스터를 더하는지에 따라 상대 주소 지정방식, 베이스 레지스터 주소 지정 방식으로 나뉜다.
 
@@ -87,7 +87,7 @@
 
 - **오퍼랜드**와 **프로그램 카운터**의 값을 더하여 유효 주소를 얻는 방식
     
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/19ac75ca-96cd-4608-aa84-56d0e48268c8/591a84ca-0c0f-48cf-b2af-75e8ffdccc42/Untitled.png)
+    ![](/CS/hongong/img/상대_주소_지정_방식.png)
     
     - 오퍼랜드가 -3 이었다면 CPU는 실행하려는 명령어의 세 칸 이전 번지의 명령어를 실행
     - 오퍼랜드가 3 이었다면 CPU는 실행하려는 명령어의 세 칸 건너뛴 번지를 실행
@@ -101,6 +101,6 @@
     - 기준 주소로부터 떨어진 거리
 - 기준 주소로부터 얼마나 떨어져 있는 주소에 접근할 것인지를 연산하여 유효 주소를 얻어내는 방식
     
-    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/19ac75ca-96cd-4608-aa84-56d0e48268c8/17a9f579-bc2f-42ed-8d90-595a6ea81f1f/Untitled.png)
+    ![](/CS/hongong/img/베이스_레지스터_주소_지정_방식.png)
     
     - 베이스 레지스터에 200 이라는 값이 있고 오퍼랜드가 40일 때 → 기준 주소 200번지로부터 40만큼 떨어진 240번지로 접근하라!
