@@ -1,34 +1,26 @@
 <div align="center">
 
-<h1> 🧑🏼‍💻 <b>Today I Learned</b> </h1>
+<h1><b>Today I Learned</b></h1>
 
-<b>얼마나 많은 노력을 했는지 기억하기 위해 남기는 공부 흔적</b>
+<b>📗 필요할 때마다 빨리 찾을 수 있게 정리해놓은 노트</b>
+
+<br>
 
 </div>
+
+## **[ Table of Contents]**
+
+## **CS**
+### 혼자 공부하는 컴퓨터 구조 + 운영체제
+- [3-1 소스코드와 명령어](/CS/hongong/Chapter-03-1-소스코드와-명령어.md)
+- [4-2 레지스터](/CS/hongong/Chapter-04-2-레지스터.md)
+- [4-3 명령어 사이클과 인터럽트](/CS/hongong/Chapter-04-3-명령어-사이클과-인터럽트.md)
+- [5-1 빠른 CPU를 위한 설계 기법](/CS/hongong/Chapter-05-1-빠른-CPU를-위한-설계-기법.md)
+
 <br>
 
-## **[ RULES ]**
-① 파일명은 영문 또는 한글로 작성한다.  
-② 내가 이해할 수 있는 언어로 정리하자.  
-③ 이해하지 못한 건 메모 정도만 남기고 넘어가고, 이해 했을 때 채워 넣자.  
-④ 네이밍 컨벤션  
-- 커밋 메세지 패턴
-    ```
-    add: chapter or content
-    chore: memo
-    ```
-⑤ 헷갈리는 것은 모르는 것이다. 헷갈리는 건 모조리 기록하자.
-<br>
-<br>
-
-## **[ INDEX ]**
-
-### **Algorithm**
-- [1-1. Recursion의 개념과 기본 예제 - recursion basic](https://github.com/kellykang-tech/TIL/blob/main/Algorithm/recursion_01.md)
-- [1-2. Recursion의 개념과 기본 예제 - recursive thinking](https://github.com/kellykang-tech/TIL/blob/main/Algorithm/recursion_02.md)
-  
-
-### **Java**
+## **JAVA**
+### **윤성우의 열혈 자바**
 - [01. 자바](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-01-Java.md)
 - [06. 메소드와 변수의 스코프](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-06-Method.md)
 - [07. 클래스와 인스턴스](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-07-Class.md)
@@ -56,7 +48,3 @@
 - [29. 스트림 1](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-29-Stream-1.md)
 - [30. 스트림 2](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-30-Stream-2.md)
 - [34. 쓰레드 그리고 동기화](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-34-Thread-and-Synchronization.md)
-
-
-### **SQL**
-- [1. 데이터베이스](https://github.com/kellykang-tech/TIL/blob/main/SQL/%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4.md)
