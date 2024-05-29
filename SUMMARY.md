@@ -7,6 +7,7 @@
     * [3-1 소스코드와 명령어](/CS/hongong/Chapter-03-1-소스코드와-명령어.md)
     * [4-2 레지스터](/CS/hongong/Chapter-04-2-레지스터.md)
     * [4-3 명령어 사이클과 인터럽트](/CS/hongong/Chapter-04-3-명령어-사이클과-인터럽트.md)
+    * [5-1 빠른 CPU를 위한 설계 기법](/CS/hongong/Chapter-05-1-빠른-CPU를-위한-설계-기법.md)
 
 
 ### **JAVA**
