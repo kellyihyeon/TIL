@@ -23,7 +23,7 @@
 
 ## RAM 용량이 작은 경우
 
-![](/cs/hongong/img/용량이_작은_RAM.png)
+![](/CS/hongong/img/용량이_작은_RAM.png)
 
 - CPU가 프로그램 B를 실행하고 싶을 때는 프로그램 B를 RAM으로 가지고 와야 한다.
 
