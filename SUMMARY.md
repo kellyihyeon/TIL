@@ -11,6 +11,7 @@
     * [5-2 명령어 병렬 처리 기법](/CS/hongong/Chapter-05-2-명령어-병렬-처리-기법.md)
     * [5-3 CISC와 RISC](/CS/hongong/Chapter-05-3-CISC와-RISC.md)
     * [6-1 RAM의 특징과 종류](/CS/hongong/Chapter-06-1-RAM의-특징과-종류.md)
+    * [6-2 메모리의 주소 공간](/CS/hongong/Chapter-06-2-메모리의-주소-공간.md)
 
 
 ### **JAVA**
