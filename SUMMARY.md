@@ -13,6 +13,7 @@
     * [6-1 RAM의 특징과 종류](/CS/hongong/Chapter-06-1-RAM의-특징과-종류.md)
     * [6-2 메모리의 주소 공간](/CS/hongong/Chapter-06-2-메모리의-주소-공간.md)
     * [6-3 캐시 메모리](/CS/hongong/Chapter-06-3-캐시-메모리.md)
+    * [7-1 다양한 보조기억장치](/CS/hongong/Chapter-07-1-다양한-보조기억장치.md)
 
 
 ### **JAVA**
