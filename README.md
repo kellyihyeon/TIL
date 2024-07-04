@@ -24,6 +24,7 @@
 - [7-1 다양한 보조기억장치](/CS/hongong/Chapter-07-1-다양한-보조기억장치.md)
 - [7-2 RAID의 정의와 종류](/CS/hongong/Chapter-07-2-RAID의-정의와-종류.md)
 - [8-1 장치 컨트롤러와 장치 드라이버](/CS/hongong/Chapter-08-1-장치-컨트롤러와-장치-드라이버.md)
+- [8-2 다양한 입출력 방법](/CS/hongong/Chapter-08-2-다양한-입출력-방법.md)
 
 <br>
 
