@@ -17,7 +17,7 @@
     * [7-2 RAID의 정의와 종류](/CS/hongong/Chapter-07-2-RAID의-정의와-종류.md)
     * [8-1 장치 컨트롤러와 장치 드라이버](/CS/hongong/Chapter-08-1-장치-컨트롤러와-장치-드라이버.md)
     * [8-2 다양한 입출력 방법](/CS/hongong/Chapter-08-2-다양한-입출력-방법.md)
-* [혼자 공부하는 운영체제]()
+* [혼자 공부하는 운영체제](CS/hongong/os/README.md)
     * [9-1 운영체제를 알아야 하는 이유](CS/hongong/os/Chapter-09-1-운영체제를-알아야-하는-이유.md)
     * [9-2 운영체제의 큰 그림](/CS/hongong/os/Chapter-09-2-운영체제의-큰-그림.md)
 
@@ -51,5 +51,3 @@
     * [29 스트림 1](Java/Chapter-29-Stream-1.md)
     * [30 스트림 2](Java/Chapter-30-Stream-2.md)
     * [34 쓰레드 그리고 동기화](Java/Chapter-34-Thread-and-Synchronization.md)
-* [테스트 자바]()
-    * [01 테스트파일1](CS/hongong/os/Chapter-09-1-운영체제를-알아야-하는-이유.md)
