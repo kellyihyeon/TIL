@@ -18,7 +18,7 @@
     * [8-1 장치 컨트롤러와 장치 드라이버](/CS/hongong/Chapter-08-1-장치-컨트롤러와-장치-드라이버.md)
     * [8-2 다양한 입출력 방법](/CS/hongong/Chapter-08-2-다양한-입출력-방법.md)
 * [혼자 공부하는 운영체제](/CS/hongong/README.md)
-    * [9-1 운영체제를 알아야 하는 이유](/CS/hongong/Chapter-09-1-운영체제를-알아야-하는-이유.md)
+    * [9-2 운영체제의 큰 그림](/CS/hongong/Chapter-09-2-운영체제의-큰-그림.md)
 
 
 ### **JAVA**
