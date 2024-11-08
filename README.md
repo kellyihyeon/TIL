@@ -34,6 +34,10 @@
 <br>
 
 ## **JAVA**
+### **자바의 신**
+- [2장 Hello God of Java](/Java/자바의신/02-Hello-God-of-Java.md)
+
+
 ### **윤성우의 열혈 자바**
 - [01. 자바](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-01-Java.md)
 - [06. 메소드와 변수의 스코프](https://github.com/kellykang-tech/TIL/blob/main/Java/Chapter-06-Method.md)
